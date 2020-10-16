@@ -33,10 +33,17 @@ def get_link_on_album_img(artist_name: str = None, album_name: str = None,
 
     logger.info(f"link_on_album = {link_on_album}")
 
-    return _get_link_on_img_from_rocknation(link_on_album)
+    return _get_link_on_img_from_rocknation(link_on_album, "albums")
 
 
-def _get_link_on_img_from_rocknation(link: str):
+def _get_link_on_img_from_rocknation(link: str, img_type: str):
+    """
+    :param link:
+    :param img_type: albums or bands
+    :return:
+    """
+    assert img_type in ("albums", "bands")
+
     try:
         html = _get_html(link)
     except requests.exceptions.MissingSchema:
@@ -44,7 +51,7 @@ def _get_link_on_img_from_rocknation(link: str):
 
     soup = BeautifulSoup(html)
 
-    img = soup.select_one("img[src^='/upload/images/albums/']")
+    img = soup.select_one(f"img[src^='/upload/images/{img_type}/']")
     src = img.get("src")
 
     url = base_url + src
