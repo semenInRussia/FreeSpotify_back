@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from backend.buisness_logic.SpotifyWebAPI.features import Spotify
-from backend.buisness_logic.core.exceptions import NotFoundAlbumException, NotFoundArtistException
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.core.exceptions import NotFoundAlbumException, NotFoundArtistException
 
 base_url = 'https://rocknation.su'
 spotify = Spotify()
@@ -33,8 +33,15 @@ def get_link_on_album_img(artist_name: str = None, album_name: str = None,
 
     logger.info(f"link_on_album = {link_on_album}")
 
+    return _get_link_on_img_from_rocknation(link_on_album)
+
+
+def get_link_on_artist_img():
+    pass
+
+def _get_link_on_img_from_rocknation(link: str):
     try:
-        html = _get_html(link_on_album)
+        html = _get_html(link)
     except requests.exceptions.MissingSchema:
         raise NotFoundAlbumException
 

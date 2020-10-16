@@ -23,7 +23,13 @@ def test_get_link_on_album():
     assert link == "https://rocknation.su/mp3/album-9"
 
 
-def test_get_link_on_album_img_by():
+def test_get_link_on_album_img():
     link = get_link_on_album_img(artist_name, album_name)
 
     assert link == "https://rocknation.su/upload/images/albums/9.jpg"
+
+def test_get_link_on_artist_img():
+    link = get_link_on_album_img(artist_name, album_name)
+
+    assert link == "https://rocknation.su/upload/images/bands/1.jpg"
+
