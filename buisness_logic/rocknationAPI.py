@@ -36,9 +36,6 @@ def get_link_on_album_img(artist_name: str = None, album_name: str = None,
     return _get_link_on_img_from_rocknation(link_on_album)
 
 
-def get_link_on_artist_img():
-    pass
-
 def _get_link_on_img_from_rocknation(link: str):
     try:
         html = _get_html(link)
