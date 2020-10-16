@@ -2,8 +2,8 @@ import json
 
 import requests
 
-from backend.buisness_logic.tests.func.test_publicFeatures import _assert_is_public_track_top
-from backend.core.features.pytest import assert_is_request
+from buisness_logic.tests.func.test_publicFeatures import _assert_is_public_track_top
+from core.features.pytest import assert_is_request
 
 test_artist_name = "AC DC"
 view_artist_detail_url = f"http://127.0.0.1:8000/api/artists/{test_artist_name}"

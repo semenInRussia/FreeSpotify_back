@@ -1,5 +1,5 @@
-from backend.buisness_logic.SpotifyWebAPI.core.exceptions import NotResultSearchException
-from backend.buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.SpotifyWebAPI.core.exceptions import NotResultSearchException
 
 _spotify = Spotify()
 

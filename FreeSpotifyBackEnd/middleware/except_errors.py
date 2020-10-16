@@ -1,11 +1,6 @@
 from django.http import JsonResponse, HttpRequest
 from loguru import logger
 
-import backend
-from backend import buisness_logic
-from backend.buisness_logic.core.exceptions import NotFoundArtistException, NotFoundAlbumException
-
-
 class ExceptErrors:
 
     def __init__(self, get_response):

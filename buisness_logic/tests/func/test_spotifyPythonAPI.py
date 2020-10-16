@@ -1,5 +1,5 @@
-from backend.buisness_logic.SpotifyWebAPI.features import Spotify
-from backend.buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info, \
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info, \
     get_top_music_info_by_approximate_artist_title
 
 spotify = Spotify()

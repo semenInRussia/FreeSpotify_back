@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 
 # Create your views here.
-from backend.buisness_logic.SpotifyWebAPI.features import Spotify
-from backend.buisness_logic.publicFeatures import get_tracks_top
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.publicFeatures import get_tracks_top
 
 spotify = Spotify()
 

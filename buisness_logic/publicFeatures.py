@@ -1,8 +1,8 @@
 from loguru import logger
 
-from backend.buisness_logic.SpotifyWebAPI.features import Spotify
-from backend.buisness_logic.rocknationAPI import get_link_on_album, get_link_on_artist, get_link_on_album_img
-from backend.buisness_logic.spotifyPythonAPI import get_top_music_info, get_top_music_info_by_approximate_artist_title
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.rocknationAPI import get_link_on_album, get_link_on_artist, get_link_on_album_img
+from buisness_logic.spotifyPythonAPI import get_top_music_info, get_top_music_info_by_approximate_artist_title
 
 
 def get_tracks_top(artist_name, spotify: Spotify) -> list:

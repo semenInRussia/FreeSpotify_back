@@ -1,6 +1,6 @@
-from backend.buisness_logic.SpotifyWebAPI.features import Spotify
-from backend.buisness_logic.publicFeatures import get_tracks_top
-from backend.buisness_logic.tests.func.test_spotifyPythonAPI import _assert_is_track_top
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.publicFeatures import get_tracks_top
+from buisness_logic.tests.func.test_spotifyPythonAPI import _assert_is_track_top
 
 artist_name = 'ac dc'
 

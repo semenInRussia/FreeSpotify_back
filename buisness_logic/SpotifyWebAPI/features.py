@@ -5,9 +5,9 @@ import loguru
 import requests
 from loguru import logger
 
-from backend.buisness_logic.SpotifyWebAPI.core.exceptions import InvalidClientException, UndefinedErrorMessageException, \
+from buisness_logic.SpotifyWebAPI.core.exceptions import InvalidClientException, UndefinedErrorMessageException, \
     NotValidTokenException, AccessTokenExpiredException
-from backend.core.features.loguru import loguru_info
+from core.features.loguru import loguru_info
 
 version_api = 'v1'
 base_url = f"https://api.spotify.com/{version_api}/"

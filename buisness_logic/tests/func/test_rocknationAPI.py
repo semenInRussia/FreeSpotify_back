@@ -1,5 +1,5 @@
-from backend.buisness_logic.rocknationAPI import get_link_on_artist, get_link_on_track, get_link_on_album, \
-    get_link_on_album_img
+from buisness_logic.rocknationAPI import get_link_on_artist, get_link_on_track, get_link_on_album, \
+    get_link_on_album_img, get_link_on_artist_img
 
 ac_dc_spotify_id = '711MCceyCBcFnzjGY4Q7Un'
 
@@ -29,7 +29,7 @@ def test_get_link_on_album_img():
     assert link == "https://rocknation.su/upload/images/albums/9.jpg"
 
 def test_get_link_on_artist_img():
-    link = get_link_on_album_img(artist_name, album_name)
+    link = get_link_on_artist_img(artist_name, album_name)
 
     assert link == "https://rocknation.su/upload/images/bands/1.jpg"
 
