@@ -26,3 +26,9 @@ def view_tracks_info(request: HttpRequest, artist):
     data = get_tracks_top(artist, spotify=spotify)
 
     return JsonResponse(data, safe=False)
+
+
+def search_track_view(request, q: str):
+    data = get_tracks_info(q, spotify=spotify)
+
+    return JsonResponse(data, safe=False)
