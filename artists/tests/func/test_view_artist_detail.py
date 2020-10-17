@@ -14,6 +14,9 @@ def _assert_is_artist_detail(test_artist_detail: dict):
     assert "name" in test_artist_detail
     assert "img_link" in test_artist_detail
 
+    # Is valid img_link?
+    assert test_artist_detail["img_link"]
+
     _assert_is_public_track_top(test_artist_detail["top"])
 
 
