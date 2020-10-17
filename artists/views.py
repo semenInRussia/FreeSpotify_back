@@ -2,7 +2,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 from buisness_logic.SpotifyWebAPI.features import Spotify
-from buisness_logic.publicFeatures import get_tracks_top
+from buisness_logic.publicFeatures import get_tracks_top, get_link_on_artist_img
 
 spotify = Spotify()
 
@@ -15,5 +15,6 @@ def view_artist_detail(request, artist_name: str):
     return JsonResponse({
         "top": top,
         "name": precise_artist_name,
-        "img_link": ""
+        "img_link": get_link_on_artist_img(artist_name=precise_artist_name,
+                                           spotify=spotify)
     })
