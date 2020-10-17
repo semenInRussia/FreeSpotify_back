@@ -31,15 +31,18 @@ def test_get_tracks_info():
     first_artist = data[0]
 
     # assert is valid tracks info
-    assert "release_date" in first_artist
-    assert "name" in first_artist
-    assert "album_name" in first_artist
-    assert "artist_name" in first_artist
+    _assert_is_valid_track_info(first_artist)
 
 def testGetTopMusicInfoByApproximateArtistTitle():
     top_music_info = get_top_music_info_by_approximate_artist_title(artist_name, spotify=spotify)
 
     assert(len(top_music_info) == 10)
+
+def _assert_is_valid_track_info(track_info):
+    assert "release_date" in track_info
+    assert "name" in track_info
+    assert "album_name" in track_info
+    assert "artist_name" in track_info
 
 def _assert_is_track_top(top: list) -> None:
     assert top is not None
