@@ -1,6 +1,6 @@
 from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info, \
-    get_top_music_info_by_approximate_artist_title
+    get_top_music_info_by_approximate_artist_title, get_tracks_info
 
 spotify = Spotify()
 
@@ -24,6 +24,17 @@ def testGetTopMusicInfo():
     top = get_top_music_info(ac_dc_spotify_id, spotify)
 
     _assert_is_track_top(top)
+
+def test_get_tracks_info():
+    data = get_tracks_info("Ac dc - T.N.T", spotify=spotify)
+
+    first_artist = data[0]
+
+    # assert is valid tracks info
+    assert "release_date" in first_artist
+    assert "name" in first_artist
+    assert "album_name" in first_artist
+    assert "artist_name" in first_artist
 
 def testGetTopMusicInfoByApproximateArtistTitle():
     top_music_info = get_top_music_info_by_approximate_artist_title(artist_name, spotify=spotify)

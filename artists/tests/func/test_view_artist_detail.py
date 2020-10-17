@@ -3,7 +3,7 @@ import json
 import requests
 
 from buisness_logic.tests.func.test_publicFeatures import _assert_is_public_track_top
-from core.features.pytest import assert_is_request
+from core.features.pytest import assert_is_valid_request
 
 test_artist_name = "AC DC"
 view_artist_detail_url = f"http://127.0.0.1:8000/api/artists/{test_artist_name}"
@@ -20,7 +20,7 @@ def _assert_is_artist_detail(test_artist_detail: dict):
 def test_view_artist_detail():
     request = requests.get(view_artist_detail_url)
 
-    assert_is_request(request)
+    assert_is_valid_request(request)
 
     test_artist_detail = json.loads(request.text)
 
