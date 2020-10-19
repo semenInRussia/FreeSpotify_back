@@ -44,7 +44,7 @@ def get_top_music_info_by_approximate_artist_title(approximate_artist_title: str
     return top
 
 
-def get_artists_ids_and_names(approximate_artist_title: str, spotify: Spotify, limit: int = 1, offset: int = 0):
+def get_artists_ids_and_names(approximate_artist_title: str, spotify: Spotify, limit: int = 1, offset: int = 0) -> list:
     full_data = spotify.search(q=approximate_artist_title, type_='artist', limit=limit, offset=offset)
 
     full_data_items = full_data['artists']['items']
@@ -68,7 +68,7 @@ def get_top_music_info(spotify_artist_id: str, spotify: Spotify, country: str = 
 
 
 def _filter_artists_search_data(artists_data: dict) -> list:
-    return [{'artist_title': artist_data['name'], 'artist_id': artist_data['id']} for artist_data in artists_data
+    return [{'artist_name': artist_data['name'], 'artist_id': artist_data['id']} for artist_data in artists_data
             ]
 
 
