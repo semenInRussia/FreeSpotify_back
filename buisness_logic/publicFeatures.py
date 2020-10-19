@@ -66,7 +66,7 @@ def get_link_on_artist_img(spotify: Spotify, artist_name: str = None, artist_lin
     assert artist_name or artist_link
 
     if artist_name:
-        artist_name = get_artist_info(artist_name, spotify)["artist_title"]
+        artist_name = get_artist_info(artist_name, spotify)["artist_name"]
         artist_link = get_link_on_artist(artist_name)
 
     return _get_link_on_img_from_rocknation(artist_link, "bands")

@@ -16,7 +16,7 @@ def testGetArtistsIdsAndNames():
     artists_ids_and_names = get_artists_ids_and_names('ac dc', spotify=spotify)
 
     assert (len(artists_ids_and_names) == 1)
-    assert (artists_ids_and_names[0]['artist_title'] == 'AC/DC')
+    assert (artists_ids_and_names[0]['artist_name'] == 'AC/DC')
     assert (artists_ids_and_names[0]['artist_id'] == ac_dc_spotify_id)
 
 
