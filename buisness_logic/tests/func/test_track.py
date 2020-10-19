@@ -7,4 +7,4 @@ artist_name = "Metallica"
 album_name = "Master of puppets"
 
 def test_init():
-    Track(Artist(artist_name), Album(artist_name, album_name))
+    Track(artist_name, artist_name, album_name)
