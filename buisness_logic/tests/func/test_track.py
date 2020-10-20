@@ -12,3 +12,13 @@ def test_base_init():
 
 def test_init():
     Track(artist_name, track_name, album_name, top_number=1, disc_number=2)
+
+def test_track_artist():
+    track = Track(track_name, artist_name, album_name)
+
+    assert track.artist.name == artist_name
+
+def test_track_album():
+    track = Track(track_name, artist_name, album_name)
+
+    assert track.album.name == album_name
