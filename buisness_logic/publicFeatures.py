@@ -41,9 +41,9 @@ def get_tracks_top(artist_name, spotify: Spotify) -> list:
                                                  get_default_value=get_default_value)
 
         # update data
-        track["album_link"] = link_on_album
-        track["artist_link"] = link_on_artist
-        track["album_img_link"] = link_on_album_img
+        track.album.link = link_on_album
+        track.artist.link = link_on_artist
+        track.album.img_link = link_on_album_img
 
     return tracks_info
 

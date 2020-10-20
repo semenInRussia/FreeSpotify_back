@@ -1,6 +1,6 @@
 from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info, \
-    get_top_music_info_by_approximate_artist_title, get_tracks_info
+    get_top_music_info_by_approximate_artist_title, search_tracks
 
 spotify = Spotify()
 
@@ -16,8 +16,8 @@ def testGetArtistsIdsAndNames():
     artists_ids_and_names = get_artists_ids_and_names('ac dc', spotify=spotify)
 
     assert (len(artists_ids_and_names) == 1)
-    assert (artists_ids_and_names[0]['artist_name'] == 'AC/DC')
-    assert (artists_ids_and_names[0]['artist_id'] == ac_dc_spotify_id)
+    assert (artists_ids_and_names[0].artist.name == 'AC/DC')
+    assert (artists_ids_and_names[0].artist.spotify_id == ac_dc_spotify_id)
 
 
 def testGetTopMusicInfo():
@@ -26,7 +26,7 @@ def testGetTopMusicInfo():
     _assert_is_track_top(top)
 
 def test_get_tracks_info():
-    data = get_tracks_info("Ac dc - T.N.T", spotify=spotify)
+    data = search_tracks("Ac dc - T.N.T", spotify=spotify)
 
     first_artist = data[0]
 
@@ -39,20 +39,18 @@ def testGetTopMusicInfoByApproximateArtistTitle():
     assert(len(top_music_info) == 10)
 
 def _assert_is_valid_track_info(track_info):
-    assert "release_date" in track_info
-    assert "name" in track_info
-    assert "album_name" in track_info
-    assert "artist_name" in track_info
+    assert track_info.album.release_date
+    assert track_info.name
+    assert track_info.allbum_name
+    assert track_info.artist.name
 
 def _assert_is_track_top(top: list) -> None:
     assert top is not None
     assert isinstance(top, list)
     assert len(top) == 10
 
-    assert top[0].get("artist_name")
-    assert top[0].get("name")
-    assert top[0].get("album_name")
-    assert top[0].get("album_name")
-    assert top[0].get("top_number")
-    assert top[0].get("disc_number")
-    assert top[0].get("release_date")
+    assert top[0].artist.name
+    assert top[0].name
+    assert top[0].album.name
+    assert top[0].disc_number
+    assert top[0].album.release_date
