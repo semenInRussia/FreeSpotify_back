@@ -19,7 +19,6 @@ def testGetArtistsIdsAndNames():
     assert (artists_ids_and_names[0].artist.name == 'AC/DC')
     assert (artists_ids_and_names[0].artist.spotify_id == ac_dc_spotify_id)
 
-
 def testGetTopMusicInfo():
     top = get_top_music_info(ac_dc_spotify_id, spotify)
 
@@ -54,3 +53,10 @@ def _assert_is_track_top(top: list) -> None:
     assert top[0].album.name
     assert top[0].disc_number
     assert top[0].album.release_date
+
+def test_album_info():
+    album_info = get_album_info(artist_name, album_name, spotify=spotify)
+
+    assert "spotify_id" in album_info
+    assert "name" in album_info
+    assert "artist_name" in album_info
