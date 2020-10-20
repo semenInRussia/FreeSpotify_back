@@ -6,7 +6,7 @@ import requests
 from loguru import logger
 
 from buisness_logic.SpotifyWebAPI.core.exceptions import InvalidClientException, UndefinedErrorMessageException, \
-    NotValidTokenException, AccessTokenExpiredException
+    NotValidTokenException, AccessTokenExpiredException, InvalidClientIdException
 from core.features.loguru import loguru_info
 
 version_api = 'v1'
@@ -106,6 +106,8 @@ class Spotify:
             raise NotValidTokenException
         elif response_data['error']['message'] == AccessTokenExpiredException.message:
             raise AccessTokenExpiredException
+        elif response_data['error']['message'] == InvalidClientIdException.message:
+            raise InvalidClientIdException
         else:
             logger.warning(response_data)
             raise UndefinedErrorMessageException

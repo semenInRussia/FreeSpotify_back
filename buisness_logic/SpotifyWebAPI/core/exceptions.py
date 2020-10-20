@@ -16,4 +16,6 @@ class UndefinedArtistException(Exception):
 class NotResultSearchException(Exception):
     message = 'Not result search'
 
+class InvalidClientIdException(Exception):
+    message = 'invalid id'
 
