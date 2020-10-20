@@ -1,6 +1,6 @@
 from buisness_logic.SpotifyWebAPI.core.exceptions import NotResultSearchException
 from buisness_logic.SpotifyWebAPI.features import Spotify
-from buisness_logic.Track import Track
+from buisness_logic.track import Track
 
 _spotify = Spotify()
 

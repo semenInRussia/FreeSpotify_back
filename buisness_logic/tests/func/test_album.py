@@ -1,4 +1,4 @@
-from buisness_logic.Album import Album
+from buisness_logic.album import Album
 
 album_name = "Master of puppets"
 artist_name = "Metallica"

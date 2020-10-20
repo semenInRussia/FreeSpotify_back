@@ -1,6 +1,6 @@
-from buisness_logic.Album import Album
-from buisness_logic.Artist import Artist
-from buisness_logic.Track import Track
+from buisness_logic.album import Album
+from buisness_logic.artist import Artist
+from buisness_logic.track import Track
 
 
 artist_name = "Metallica"
