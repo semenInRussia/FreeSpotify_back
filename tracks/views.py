@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpRequest
 
 # Create your views here.
 from buisness_logic.SpotifyWebAPI.features import Spotify
-from buisness_logic.spotifyPythonAPI import get_track_info, search_tracks, \
+from buisness_logic.spotifyPythonAPI import get_track_info, get_tracks_info, \
     get_top_music_info_by_approximate_artist_title
 
 from buisness_logic.publicFeatures import get_tracks_top
@@ -29,6 +29,6 @@ def view_tracks_info(request: HttpRequest, artist):
 
 
 def search_track_view(request, q: str):
-    data = search_tracks(q, spotify=spotify)
+    data = get_tracks_info(q, spotify=spotify)
 
     return JsonResponse(data, safe=False)
