@@ -5,7 +5,7 @@ artist_name = "Metallica"
 approximate_artist_name = "metalica"
 
 
-def test_init():
+def test_base_init():
     # Not raise exception
     Artist(artist_name)
 
