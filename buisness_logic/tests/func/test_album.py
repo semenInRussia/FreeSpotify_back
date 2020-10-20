@@ -1,7 +1,19 @@
 from buisness_logic.album import Album
 
-album_name = "Master of puppets"
-artist_name = "Metallica"
+album_name = "Paranoid"
+artist_name = "Black sabbath"
+
+approximate_album_name = "Paranoid"
 
 def test_album():
     Album(artist_name, album_name)
+
+def test_name():
+    album = Album(artist_name, album_name)
+
+    assert album.name == album_name
+
+def test_precise_name():
+    album = Album(artist_name, approximate_album_name)
+
+    assert album.name == album_name
