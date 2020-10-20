@@ -1,8 +1,25 @@
 from buisness_logic.SpotifyWebAPI.core.exceptions import NotResultSearchException
 from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.album import Album
 from buisness_logic.track import Track
 
 _spotify = Spotify()
+
+
+def _filter_album_info(json_response: dict):
+    return [
+        Album(
+            album_name=album["name"],
+            artist_name=album['artists'][0]['name'],
+            spotify_id=album['id']
+        ) for album in json_response['albums']
+    ]
+
+
+def search_albums_by_spotify_id(spotify_album_id: str, spotify: Spotify):
+    json_response = spotify.get_album_info(spotify_album_id)
+
+    return _filter_album_info(json_response)
 
 
 def get_track_info(artist_name: str, track_name: str, spotify: Spotify) -> dict:

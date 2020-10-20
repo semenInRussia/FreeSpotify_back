@@ -145,3 +145,8 @@ class Spotify(BaseSpotify, AuthenticationSpotifyMixIn, SendResponseMixIn):
                                                              "country": country
                                                          })
 
+    def get_album_info(self, album_ids: str, market: str = 'ES'):
+        return self._get_response_JSON_with_link_spotify(second_part_of_links=f'artists/albums/', params={
+            'market': market,
+            'ids': album_ids
+        })
