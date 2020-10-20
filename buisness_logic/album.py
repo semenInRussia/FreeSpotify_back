@@ -6,6 +6,12 @@ class BaseAlbum:
 
 class Album(BaseAlbum):
     @property
+    def artist(self):
+        from buisness_logic.artist import Artist
+
+        return Artist(self._artist_name)
+
+    @property
     def name(self):
         return self._album_name
 
