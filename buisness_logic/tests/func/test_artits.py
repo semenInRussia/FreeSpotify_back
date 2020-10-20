@@ -1,4 +1,4 @@
-from buisness_logic.Artist import Artist
+from buisness_logic.artist import Artist
 from buisness_logic.tests.func.test_spotifyPythonAPI import _assert_is_valid_track_info, _assert_is_track_top
 
 artist_name = "Metallica"
