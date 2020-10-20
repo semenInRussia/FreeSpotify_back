@@ -107,6 +107,7 @@ class Spotify:
         elif response_data['error']['message'] == AccessTokenExpiredException.message:
             raise AccessTokenExpiredException
         else:
+            logger.warning(response_data)
             raise UndefinedErrorMessageException
 
     @staticmethod

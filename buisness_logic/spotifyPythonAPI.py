@@ -1,5 +1,6 @@
-from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.SpotifyWebAPI.core.exceptions import NotResultSearchException
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.Track import Track
 
 _spotify = Spotify()
 
@@ -74,12 +75,12 @@ def _filter_artists_search_data(artists_data: dict) -> list:
 
 def _filter_tracks(tracks: dict) -> list:
     return [
-        {
-            "release_date": track['album']["release_date"],
-            "name": track['name'],
-            "album_name": track['album']['name'],
-            "top_number": index + 1,
-            "disc_number": track['track_number'],
-            "artist_name": track['artists'][0]['name']
-        } for index, track in enumerate(tracks)
+
+        Track(release_date=track['album']["release_date"],
+              track_name=track['name'],
+              album_name=track['album']['name'],
+              top_number=index + 1,
+              disc_number=track['track_number'],
+              artist_name=track['artists'][0]['name'])
+        for index, track in enumerate(tracks)
     ]
