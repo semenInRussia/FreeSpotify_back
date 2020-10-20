@@ -1,5 +1,5 @@
 from buisness_logic.SpotifyWebAPI.features import Spotify
-from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info
+from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info_by_approximate_artist_title
 
 
 class Artist:
@@ -18,4 +18,4 @@ class Artist:
         return artists_info[0]
 
     def get_top(self):
-        return get_top_music_info(self.name, spotify=self._spotify)
+        return get_top_music_info_by_approximate_artist_title(self.name, spotify=self._spotify)

@@ -1,5 +1,5 @@
 from buisness_logic.Artist import Artist
-from buisness_logic.tests.func.test_spotifyPythonAPI import _assert_is_valid_track_info
+from buisness_logic.tests.func.test_spotifyPythonAPI import _assert_is_valid_track_info, _assert_is_track_top
 
 artist_name = "Metallica"
 approximate_artist_name = "metalica"
@@ -24,4 +24,4 @@ def test_get_top():
 
     top = artist.get_top()
 
-    _assert_is_valid_track_info(top)
+    _assert_is_track_top(top)
