@@ -1,12 +1,13 @@
 from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info, \
-    get_top_music_info_by_approximate_artist_title, get_tracks_info
+    get_top_music_info_by_approximate_artist_title, get_tracks_info, search_albums_by_spotify_id
 
 spotify = Spotify()
 
 ac_dc_spotify_id = '711MCceyCBcFnzjGY4Q7Un'
 
 artist_name = 'AC/DC'
+album_spotify_id = '6mUdeDZCsExyJLMdAfDuwh'
 album_name = 'back in black'
 track_name = 'back in black'
 release_year = '1980'
@@ -54,9 +55,10 @@ def _assert_is_track_top(top: list) -> None:
     assert top[0].disc_number
     assert top[0].album.release_date
 
-def test_album_info():
-    album_info = get_album_info(artist_name, album_name, spotify=spotify)
+def test_albums_info():
+    albums = search_albums_by_spotify_id(album_spotify_id, spotify=spotify)
+    album = albums[0]
 
-    assert "spotify_id" in album_info
-    assert "name" in album_info
-    assert "artist_name" in album_info
+    assert album.name
+    assert album.artist.name
+    assert album.spotify_id

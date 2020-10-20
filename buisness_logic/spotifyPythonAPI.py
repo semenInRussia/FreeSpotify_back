@@ -1,3 +1,5 @@
+from loguru import logger
+
 from buisness_logic.SpotifyWebAPI.core.exceptions import NotResultSearchException
 from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.album import Album
@@ -16,8 +18,10 @@ def _filter_album_info(json_response: dict):
     ]
 
 
-def search_albums_by_spotify_id(spotify_album_id: str, spotify: Spotify):
-    json_response = spotify.get_album_info(spotify_album_id)
+def search_albums_by_spotify_id(spotify_album_ids: str, spotify: Spotify):
+    logger.info(f"album_ids = {spotify_album_ids}")
+    json_response = spotify.get_album_info(spotify_album_ids)
+    logger.info(f"json_response = {json_response}")
 
     return _filter_album_info(json_response)
 
