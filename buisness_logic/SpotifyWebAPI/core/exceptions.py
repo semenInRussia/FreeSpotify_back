@@ -18,4 +18,3 @@ class NotResultSearchException(Exception):
 
 class InvalidClientIdException(Exception):
     message = 'invalid id'
-

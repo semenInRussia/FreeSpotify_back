@@ -1,13 +1,10 @@
 import base64
-import os
 
-import loguru
 import requests
 from loguru import logger
 
 from buisness_logic.SpotifyWebAPI.core.exceptions import InvalidClientException, UndefinedErrorMessageException, \
     NotValidTokenException, AccessTokenExpiredException, InvalidClientIdException
-from core.features.loguru import loguru_info
 
 version_api = 'v1'
 base_url = f"https://api.spotify.com/{version_api}/"
@@ -17,9 +14,11 @@ spotify_client_secret = "09ece004e71740da8f003ba333c7f887"
 
 
 class Spotify:
-    """Object for work with spotify."""
+    """
+    Object for work with spotify.
+    """
 
-    def __init__(self, token: str = None):
+    def __init__(self):
         # Set token
         self._set_new_token()
 
@@ -96,11 +95,13 @@ class Spotify:
 
         return response_data
 
-    def _raise_spotify_web_api_errors(self, response_data: dict):
+    @staticmethod
+    def _raise_spotify_web_api_errors(response_data: dict):
         # Here not errors
         if not response_data.get('error'):
             return None
 
+        logger.warning(response_data['error']['message'])
         # Here are errors
         if response_data['error']['message'] == NotValidTokenException.message:
             raise NotValidTokenException
@@ -109,7 +110,6 @@ class Spotify:
         elif response_data['error']['message'] == InvalidClientIdException.message:
             raise InvalidClientIdException
         else:
-            logger.warning(response_data)
             raise UndefinedErrorMessageException
 
     @staticmethod
