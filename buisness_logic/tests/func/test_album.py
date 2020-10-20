@@ -3,7 +3,7 @@ from buisness_logic.album import Album
 album_name = "Paranoid"
 artist_name = "Black sabbath"
 
-approximate_album_name = "Paranoid"
+approximate_album_name = "paRanid"
 
 def test_album():
     Album(artist_name, album_name)
