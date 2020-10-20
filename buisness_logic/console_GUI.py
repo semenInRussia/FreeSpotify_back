@@ -1,8 +1,8 @@
-from backend import buisness_logic
-from backend.buisness_logic.SpotifyWebAPI.features import Spotify
-from backend.buisness_logic.publicFeatures import get_tracks_top
-from backend.buisness_logic.rocknationAPI import get_link_on_artist
-from backend.buisness_logic.spotifyPythonAPI import get_artist_info, get_top_music_info_by_approximate_artist_title
+import buisness_logic
+from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.publicFeatures import get_tracks_top
+from buisness_logic.rocknationAPI import get_link_on_artist
+from buisness_logic.spotifyPythonAPI import get_artist_info
 
 spotify = Spotify()
 
@@ -27,7 +27,6 @@ def main():
 
 def print_top(top: list):
     for track in top:
-        artist_name = track['artist_name']
         name = track['name']
         album_name = track['album_name']
         link_on_album = track['album_link']
