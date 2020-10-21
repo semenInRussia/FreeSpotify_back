@@ -1,6 +1,6 @@
 from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names, get_top_music_info, \
-    get_top_music_info_by_approximate_artist_title, get_tracks_info, search_albums_by_spotify_id
+    get_top_music_info_by_approximate_artist_title, get_tracks_info, search_albums_by_spotify_id, search_albums
 
 spotify = Spotify()
 
@@ -62,3 +62,11 @@ def test_albums_info():
     assert album.name
     assert album.artist.name
     assert album.spotify_id
+
+def test_search_albums():
+    albums = search_albums(artist_name, spotify=spotify)
+    album = albums[-1]
+
+    assert isinstance(albums, list), "search_albums() must return type - list"
+    assert album.name
+    assert album.artist.name
