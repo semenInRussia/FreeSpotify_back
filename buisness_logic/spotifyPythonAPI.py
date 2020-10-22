@@ -4,8 +4,8 @@ from loguru import logger
 
 from buisness_logic.SpotifyWebAPI.core.exceptions import NotResultSearchException
 from buisness_logic.SpotifyWebAPI.features import Spotify
-from buisness_logic.album import Album
-from buisness_logic.track import Track
+from buisness_logic.entities.album import Album
+from buisness_logic.entities.track import Track
 
 _spotify = Spotify()
 

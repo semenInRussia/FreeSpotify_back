@@ -1,4 +1,4 @@
-from buisness_logic.album import Album
+from buisness_logic.entities.album import Album
 
 album_name = "Paranoid"
 artist_name = "Black sabbath"
