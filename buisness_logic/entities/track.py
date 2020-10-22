@@ -1,10 +1,10 @@
 from typing import NamedTuple
 
-from buisness_logic.entities._base import BaseEntityMixIn
+from buisness_logic.entities._base import SaveSpotifyObjectMixIn
 from buisness_logic.entities.album import Album
 
 
-class BaseTrack(BaseEntityMixIn, NamedTuple):
+class BaseTrack(SaveSpotifyObjectMixIn, NamedTuple):
     track_name: str
     artist_name: str
     album_name: str
@@ -17,7 +17,7 @@ class BaseTrack(BaseEntityMixIn, NamedTuple):
         return f"{self.artist_name} - {self.disc_number}. {self.track_name}"
 
     def __repr__(self):
-        self.__str__()
+        return self.__str__()
 
 
 class Track(BaseTrack):

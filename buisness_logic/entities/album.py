@@ -1,9 +1,9 @@
 from typing import NamedTuple
 
-from buisness_logic.entities._base import BaseEntityMixIn
+from buisness_logic.entities._base import SaveSpotifyObjectMixIn
 
 
-class BaseAlbum(BaseEntityMixIn, NamedTuple):
+class BaseAlbum(SaveSpotifyObjectMixIn, NamedTuple):
     artist_name: str
     album_name: str
 

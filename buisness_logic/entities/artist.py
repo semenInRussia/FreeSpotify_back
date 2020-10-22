@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from buisness_logic.entities._base import BaseEntityMixIn
+from buisness_logic.entities._base import SaveSpotifyObjectMixIn
 from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names
 
 
@@ -14,7 +14,7 @@ class BaseArtist(NamedTuple):
         return self.artist_name
 
 
-class Artist(BaseEntityMixIn, BaseArtist):
+class Artist(SaveSpotifyObjectMixIn, BaseArtist):
     @property
     def name(self):
         return self._get_artist_info()["artist_name"]
