@@ -4,7 +4,7 @@ from buisness_logic.entities._base import SaveSpotifyObjectMixIn
 from buisness_logic.entities.album import Album
 
 
-class BaseTrack(SaveSpotifyObjectMixIn, NamedTuple):
+class BaseTrack(NamedTuple):
     track_name: str
     artist_name: str
     album_name: str
@@ -20,14 +20,14 @@ class BaseTrack(SaveSpotifyObjectMixIn, NamedTuple):
         return self.__str__()
 
 
-class Track(BaseTrack):
+class Track(SaveSpotifyObjectMixIn, BaseTrack):
     @property
     def name(self):
         from buisness_logic.spotifyPythonAPI import get_track_info
 
-        track_info = get_track_info(self.artist_name, self.track_name, self._spotify)
+        track = get_track_info(self.artist_name, self.track_name, self._spotify)
 
-        return track_info["name"]
+        return track.artist_name
 
     @property
     def artist(self):

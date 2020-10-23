@@ -47,17 +47,17 @@ def search_albums_by_spotify_id(spotify_album_ids: str, spotify: Spotify) -> Lis
     return _filter_albums_for_search_albums_by_spotify_id(json_response)
 
 
-def get_track_info(artist_name: str, track_name: str, spotify: Spotify) -> dict:
+def get_track_info(artist_name: str, track_name: str, spotify: Spotify) -> Track:
     search_text = f"{artist_name} - {track_name}"
 
     tracks_info_at_search = get_tracks_info(search_text, spotify=spotify)
 
     try:
-        first_track_info = tracks_info_at_search[0]
+        first_track = tracks_info_at_search[0]
     except IndexError:
         raise NotResultSearchException
 
-    return first_track_info
+    return first_track
 
 
 def get_artist_info(artist_name: str, spotify: Spotify) -> dict:
@@ -95,7 +95,7 @@ def get_artists_ids_and_names(approximate_artist_title: str, spotify: Spotify, l
     return _filter_artists_search_data(full_data_items)
 
 
-def get_tracks_info(search_text: str, spotify: Spotify, limit: int = 1, offset: int = 0) -> list:
+def get_tracks_info(search_text: str, spotify: Spotify, limit: int = 1, offset: int = 0) -> List[Track]:
     full_data = spotify.search(q=search_text, type_='track', limit=limit, offset=offset)
 
     full_data_items = full_data['tracks']['items']
@@ -115,7 +115,7 @@ def _filter_artists_search_data(artists_data: dict) -> list:
             ]
 
 
-def _filter_tracks(tracks: dict) -> list:
+def _filter_tracks(tracks: dict) -> List[Track]:
     return [
         Track(release_date=track['album']["release_date"],
               track_name=track['name'],

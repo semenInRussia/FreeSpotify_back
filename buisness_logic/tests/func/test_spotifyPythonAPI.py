@@ -53,7 +53,7 @@ def _assert_is_track_top(top: list) -> None:
     assert top[0].name
     assert top[0].album.name
     assert top[0].disc_number
-    assert top[0].album.release_date
+    assert top[0].release_date
 
 def test_albums_info():
     albums = search_albums_by_spotify_id(album_spotify_id, spotify=spotify)
