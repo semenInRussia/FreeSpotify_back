@@ -1,6 +1,6 @@
 from loguru import logger
 
-from buisness_logic.SpotifyWebAPI.features import Spotify
+from buisness_logic.spotify.spotifyPythonAPI import Spotify
 
 
 class SaveSpotifyObjectMixIn:
@@ -8,3 +8,4 @@ class SaveSpotifyObjectMixIn:
         logger.debug("BaseEntityMixIn called...")
         self._spotify = Spotify()
 
+        super(SaveSpotifyObjectMixIn, self).__init__(args, kwargs)

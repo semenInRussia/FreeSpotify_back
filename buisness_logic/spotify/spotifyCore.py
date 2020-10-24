@@ -3,8 +3,8 @@ import base64
 import requests
 from loguru import logger
 
-from buisness_logic.SpotifyWebAPI.core.exceptions import InvalidClientException, UndefinedErrorMessageException, \
-    NotValidTokenException, AccessTokenExpiredException, InvalidClientIdException
+from buisness_logic.spotify.core.exceptions import UndefinedErrorMessageException, InvalidClientIdException, \
+    AccessTokenExpiredException, NotValidTokenException, InvalidClientException
 
 version_api = 'v1'
 base_url = f"https://api.spotify.com/{version_api}/"
@@ -13,7 +13,7 @@ spotify_client_id = "1878579b79fd4d30b106622791eaa706"
 spotify_client_secret = "09ece004e71740da8f003ba333c7f887"
 
 
-class BaseSpotify:
+class BaseSpotifyCore:
     @staticmethod
     def _raise_spotify_web_api_errors(response_data: dict):
         # Here not errors
@@ -120,9 +120,11 @@ class AuthenticationSpotifyMixIn:
             return token
 
 
-class Spotify(BaseSpotify, AuthenticationSpotifyMixIn, SendResponseMixIn):
+class SpotifyCore(BaseSpotifyCore, AuthenticationSpotifyMixIn, SendResponseMixIn):
     """
-    Object for work with spotify.
+    Object for work for base operation with spotify.
+    For example, search( q: str, type_: str, marker: str = None, limit: int = 1, offset: int = 0) -> dict,
+    return response from https://api.spotify.com/v1/search.
     """
 
     def search(self, q: str, type_: str, marker: str = None, limit: int = 1, offset: int = 0) -> dict:

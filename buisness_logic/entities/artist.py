@@ -21,15 +21,11 @@ class Artist(SaveSpotifyObjectMixIn, BaseArtist):
         return self._get_artist_info()["artist_name"]
 
     def _get_artist_info(self) -> dict:
-        from buisness_logic.spotifyPythonAPI import get_artists_ids_and_names
-
-        artists_info = get_artists_ids_and_names(self.artist_name, self._spotify)
+        artists_info = self._spotify.get_artists_ids_and_names(self.artist_name)
 
         return artists_info[0]
 
     def get_top(self) -> List[Track]:
-        from buisness_logic.spotifyPythonAPI import get_top_music_info_by_approximate_artist_title
-
-        top = get_top_music_info_by_approximate_artist_title(self.name, self._spotify)
+        top = self._spotify.get_top_music_info_by_approximate_artist_title(self.name)
 
         return top

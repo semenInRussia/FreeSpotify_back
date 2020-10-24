@@ -14,7 +14,7 @@ class BaseTrack(NamedTuple):
     top_number: int = None
 
     def __str__(self):
-        return f"{self.artist_name} - {self.disc_number}. {self.track_name}"
+        return f"{self.artist_name} - {self.disc_number}.{self.track_name}"
 
     def __repr__(self):
         return self.__str__()
@@ -23,9 +23,7 @@ class BaseTrack(NamedTuple):
 class Track(SaveSpotifyObjectMixIn, BaseTrack):
     @property
     def name(self):
-        from buisness_logic.spotifyPythonAPI import get_track_info
-
-        track = get_track_info(self.artist_name, self.track_name, self._spotify)
+        track = self._spotify.get_track_info(self.artist_name, self.track_name)
 
         return track.artist_name
 
