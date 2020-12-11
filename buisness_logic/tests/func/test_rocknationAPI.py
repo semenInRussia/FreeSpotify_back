@@ -1,6 +1,6 @@
-from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.rocknationAPI import get_link_on_artist, get_link_on_album, \
     get_link_on_album_img
+from buisness_logic.spotify.spotifyPythonAPI import Spotify
 
 ac_dc_spotify_id = '711MCceyCBcFnzjGY4Q7Un'
 

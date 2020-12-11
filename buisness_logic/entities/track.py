@@ -21,11 +21,18 @@ class BaseTrack(NamedTuple):
 
 
 class Track(SaveSpotifyObjectMixIn, BaseTrack):
+    _name = None
+
+    def __init__(self, precise_data: bool= False, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self._precise_date = precise_data
+
     @property
     def name(self):
-        track = self._spotify.get_track_info(self.artist_name, self.track_name)
+        if self._precise_date:
+            self._update_info()
 
-        return track.artist_name
+        return self.artist_name
 
     @property
     def artist(self):
@@ -36,3 +43,8 @@ class Track(SaveSpotifyObjectMixIn, BaseTrack):
     @property
     def album(self):
         return Album(self.artist_name, self.album_name)
+
+    def _update_info(self):
+        track = self._spotify.get_track_info(self.artist_name, self.track_name)
+
+        self._name = track.artist_name

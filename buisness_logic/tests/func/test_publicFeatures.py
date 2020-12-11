@@ -1,6 +1,5 @@
-from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.publicFeatures import get_tracks_top, get_link_on_artist_img
-from buisness_logic.tests.func.test_rocknationAPI import spotify, artist_name
+from buisness_logic.spotify.spotifyPythonAPI import Spotify
 from buisness_logic.tests.func.test_spotifyPythonAPI import _assert_is_track_top
 
 artist_name = 'ac dc'

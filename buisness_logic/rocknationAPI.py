@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.core.exceptions import NotFoundAlbumException, NotFoundArtistException
+from buisness_logic.spotify.spotifyPythonAPI import Spotify
 
 base_url = 'https://rocknation.su'
 spotify = Spotify()
