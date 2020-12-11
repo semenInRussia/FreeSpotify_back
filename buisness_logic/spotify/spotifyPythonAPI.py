@@ -2,6 +2,7 @@ from typing import List
 
 from loguru import logger
 
+from buisness_logic.dto import TrackDto
 from buisness_logic.spotify.core.exceptions import NotResultSearchException
 from buisness_logic.spotify.spotifyCore import SpotifyCore
 
@@ -15,6 +16,7 @@ class _BaseSpotifyObject:
             self._spotify_core = SpotifyCore()
         else:
             self._spotify_core = spotify_core
+
 
 class SpotifyArtists(_BaseSpotifyObject):
     def get_artist_info(self, artist_name: str) -> dict:
@@ -56,8 +58,7 @@ class SpotifyArtists(_BaseSpotifyObject):
                   top_number=index + 1,
                   disc_number=track['track_number'],
                   artist_name=track['artists'][0]['name'])
-            for index, track in enumerate(tracks)
-        ]
+            for index, track in enumerate(tracks)]
 
     @staticmethod
     def _filter_artists_search_data(artists_data: dict) -> list:
@@ -105,32 +106,38 @@ class SpotifyAlbums(_BaseSpotifyObject):
 class SpotifyTracks(_BaseSpotifyObject):
     @staticmethod
     def _filter_tracks(tracks: dict) -> list:
-        from buisness_logic.entities.track import Track
 
         return [
-            Track(release_date=track['album']["release_date"],
-                  track_name=track['name'],
-                  album_name=track['album']['name'],
-                  top_number=index + 1,
-                  disc_number=track['track_number'],
-                  artist_name=track['artists'][0]['name'])
+            TrackDto(release_date=track['album']["release_date"],
+                     name=track['name'],
+                     album_name=track['album']['name'],
+                     top_number=index + 1,
+                     disc_number=track['track_number'],
+                     artist_name=track['artists'][0]['name'])
             for index, track in enumerate(tracks)
         ]
 
-    def get_tracks_info(self, search_text: str, limit: int = 1, offset: int = 0):
+    def search(self, artist_name: str, track_name: str, limit: int = 1, offset: int = 0):
+        search_text = f"{artist_name} - {track_name}"
+
+        track = self._search_by_text(search_text,
+                                     limit=limit,
+                                     offset=offset)
+
+        return track
+
+    def _search_by_text(self, search_text: str, limit: int = 1, offset: int = 0):
         full_data = self._spotify_core.search(q=search_text, type_='track', limit=limit, offset=offset)
 
         full_data_items = full_data['tracks']['items']
 
         return self._filter_tracks(full_data_items)
 
-    def get_track_info(self, artist_name: str, track_name: str):
-        search_text = f"{artist_name} - {track_name}"
-
-        tracks_info_at_search = self.get_tracks_info(search_text)
+    def get(self, artist_name: str, track_name: str):
+        tracks = self.search(artist_name, track_name)
 
         try:
-            first_track = tracks_info_at_search[0]
+            first_track = tracks[0]
         except IndexError:
             raise NotResultSearchException
 
@@ -141,4 +148,3 @@ class Spotify:
     tracks = SpotifyTracks()
     albums = SpotifyAlbums()
     artists = SpotifyArtists()
-

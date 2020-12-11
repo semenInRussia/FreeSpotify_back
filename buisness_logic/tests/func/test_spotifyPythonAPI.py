@@ -1,27 +1,17 @@
-import pytest
-
 from buisness_logic.spotify.spotifyPythonAPI import Spotify
 
 spotify = Spotify()
 
-
 artist_name = 'AC/DC'
-album_name = 'back in black'
-track_name = 'back in black'
+album_name = 'Back In Black'
+track_name = 'Back In Black'
 release_year = '1980'
 
 
-def testGetTop():
+def test_get_top():
     top = spotify.artists.get_top(artist_name)
 
     _assert_is_track_top(top)
-
-def test_get_tracks_info():
-    data = spotify.tracks.get("Ac dc - T.N.T")
-
-    first_artist = data[0]
-
-    assert first_artist.name == artist_name
 
 
 def _assert_is_track_top(top: list) -> None:
@@ -35,8 +25,23 @@ def _assert_is_track_top(top: list) -> None:
     assert top[0].disc_number
     assert top[0].release_date
 
+
+def test_get_track():
+    track = spotify.tracks.get(artist_name, track_name)
+
+    assert track.name == track_name
+
+
+def test_search_tracks():
+    tracks = spotify.tracks.search(artist_name, track_name)
+
+    first_track = tracks[0]
+
+    assert first_track.name == track_name
+
+
 def test_search_albums():
-    albums = spotify.album.search(artist_name, spotify=spotify)
+    albums = spotify.albums.search(artist_name, spotify=spotify)
     album = albums[-1]
 
     assert isinstance(albums, list), "search_albums() must return type - list"
