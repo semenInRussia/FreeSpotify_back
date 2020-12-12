@@ -101,17 +101,9 @@ class SpotifyAlbums(_BaseSpotifyObject):
             AlbumDto(
                 name=self._delete_sound_quality(album["name"]),
                 artist_name=album['artists'][0]['name'],
+                release_date=album['release_date']
             ) for album in albums_info
         ]
-
-    def search_albums_by_spotify_id(self, spotify_album_ids: str) -> List:
-        logger.info(f"album_ids = {spotify_album_ids}")
-
-        json_response = self._spotify_core.get_album_info(spotify_album_ids)
-
-        logger.info(f"json_response = {json_response}")
-
-        return self._filter_albums_by_spotify_id(json_response)
 
     def get(self, artist_name: str, album_name: str):
         albums = self.search(artist_name, album_name)

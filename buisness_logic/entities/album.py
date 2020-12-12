@@ -3,7 +3,7 @@ from buisness_logic.entities._base import SaveSpotifyObjectMixIn
 
 
 class Album(SaveSpotifyObjectMixIn):
-    def __init__(self, album_name: str, artist_name: str, *args, **kwargs):
+    def __init__(self, album_name: str, artist_name: str):
         self._save_spotify()
 
         self._instance = AlbumDto(
@@ -13,6 +13,12 @@ class Album(SaveSpotifyObjectMixIn):
 
         self._update_instance()
 
+    def _update_instance(self):
+        self._instance = self._spotify.albums.get(
+            self._instance.artist_name,
+            self._instance.name
+        )
+
     @property
     def artist(self):
         from buisness_logic.entities.artist import Artist
@@ -20,11 +26,9 @@ class Album(SaveSpotifyObjectMixIn):
         return Artist(self._instance.artist_name)
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._instance.name
 
-    def _update_instance(self):
-        self._instance = self._spotify.albums.get(
-            self._instance.artist_name,
-            self._instance.name
-        )
+    @property
+    def release_date(self) -> str:
+        return self._instance.release_date
