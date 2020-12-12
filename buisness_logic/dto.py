@@ -24,11 +24,18 @@ class AlbumDto(NamedTuple):
     release_date: str = None
 
     def __str__(self):
-        return f"{self.artist_name} - {self.album_name}"
+        return f"{self.artist_name} - {self.name}"
 
     def __repr__(self):
         return self.__str__()
 
 
 class ArtistDto(NamedTuple):
-    pass
+    name: str
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return self.artist_name
+

@@ -9,12 +9,12 @@ def test_base_init():
     # Not raise exception
     Artist(artist_name=artist_name)
 
-def test_get_album_name():
+def test_get_artist_name():
     artist = Artist(artist_name=artist_name)
 
     assert artist.name == artist_name
 
-def test_get_precise_album_name():
+def test_get_precise_artist_name():
     artist = Artist(artist_name=approximate_artist_name)
 
     assert artist.name == artist_name
