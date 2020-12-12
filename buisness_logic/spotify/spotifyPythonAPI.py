@@ -2,7 +2,8 @@ from typing import List
 
 from loguru import logger
 
-from buisness_logic.dto import TrackDto
+from buisness_logic.core.exceptions import NotFoundAlbumException
+from buisness_logic.dto import TrackDto, AlbumDto
 from buisness_logic.spotify.core.exceptions import NotResultSearchException
 from buisness_logic.spotify.spotifyCore import SpotifyCore
 
@@ -67,41 +68,66 @@ class SpotifyArtists(_BaseSpotifyObject):
 
 
 class SpotifyAlbums(_BaseSpotifyObject):
-    def _filter_albums_for_search_albums_by_spotify_id(self, json_response: dict):
-        return self._filter_albums(json_response["albums"])
-
-    def _filter_albums_for_search_albums(self, json_response: dict):
-        return self._filter_albums(json_response['albums']['items'])
-
-    @staticmethod
-    def _filter_albums(albums_info: dict) -> List:
-        from buisness_logic.entities.album import Album
-
-        return [
-            Album(
-                album_name=album["name"],
-                artist_name=album['artists'][0]['name'],
-                spotify_id=album['id']
-            ) for album in albums_info
-        ]
-
-    def search_albums(self, search_string: str, limit: int = 4, offset: int = 0) -> List:
+    def search(self, artist_name: str, album_name: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
         # "album" - type searching
         # link on doc for search -
         # https://developer.spotify.com/console/get-search-item/https://developer.spotify.com/documentation/web-api/reference/search/search/
-        search_data = self._spotify_core.search(q=search_string, type_="album", limit=limit, offset=offset)
 
-        logger.info(f"search_data = {search_data}")
+        search_string = f"{artist_name} - {album_name}"
 
-        return self._filter_albums_for_search_albums(search_data)
+        albums = self._search_by_text(search_string,
+                                      limit=limit,
+                                      offset=offset)
+
+        return albums
+
+    def _search_by_text(self, search_string: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
+        searching_data = self._spotify_core.search(q=search_string, type_="album", limit=limit, offset=offset)
+
+        logger.info(f"search_data = {searching_data}")
+
+        albums = self._filter_albums_for_searching(searching_data)
+
+        return albums
+
+    def _filter_albums_by_spotify_id(self, json_response: dict):
+        return self._filter_albums(json_response["albums"])
+
+    def _filter_albums_for_searching(self, json_response: dict):
+        return self._filter_albums(json_response['albums']['items'])
+
+    def _filter_albums(self, albums_info: dict) -> List:
+        return [
+            AlbumDto(
+                name=self._delete_sound_quality(album["name"]),
+                artist_name=album['artists'][0]['name'],
+            ) for album in albums_info
+        ]
 
     def search_albums_by_spotify_id(self, spotify_album_ids: str) -> List:
         logger.info(f"album_ids = {spotify_album_ids}")
+
         json_response = self._spotify_core.get_album_info(spotify_album_ids)
+
         logger.info(f"json_response = {json_response}")
 
-        return self._filter_albums_for_search_albums_by_spotify_id(json_response)
+        return self._filter_albums_by_spotify_id(json_response)
 
+    def get(self, artist_name: str, album_name: str):
+        albums = self.search(artist_name, album_name)
+
+        try:
+            return albums[0]
+        except IndexError:
+            raise NotFoundAlbumException
+
+    def _delete_sound_quality(self, album_name: str):
+        branch_index = album_name.find("(")
+        space_before_branch = branch_index - 1
+
+        new_string = album_name[:space_before_branch]
+
+        return new_string
 
 class SpotifyTracks(_BaseSpotifyObject):
     @staticmethod

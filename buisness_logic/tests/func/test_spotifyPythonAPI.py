@@ -14,14 +14,14 @@ def test_get_top():
     _assert_is_track_top(top)
 
 
-def _assert_is_track_top(top: list) -> None:
+def _assert_is_track_top(top: list):
     assert top is not None
     assert isinstance(top, list)
     assert len(top) == 10
 
-    assert top[0].artist.name
+    assert top[0].artist_name
     assert top[0].name
-    assert top[0].album.name
+    assert top[0].album_name
     assert top[0].disc_number
     assert top[0].release_date
 
@@ -41,9 +41,16 @@ def test_search_tracks():
 
 
 def test_search_albums():
-    albums = spotify.albums.search(artist_name, spotify=spotify)
+    albums = spotify.albums.search(artist_name, album_name)
     album = albums[-1]
 
-    assert isinstance(albums, list), "search_albums() must return type - list"
+    assert isinstance(albums, list)
     assert album.name
-    assert album.artist.name
+    assert album.artist_name
+
+
+def test_get_album():
+    album = spotify.albums.get(artist_name, album_name)
+
+    assert album.name == album_name
+    assert album.artist_name == artist_name

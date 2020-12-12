@@ -18,7 +18,17 @@ class TrackDto(NamedTuple):
 
 
 class AlbumDto(NamedTuple):
-    pass
+    artist_name: str
+    name: str
+
+    release_date: str = None
+
+    def __str__(self):
+        return f"{self.artist_name} - {self.album_name}"
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class ArtistDto(NamedTuple):
     pass

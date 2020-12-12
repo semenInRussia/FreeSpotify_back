@@ -7,7 +7,7 @@ class Track(SaveSpotifyObjectMixIn):
     _name = None
 
     def __init__(self, artist_name: str, album_name: str, track_name: str):
-        super().__init__()
+        self._save_spotify()
 
         self._instance = TrackDto(
             artist_name=artist_name,
