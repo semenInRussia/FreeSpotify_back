@@ -19,11 +19,8 @@ def _assert_is_track_top(top: list):
     assert isinstance(top, list)
     assert len(top) == 10
 
-    assert top[0].artist_name
     assert top[0].name
-    assert top[0].album_name
     assert top[0].disc_number
-    assert top[0].release_date
 
 
 def test_get_track():

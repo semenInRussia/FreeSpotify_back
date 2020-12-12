@@ -2,8 +2,8 @@ from typing import List
 
 from loguru import logger
 
-from buisness_logic.core.exceptions import NotFoundAlbumException
-from buisness_logic.dto import TrackDto, AlbumDto
+from buisness_logic.core.exceptions import NotFoundAlbumException, NotFoundArtistException
+from buisness_logic.dto import TrackDto, AlbumDto, ArtistDto
 from buisness_logic.spotify.core.exceptions import NotResultSearchException
 from buisness_logic.spotify.spotifyCore import SpotifyCore
 
@@ -20,51 +20,55 @@ class _BaseSpotifyObject:
 
 
 class SpotifyArtists(_BaseSpotifyObject):
-    def get_artist_info(self, artist_name: str) -> dict:
-        artists_info = self.get_artists_ids_and_names(artist_name)
+    def get(self, artist_name: str) -> ArtistDto:
+        try:
+            return self.search(artist_name)[0]
+        except IndexError:
+            raise NotFoundArtistException
 
-        return artists_info[0]
+    def search(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[ArtistDto]:
+        data = self._spotify_core.search(artist_name,
+                                         type_="artist",
+                                         limit=limit,
+                                         offset=offset)
 
-    def get_top_music_info_by_approximate_artist_title(self, approximate_artist_title: str, ) -> list:
-        artists = self.get_artists_ids_and_names(approximate_artist_title)
-        first_artist = artists[0]
+        return self._filter_artists_search_data(data)
 
-        first_artist_id = first_artist['artist_id']
+    def get_top(self, artist_name: str, ) -> list:
+        artist = self.get(artist_name)
 
-        top = self.get_top_music_info(first_artist_id)
+        top = self._get_top_by_spotify_id(artist.spotify_id)
 
         return top
 
-    def get_artists_ids_and_names(self, approximate_artist_title: str, limit: int = 1,
-                                  offset: int = 0) -> list:
-        full_data = self._spotify_core.search(q=approximate_artist_title, type_='artist', limit=limit, offset=offset)
-
-        full_data_items = full_data['artists']['items']
-
-        return self._filter_artists_search_data(full_data_items)
-
-    def get_top_music_info(self, spotify_artist_id: str, country: str = 'US'):
+    def _get_top_by_spotify_id(self, spotify_artist_id: str, country: str = 'US'):
         full_data = self._spotify_core.get_top_tracks(spotify_artist_id, country=country)
         tracks = full_data['tracks']
 
         return self._filter_tracks(tracks)
 
+    @staticmethod
     def _filter_tracks(tracks: dict) -> list:
-        from buisness_logic.entities.track import Track
-
         return [
-            Track(release_date=track['album']["release_date"],
-                  track_name=track['name'],
-                  album_name=track['album']['name'],
-                  top_number=index + 1,
-                  disc_number=track['track_number'],
-                  artist_name=track['artists'][0]['name'])
-            for index, track in enumerate(tracks)]
+            TrackDto(release_date=track['album']["release_date"],
+                     name=track['name'],
+                     album_name=track['album']['name'],
+                     top_number=index + 1,
+                     disc_number=track['track_number'],
+                     artist_name=track['artists'][0]['name']
+                     ) for index, track in enumerate(tracks)
+        ]
 
     @staticmethod
-    def _filter_artists_search_data(artists_data: dict) -> list:
-        return [{'artist_name': artist_data['name'], 'artist_id': artist_data['id']} for artist_data in artists_data
-                ]
+    def _filter_artists_search_data(json_response: dict) -> list:
+        artists_data = json_response['artists']['items']
+
+        return [
+            ArtistDto(
+                name=artist_data['name'],
+                spotify_id=artist_data['id']
+            ) for artist_data in artists_data
+        ]
 
 
 class SpotifyAlbums(_BaseSpotifyObject):
@@ -120,6 +124,7 @@ class SpotifyAlbums(_BaseSpotifyObject):
         new_string = album_name[:space_before_branch]
 
         return new_string
+
 
 class SpotifyTracks(_BaseSpotifyObject):
     @staticmethod

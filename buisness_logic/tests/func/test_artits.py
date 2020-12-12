@@ -22,6 +22,6 @@ def test_get_precise_artist_name():
 def test_get_top():
     artist = Artist(artist_name=artist_name)
 
-    top = artist.get_top()
+    top = artist.top
 
     _assert_is_track_top(top)

@@ -28,3 +28,11 @@ class Track(SaveSpotifyObjectMixIn):
     @property
     def album(self):
         return Album(self._instance.artist_name, self._instance.album_name)
+
+    @classmethod
+    def create_from_dto(cls, track_dto: TrackDto):
+        return cls(
+            track_dto.artist_name,
+            track_dto.album_name,
+            track_dto.name
+        )

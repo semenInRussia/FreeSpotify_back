@@ -32,10 +32,11 @@ class AlbumDto(NamedTuple):
 
 class ArtistDto(NamedTuple):
     name: str
+    spotify_id: str = None
 
     def __repr__(self):
         return self.__str__()
 
     def __str__(self):
-        return self.artist_name
+        return self.name
 
