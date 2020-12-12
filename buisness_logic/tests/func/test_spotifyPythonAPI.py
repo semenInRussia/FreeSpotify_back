@@ -1,3 +1,4 @@
+from buisness_logic.dto import TrackDto
 from buisness_logic.spotify.spotifyPythonAPI import Spotify
 
 spotify = Spotify()
@@ -11,16 +12,15 @@ release_year = '1980'
 def test_get_top():
     top = spotify.artists.get_top(artist_name)
 
-    _assert_is_track_top(top)
+    _assert_is_track_dto_top(top)
 
 
-def _assert_is_track_top(top: list):
+def _assert_is_track_dto_top(top: list):
     assert top is not None
     assert isinstance(top, list)
     assert len(top) == 10
 
-    assert top[0].name
-    assert top[0].disc_number
+    assert isinstance(top[0], TrackDto)
 
 
 def test_get_track():
