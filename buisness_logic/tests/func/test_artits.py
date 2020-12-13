@@ -1,5 +1,6 @@
 import pytest
 
+from buisness_logic.dto import ArtistDto
 from buisness_logic.entities.artist import Artist
 from buisness_logic.entities.track import Track
 
@@ -25,3 +26,10 @@ def test_get_top(artist):
     top = artist.top
 
     _assert_is_track_top(top)
+
+def test_create_from_dto():
+    dto = ArtistDto(artist_name)
+
+    artist = Artist.create_from_dto(dto)
+
+    assert isinstance(artist, Artist)

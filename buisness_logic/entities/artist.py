@@ -15,6 +15,9 @@ class Artist(SaveSpotifyObjectMixIn):
         )
         self._update_instance()
 
+    def _update_instance(self):
+        self._instance = self._spotify.artists.get(self.name)
+
     @property
     def name(self) -> str:
         return self._instance.name
@@ -27,9 +30,6 @@ class Artist(SaveSpotifyObjectMixIn):
 
         return track_top
 
-    def _update_instance(self):
-        self._instance = self._spotify.artists.get(self.name)
-
     def _get_top_from_dto_top(self, track_dto_top):
         from buisness_logic.entities.track import Track
 
@@ -41,3 +41,9 @@ class Artist(SaveSpotifyObjectMixIn):
             top.append(track)
 
         return top
+
+    @classmethod
+    def create_from_dto(cls, dto):
+        return cls(
+            dto.name
+        )
