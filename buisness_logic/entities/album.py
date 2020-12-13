@@ -32,3 +32,10 @@ class Album(SaveSpotifyObjectMixIn):
     @property
     def release_date(self) -> str:
         return self._instance.release_date
+
+    @classmethod
+    def create_from_dto(cls, dto: AlbumDto):
+        return cls(
+            dto.artist_name,
+            dto.name
+        )

@@ -3,9 +3,10 @@ from typing import List
 from loguru import logger
 
 from buisness_logic.core.exceptions import NotFoundAlbumException, NotFoundArtistException
-from buisness_logic.dto import TrackDto, AlbumDto, ArtistDto
+from buisness_logic.dto import AlbumDto, ArtistDto
 from buisness_logic.spotify.core.exceptions import NotResultSearchException
 from buisness_logic.spotify.spotifyCore import SpotifyCore
+from ._filtres import filter_artists_search_data, filter_tracks, filter_albums_for_searching, filter_tracks_of_album
 
 
 class _BaseSpotifyObject:
@@ -32,7 +33,7 @@ class SpotifyArtists(_BaseSpotifyObject):
                                          limit=limit,
                                          offset=offset)
 
-        return self._filter_artists_search_data(data)
+        return filter_artists_search_data(data)
 
     def get_top(self, artist_name: str, ) -> list:
         artist = self.get(artist_name)
@@ -45,30 +46,7 @@ class SpotifyArtists(_BaseSpotifyObject):
         full_data = self._spotify_core.get_top_tracks(spotify_artist_id, country=country)
         tracks = full_data['tracks']
 
-        return self._filter_tracks(tracks)
-
-    @staticmethod
-    def _filter_tracks(tracks: dict) -> list:
-        return [
-            TrackDto(release_date=track['album']["release_date"],
-                     name=track['name'],
-                     album_name=track['album']['name'],
-                     top_number=index + 1,
-                     disc_number=track['track_number'],
-                     artist_name=track['artists'][0]['name']
-                     ) for index, track in enumerate(tracks)
-        ]
-
-    @staticmethod
-    def _filter_artists_search_data(json_response: dict) -> list:
-        artists_data = json_response['artists']['items']
-
-        return [
-            ArtistDto(
-                name=artist_data['name'],
-                spotify_id=artist_data['id']
-            ) for artist_data in artists_data
-        ]
+        return filter_tracks(tracks)
 
 
 class SpotifyAlbums(_BaseSpotifyObject):
@@ -90,26 +68,11 @@ class SpotifyAlbums(_BaseSpotifyObject):
 
         logger.info(f"search_data = {searching_data}")
 
-        albums = self._filter_albums_for_searching(searching_data)
+        albums = filter_albums_for_searching(searching_data)
 
         return albums
 
-    def _filter_albums_by_spotify_id(self, json_response: dict):
-        return self._filter_albums(json_response["albums"])
-
-    def _filter_albums_for_searching(self, json_response: dict):
-        return self._filter_albums(json_response['albums']['items'])
-
-    def _filter_albums(self, albums_info: dict) -> List:
-        return [
-            AlbumDto(
-                name=self._delete_sound_quality(album["name"]),
-                artist_name=album['artists'][0]['name'],
-                release_date=album['release_date']
-            ) for album in albums_info
-        ]
-
-    def get(self, artist_name: str, album_name: str):
+    def get(self, artist_name: str, album_name: str) -> AlbumDto:
         albums = self.search(artist_name, album_name)
 
         try:
@@ -117,23 +80,14 @@ class SpotifyAlbums(_BaseSpotifyObject):
         except IndexError:
             raise NotFoundAlbumException
 
-    def _delete_sound_quality(self, album_name: str):
-        if self._is_sound_quality_in_album_name(album_name):
-            branch_index = album_name.find("(")
-            space_before_branch = branch_index - 1
+    def get_tracks(self, artist_name: str, album_name: str):
+        album_id = self.get(artist_name, album_name).spotify_id
 
-            new_string = album_name[:space_before_branch]
+        not_filtered_tracks = self._spotify_core.get_tracks_of_album(album_id)
 
-            return new_string
-        else:
-            return album_name
+        tracks = filter_tracks_of_album(not_filtered_tracks, album_name)
 
-    def _is_sound_quality_in_album_name(self, album_name: str):
-        return not self._is_sound_quality_not_in_album_name(album_name)
-
-    def _is_sound_quality_not_in_album_name(self, album_name: str):
-        status_when_char_not_found: int = -1
-        return album_name.find("(") == status_when_char_not_found
+        return tracks
 
 
 class SpotifyTracks(_BaseSpotifyObject):
@@ -152,7 +106,7 @@ class SpotifyTracks(_BaseSpotifyObject):
 
         full_data_items = full_data['tracks']['items']
 
-        return self._filter_tracks(full_data_items)
+        return filter_tracks(full_data_items)
 
     def get(self, artist_name: str, track_name: str):
         tracks = self.search(artist_name, track_name)
@@ -163,36 +117,6 @@ class SpotifyTracks(_BaseSpotifyObject):
             raise NotResultSearchException
 
         return first_track
-
-    def _filter_tracks(self, tracks: dict) -> list:
-
-        return [
-            TrackDto(release_date=track['album']["release_date"],
-                     name=self._delete_sound_quality(track['name']),
-                     album_name=self._delete_sound_quality(track['album']['name']),
-                     top_number=index + 1,
-                     disc_number=track['track_number'],
-                     artist_name=track['artists'][0]['name'])
-            for index, track in enumerate(tracks)
-        ]
-
-    def _delete_sound_quality(self, album_name: str):
-        if self._is_sound_quality_in_album_name(album_name):
-            branch_index = album_name.find("(")
-            space_before_branch = branch_index - 1
-
-            new_string = album_name[:space_before_branch]
-
-            return new_string
-        else:
-            return album_name
-
-    def _is_sound_quality_in_album_name(self, album_name: str):
-        return not self._is_sound_quality_not_in_album_name(album_name)
-
-    def _is_sound_quality_not_in_album_name(self, album_name: str):
-        status_when_char_not_found: int = -1
-        return album_name.find("(") == status_when_char_not_found
 
 
 class Spotify:

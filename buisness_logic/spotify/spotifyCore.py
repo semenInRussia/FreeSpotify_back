@@ -13,7 +13,7 @@ spotify_client_id = "1878579b79fd4d30b106622791eaa706"
 spotify_client_secret = "09ece004e71740da8f003ba333c7f887"
 
 
-class BaseSpotifyCore:
+class ExceptionsMangerSpotifyCore:
     @staticmethod
     def _raise_spotify_web_api_errors(response_data: dict):
         # Here not errors
@@ -30,47 +30,6 @@ class BaseSpotifyCore:
             raise InvalidClientIdException
         else:
             raise UndefinedErrorMessageException
-
-
-class SendResponseMixIn:
-    @staticmethod
-    def _get_response(url: str, params: dict = None, headers: dict = None, data: dict = None) -> requests.Response:
-        return requests.get(url, params=params, headers=headers, data=data)
-
-    def _get_response_JSON(self, url: str, params: dict = None, headers: dict = None, data: dict = None) -> dict:
-        return self._get_response(url, params=params, headers=headers, data=data).json()
-
-    def _get_response_JSON_with_link_spotify(self, second_part_of_links: str, params: dict = None,
-                                             data: dict = None) -> dict:
-        url = base_url + second_part_of_links
-
-        headers = {
-            "Authorization": "Bearer " + self.token
-        }
-
-        response_data = self._get_response_JSON(url, params=params, headers=headers, data=data)
-        self._raise_spotify_web_api_errors(response_data)
-
-        return response_data
-
-    @staticmethod
-    def _post_response(url: str, params: dict = None, headers: dict = None, data: dict = None) -> requests.Response:
-        return requests.post(url, params=params, headers=headers, data=data)
-
-    def _post_response_JSON(self, url: str, params: dict = None, headers: dict = None, data: dict = None) -> dict:
-        return self._post_response(url, params=params, headers=headers, data=data).json()
-
-    def _post_response_JSON_with_link_spotify(self, second_part_of_links: str, params: dict = None,
-                                              data: dict = None) -> dict:
-        self._set_new_token()
-
-        url = base_url + second_part_of_links
-
-        headers = {
-            "Authorization": "Bearer " + self.token
-        }
-
-        return self._post_response_JSON(url, params=params, headers=headers, data=data)
 
 
 class AuthenticationSpotifyMixIn:
@@ -120,7 +79,47 @@ class AuthenticationSpotifyMixIn:
             return token
 
 
-class SpotifyCore(BaseSpotifyCore, AuthenticationSpotifyMixIn, SendResponseMixIn):
+class SendResponse(AuthenticationSpotifyMixIn, ExceptionsMangerSpotifyCore):
+    @staticmethod
+    def _get_response(url: str, params: dict = None, headers: dict = None, data: dict = None) -> requests.Response:
+        return requests.get(url, params=params, headers=headers, data=data)
+
+    def _get_response_JSON(self, url: str, params: dict = None, headers: dict = None, data: dict = None) -> dict:
+        return self._get_response(url, params=params, headers=headers, data=data).json()
+
+    def _get_response_JSON_with_link_spotify(self, second_part_of_links: str, data: dict = None, **params) -> dict:
+        url = base_url + second_part_of_links
+
+        headers = {
+            "Authorization": "Bearer " + self.token
+        }
+
+        response_data = self._get_response_JSON(url, params=params, headers=headers, data=data)
+        self._raise_spotify_web_api_errors(response_data)
+
+        return response_data
+
+    @staticmethod
+    def _post_response(url: str, params: dict = None, headers: dict = None, data: dict = None) -> requests.Response:
+        return requests.post(url, params=params, headers=headers, data=data)
+
+    def _post_response_JSON(self, url: str, params: dict = None, headers: dict = None, data: dict = None) -> dict:
+        return self._post_response(url, params=params, headers=headers, data=data).json()
+
+    def _post_response_JSON_with_link_spotify(self, second_part_of_links: str, params: dict = None,
+                                              data: dict = None) -> dict:
+        self._set_new_token()
+
+        url = base_url + second_part_of_links
+
+        headers = {
+            "Authorization": "Bearer " + self.token
+        }
+
+        return self._post_response_JSON(url, params=params, headers=headers, data=data)
+
+
+class SpotifyCore(SendResponse):
     """
     Object for work for base operation with spotify.
     For example, search( q: str, type_: str, marker: str = None, limit: int = 1, offset: int = 0) -> dict,
@@ -139,18 +138,18 @@ class SpotifyCore(BaseSpotifyCore, AuthenticationSpotifyMixIn, SendResponseMixIn
         if marker:
             params['marker'] = marker
         return self._get_response_JSON_with_link_spotify(second_part_of_links='search',
-                                                         params=params)
+                                                         **params)
 
     def get_top_tracks(self, artist_id: str, country: str = 'US') -> dict:
         return self._get_response_JSON_with_link_spotify(second_part_of_links=f'artists/{artist_id}/top-tracks',
-                                                         params={
-                                                             "country": country
-                                                         })
+                                                         country=country)
 
     def get_album_info(self, album_ids: str, market: str = 'ES'):
         logger.info(f"album_ids = {album_ids}")
 
-        return self._get_response_JSON_with_link_spotify(second_part_of_links=f'albums', params={
-            'market': market,
-            'ids': album_ids
-        })
+        return self._get_response_JSON_with_link_spotify(second_part_of_links=f'albums',
+                                                         market=market,
+                                                         ids=album_ids)
+
+    def get_tracks_of_album(self, album_id: str):
+        return self._get_response_JSON_with_link_spotify(f'albums/{album_id}/tracks')

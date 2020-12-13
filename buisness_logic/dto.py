@@ -23,6 +23,8 @@ class AlbumDto(NamedTuple):
 
     release_date: str = None
 
+    spotify_id: str = None
+
     def __str__(self):
         return f"{self.artist_name} - {self.name}"
 

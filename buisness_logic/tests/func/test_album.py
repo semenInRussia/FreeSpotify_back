@@ -1,5 +1,6 @@
 import pytest
 
+from buisness_logic.dto import AlbumDto
 from buisness_logic.entities.album import Album
 
 album_name = "Paranoid"
@@ -18,3 +19,10 @@ def test_precise_name(album):
 
 def test_release_year(album):
     assert album.release_date == release_date
+
+def test_create_from_dto():
+    dto = AlbumDto(artist_name, album_name)
+
+    album = Album.create_from_dto(dto)
+
+    assert isinstance(album, Album)
