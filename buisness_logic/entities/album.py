@@ -26,6 +26,26 @@ class Album(SaveSpotifyObjectMixIn):
         return Artist(self._instance.artist_name)
 
     @property
+    def tracks(self) -> list:
+        from buisness_logic.entities.track import Track
+
+        tracks = []
+
+        dto_tracks = self._get_dto_tracks()
+
+        for dto_track in dto_tracks:
+            track = Track.create_from_dto(dto_track)
+            tracks.append(track)
+
+        return tracks
+
+    def _get_dto_tracks(self):
+        return self._spotify.albums.get_tracks(
+            self._instance.artist_name,
+            self.name
+        )
+
+    @property
     def name(self) -> str:
         return self._instance.name
 
