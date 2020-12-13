@@ -5,6 +5,8 @@ spotify = Spotify()
 
 artist_name = 'AC/DC'
 album_name = 'Back In Black'
+
+
 track_name = 'Back In Black'
 release_year = '1980'
 
@@ -51,3 +53,11 @@ def test_get_album():
 
     assert album.name == album_name
     assert album.artist_name == artist_name
+
+def test_delete_sound_quality_when_get_album():
+    new_artist_name = 'Black Sabbath'
+    new_album_name = 'Paranoid'
+
+    album = spotify.albums.get(new_artist_name, new_album_name)
+
+    assert album.name == new_album_name

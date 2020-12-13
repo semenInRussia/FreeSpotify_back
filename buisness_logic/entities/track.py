@@ -4,16 +4,18 @@ from buisness_logic.entities.album import Album
 
 
 class Track(SaveSpotifyObjectMixIn):
-    _name = None
-
     def __init__(self, artist_name: str, album_name: str, track_name: str):
         self._save_spotify()
 
+        self._init_instance(album_name, artist_name, track_name)
+
+    def _init_instance(self, album_name, artist_name, track_name):
         self._instance = TrackDto(
             artist_name=artist_name,
             album_name=album_name,
             name=track_name
         )
+        self._update_instance()
 
     @property
     def name(self):
@@ -35,4 +37,10 @@ class Track(SaveSpotifyObjectMixIn):
             track_dto.artist_name,
             track_dto.album_name,
             track_dto.name
+        )
+
+    def _update_instance(self):
+        self._instance = self._spotify.tracks.get(
+            artist_name=self._instance.artist_name,
+            track_name=self.name
         )

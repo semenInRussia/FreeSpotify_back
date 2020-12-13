@@ -118,27 +118,25 @@ class SpotifyAlbums(_BaseSpotifyObject):
             raise NotFoundAlbumException
 
     def _delete_sound_quality(self, album_name: str):
-        branch_index = album_name.find("(")
-        space_before_branch = branch_index - 1
+        if self._is_sound_quality_in_album_name(album_name):
+            branch_index = album_name.find("(")
+            space_before_branch = branch_index - 1
 
-        new_string = album_name[:space_before_branch]
+            new_string = album_name[:space_before_branch]
 
-        return new_string
+            return new_string
+        else:
+            return album_name
+
+    def _is_sound_quality_in_album_name(self, album_name: str):
+        return not self._is_sound_quality_not_in_album_name(album_name)
+
+    def _is_sound_quality_not_in_album_name(self, album_name: str):
+        status_when_char_not_found: int = -1
+        return album_name.find("(") == status_when_char_not_found
 
 
 class SpotifyTracks(_BaseSpotifyObject):
-    @staticmethod
-    def _filter_tracks(tracks: dict) -> list:
-
-        return [
-            TrackDto(release_date=track['album']["release_date"],
-                     name=track['name'],
-                     album_name=track['album']['name'],
-                     top_number=index + 1,
-                     disc_number=track['track_number'],
-                     artist_name=track['artists'][0]['name'])
-            for index, track in enumerate(tracks)
-        ]
 
     def search(self, artist_name: str, track_name: str, limit: int = 1, offset: int = 0):
         search_text = f"{artist_name} - {track_name}"
@@ -165,6 +163,36 @@ class SpotifyTracks(_BaseSpotifyObject):
             raise NotResultSearchException
 
         return first_track
+
+    def _filter_tracks(self, tracks: dict) -> list:
+
+        return [
+            TrackDto(release_date=track['album']["release_date"],
+                     name=self._delete_sound_quality(track['name']),
+                     album_name=self._delete_sound_quality(track['album']['name']),
+                     top_number=index + 1,
+                     disc_number=track['track_number'],
+                     artist_name=track['artists'][0]['name'])
+            for index, track in enumerate(tracks)
+        ]
+
+    def _delete_sound_quality(self, album_name: str):
+        if self._is_sound_quality_in_album_name(album_name):
+            branch_index = album_name.find("(")
+            space_before_branch = branch_index - 1
+
+            new_string = album_name[:space_before_branch]
+
+            return new_string
+        else:
+            return album_name
+
+    def _is_sound_quality_in_album_name(self, album_name: str):
+        return not self._is_sound_quality_not_in_album_name(album_name)
+
+    def _is_sound_quality_not_in_album_name(self, album_name: str):
+        status_when_char_not_found: int = -1
+        return album_name.find("(") == status_when_char_not_found
 
 
 class Spotify:
