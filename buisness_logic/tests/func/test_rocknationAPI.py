@@ -1,33 +1,26 @@
-from buisness_logic.rocknationAPI import get_link_on_artist, get_link_on_album, \
-    get_link_on_album_img
-from buisness_logic.spotify.spotifyPythonAPI import Spotify
+from buisness_logic.rocknation.rocknationAPI import Rocknation
 
-ac_dc_spotify_id = '711MCceyCBcFnzjGY4Q7Un'
+rocknation = Rocknation()
 
 artist_name = 'AC/DC'
-album_name = 'back in black'
-track_name = 'back in black'
-release_year = '1980'
-
-spotify = Spotify()
-
-
-def test_get_link_on_artist():
-    link = get_link_on_artist(artist_name)
-
-    assert link is not None
-    assert link == "https://rocknation.su/mp3/band-1"
-
-
-def test_get_link_on_album():
-    link = get_link_on_album(artist_name, album_name, raise_exception=False)
-
-    assert link is not None
-    assert link == "https://rocknation.su/mp3/album-9"
-
+album_name = 'Back In Black'
 
 def test_get_link_on_album_img():
-    link = get_link_on_album_img(artist_name, album_name)
+    album_img = rocknation.albums.get_link_on_img(artist_name, album_name)
 
-    assert link == "https://rocknation.su/upload/images/albums/9.jpg"
+    assert album_img == 'https://rocknation.su/upload/images/albums/9.jpg'
 
+def test_get_link_on_album():
+    link_on_album = rocknation.albums.get_link(artist_name, album_name)
+
+    assert link_on_album == 'https://rocknation.su/mp3/album-9'
+
+def test_get_link_on_artist_img():
+    artist_img = rocknation.artists.get_link_on_img(artist_name)
+
+    assert artist_img == 'https://rocknation.su/upload/images/bands/1.jpg'
+
+def test_get_link_on_artist():
+    link = rocknation.artists.get_link(artist_name)
+
+    assert link == 'https://rocknation.su/mp3/band-1'

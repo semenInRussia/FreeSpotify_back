@@ -1,7 +1,7 @@
 import buisness_logic
 from buisness_logic.SpotifyWebAPI.features import Spotify
 from buisness_logic.publicFeatures import get_tracks_top
-from buisness_logic.rocknationAPI import get_link_on_artist
+from buisness_logic.rocknation.rocknationAPI import get_link_on_artist
 from buisness_logic.spotifyPythonAPI import get_artist_info
 
 spotify = Spotify()
