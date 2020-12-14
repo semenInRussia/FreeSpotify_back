@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from rocknation.core.exceptions import NotValidMethodNameExceptions
+from .core.exceptions import NotValidMethodNameExceptions
 
 
 class RocknationCore:

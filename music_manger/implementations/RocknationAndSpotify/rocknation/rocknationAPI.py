@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from core.exceptions import NotFoundArtistException
-from rocknation.rocknationCore import RocknationCore
+from music_manger.implementations.RocknationAndSpotify.rocknation.rocknationCore import RocknationCore
 
 base_url = 'https://rocknation.su'
 

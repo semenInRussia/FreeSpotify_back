@@ -1,6 +1,6 @@
 from loguru import logger
 
-from spotify import Spotify
+from music_manger.implementations.RocknationAndSpotify.spotify import Spotify
 
 
 class SaveSpotifyObjectMixIn:

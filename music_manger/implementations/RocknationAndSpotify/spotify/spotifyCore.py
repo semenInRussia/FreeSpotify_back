@@ -3,7 +3,7 @@ import base64
 import requests
 from loguru import logger
 
-from spotify.core.exceptions import UndefinedErrorMessageException, InvalidClientIdException, \
+from .core.exceptions import UndefinedErrorMessageException, InvalidClientIdException, \
     AccessTokenExpiredException, NotValidTokenException, InvalidClientException
 
 version_api = 'v1'

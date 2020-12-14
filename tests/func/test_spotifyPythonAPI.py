@@ -1,7 +1,8 @@
 from dto import TrackDto
-from spotify import Spotify
+from music_manger.implementations.RocknationAndSpotify.rocknation_and_spotify import RocknationAndSpotify
+from music_manger.implementations.RocknationAndSpotify.spotify import Spotify
 
-spotify = Spotify()
+spotify = RocknationAndSpotify()
 
 artist_name = 'AC/DC'
 album_name = 'Back In Black'

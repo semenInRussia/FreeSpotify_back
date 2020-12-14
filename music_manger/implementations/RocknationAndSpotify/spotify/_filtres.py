@@ -1,5 +1,5 @@
 from dto import TrackDto, ArtistDto, AlbumDto
-from spotify.utils import delete_sound_quality
+from .utils import delete_sound_quality
 
 
 def filter_tracks_of_album(tracks: dict, album_name: str):

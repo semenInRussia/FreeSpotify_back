@@ -1,6 +1,7 @@
-from rocknation.rocknationAPI import Rocknation
+from music_manger.implementations.RocknationAndSpotify.rocknation.rocknationAPI import Rocknation
+from music_manger.implementations.RocknationAndSpotify.rocknation_and_spotify import RocknationAndSpotify
 
-rocknation = Rocknation()
+rocknation = RocknationAndSpotify()
 
 artist_name = 'AC/DC'
 album_name = 'Back In Black'

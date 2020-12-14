@@ -4,8 +4,9 @@ from loguru import logger
 
 from core.exceptions import NotFoundAlbumException, NotFoundArtistException
 from dto import AlbumDto, ArtistDto
-from spotify.core.exceptions import NotResultSearchException
-from spotify.spotifyCore import SpotifyCore
+
+from .core.exceptions import NotResultSearchException
+from .spotifyCore import SpotifyCore
 from ._filtres import filter_artists_search_data, filter_tracks, filter_albums_for_searching, filter_tracks_of_album
 
 
