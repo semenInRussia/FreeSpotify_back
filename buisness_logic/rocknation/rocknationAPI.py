@@ -78,47 +78,29 @@ class _BaseRocknationObject:
 class RocknationAlbums(_BaseRocknationObject):
     def get_link_on_img(self, artist_name: str = None, album_name: str = None, link_on_album: str = None):
         """
-        Get link on album image,
-        You have to give  (artist & album  name) or (link_on_album)
+        Get link on album image.
+        You must take  (artist & album  name) or (link_on_album).
         """
         self._assert_is_valid_args_for_link_on_img(album_name, artist_name, link_on_album)
 
         if not link_on_album:
             link_on_album = self.get_link(artist_name, album_name)
 
-        return self._get_link_on_album_img_by_album_link(link_on_album)
-
-    def _assert_is_valid_args_for_link_on_img(self, album_name, artist_name, link_on_album):
-        assert self._is_valid_args_for_link_on_img(album_name, artist_name, link_on_album), \
-            "You have to give  (artist & album  name) or (link_on_album)!"
+        return self._get_link_on_img_by_album_link(link_on_album)
 
     @staticmethod
-    def _is_valid_args_for_link_on_img(album_name, artist_name, link_on_album):
-        return (artist_name and album_name) or link_on_album
+    def _assert_is_valid_args_for_link_on_img(album_name, artist_name, link_on_album):
+        assert (artist_name and album_name) or link_on_album
 
-    def _get_link_on_album_img_by_album_link(self, link_on_album: str):
-        return self._get_link_on_img_by_album_link(link_on_album, 'albums')
-
-    def _get_link_on_img_by_album_link(self, link: str, img_type: str):
-        """
-        :param link:
-        :param img_type: albums or bands
-        :return:
-        """
-        assert self._is_valid_img_type(img_type)
-
+    def _get_link_on_img_by_album_link(self, link: str):
         soup = self._rocknation_core.get_bs(link)
 
-        img = soup.select_one(f"img[src^='/upload/images/{img_type}/']")
+        img = soup.select_one(f"img[src^='/upload/images/albums/']")
         src = img.get("src")
 
         url = base_url + src
 
         return url
-
-    @staticmethod
-    def _is_valid_img_type(img_type: str) -> bool:
-        return img_type in ('albums', 'artists')
 
     def get_link(self, artist_name: str, album_name: str, raise_exception: bool = True) -> Optional[str]:
         try:
@@ -132,16 +114,16 @@ class RocknationAlbums(_BaseRocknationObject):
 
     def _get_link_by_link_on_artist(self, link_on_artist: str, album_name: str, raise_exception: bool):
 
-        html = self._rocknation_core.get_html(link_on_artist)
-        link_on_album = self._find_link_on_album_in_html(html, album_name)
+        soup = self._rocknation_core.get_bs(link_on_artist)
+        link_on_album = self._find_link_on_album_by_soup(soup, album_name)
 
         if self._should_raise_not_found_artist_exception(link_on_album, raise_exception):
             raise NotFoundArtistException
 
         return link_on_album
 
-    def _find_link_on_album_in_html(self, html: str, album_name: str) -> str:
-        albums_links = self._find_links_on_album(html)
+    def _find_link_on_album_by_soup(self, soup: BeautifulSoup, album_name: str) -> str:
+        albums_links = self._find_links_on_album(soup)
 
         album_link = self._find_album_link(albums_links, album_name)
 
@@ -175,9 +157,8 @@ class RocknationAlbums(_BaseRocknationObject):
         return string[:index_space_before_bracket]
 
     @staticmethod
-    def _find_links_on_album(html: str) -> list:
-        bs = BeautifulSoup(html, "html.parser")
-        albums_elements = bs.select('a[href^="/mp3/album"]')
+    def _find_links_on_album(soup: BeautifulSoup) -> list:
+        albums_elements = soup.select('a[href^="/mp3/album"]')
 
         return albums_elements
 
