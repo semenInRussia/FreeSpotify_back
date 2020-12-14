@@ -4,6 +4,8 @@ from music_manger.implementations.RocknationAndSpotify.spotify import Spotify
 
 
 class SaveSpotifyObjectMixIn:
-    def _save_spotify(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         logger.debug("BaseEntityMixIn called...")
         self._spotify = Spotify()

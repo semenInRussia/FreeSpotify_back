@@ -4,14 +4,8 @@ from argparse import ArgumentParser, Namespace
 from loguru import logger
 
 from server.main import app
-
-description = "This is app for to download music from spotify."
-epilog = 'Good luck!'
-
-default_port = 8000
-host = '127.0.0.1'
-
-help_text_for_port = f"This is port, he will open. (default: {default_port})"
+from settings.flask import default_port, host
+from settings.general import description, epilog, help_text_for_port
 
 parser = ArgumentParser(
     description=description,

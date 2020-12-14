@@ -12,6 +12,8 @@ from ._filtres import filter_artists_search_data, filter_tracks, filter_albums_f
 
 class _BaseSpotifyObject:
     def __init__(self, spotify_core: SpotifyCore = None):
+        super().__init__()
+
         self._init_spotify_core(spotify_core)
 
     def _init_spotify_core(self, spotify_core):

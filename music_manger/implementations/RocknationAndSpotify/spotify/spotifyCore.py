@@ -5,12 +5,10 @@ from loguru import logger
 
 from .core.exceptions import UndefinedErrorMessageException, InvalidClientIdException, \
     AccessTokenExpiredException, NotValidTokenException, InvalidClientException
+from ..settings.spotify import spotify_client_id, spotify_client_secret
 
 version_api = 'v1'
 base_url = f"https://api.spotify.com/{version_api}/"
-
-spotify_client_id = "1878579b79fd4d30b106622791eaa706"
-spotify_client_secret = "09ece004e71740da8f003ba333c7f887"
 
 
 class ExceptionsMangerSpotifyCore:

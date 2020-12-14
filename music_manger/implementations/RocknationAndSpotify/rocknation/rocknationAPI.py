@@ -72,6 +72,8 @@ def _find_artist_elements(html: str):
 
 class _BaseRocknationObject:
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self._rocknation_core = RocknationCore()
 
 

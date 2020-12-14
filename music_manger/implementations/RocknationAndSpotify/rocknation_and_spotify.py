@@ -16,4 +16,4 @@ class RocknationAndSpotifyTracks(SpotifyTracks):
 class RocknationAndSpotify(AbstractMusicManager):
     artists = RocknationAndSpotifyArtists()
     albums = RocknationAndSpotifyAlbums()
-    tracks = RocknationAndSpotifyTracks
+    tracks = RocknationAndSpotifyTracks()

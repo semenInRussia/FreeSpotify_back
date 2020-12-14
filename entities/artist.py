@@ -4,8 +4,8 @@ from entities._mixins import SaveSpotifyObjectMixIn
 
 class Artist(SaveSpotifyObjectMixIn):
 
-    def __init__(self, artist_name: str):
-        self._save_spotify()
+    def __init__(self, artist_name: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self._init_instance(artist_name)
 

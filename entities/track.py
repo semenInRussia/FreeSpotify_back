@@ -4,8 +4,8 @@ from entities import Album
 
 
 class Track(SaveSpotifyObjectMixIn):
-    def __init__(self, artist_name: str, album_name: str, track_name: str):
-        self._save_spotify()
+    def __init__(self, artist_name: str, album_name: str, track_name: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self._init_instance(album_name, artist_name, track_name)
 

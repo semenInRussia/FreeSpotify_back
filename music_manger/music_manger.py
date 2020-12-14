@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class _AbstractObjects:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def get(self, *args, **kwargs):
         return self.search(*args, **kwargs)
 
