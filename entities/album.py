@@ -1,3 +1,5 @@
+from loguru import logger
+
 from dto import AlbumDto
 from entities._mixins import _Entity
 
@@ -60,6 +62,15 @@ class Album(_Entity):
         return self._music_mgr.albums.get_link(
             self._instance.artist_name,
             self._instance.name
+        )
+
+    @property
+    def link_on_img(self):
+        logger.debug(f'name = {self.name}; artist = {self._instance.artist_name}')
+
+        return self._music_mgr.albums.get_link_on_img(
+            self._instance.artist_name,
+            self.name
         )
 
     @classmethod

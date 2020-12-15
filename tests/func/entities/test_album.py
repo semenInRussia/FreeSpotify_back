@@ -44,3 +44,7 @@ def test_get_tracks(album):
 
 def test_get_link(album):
     assert album.link == "https://rocknation.su/mp3/album-75"
+
+
+def test_get_link_on_img(album):
+    assert album.link_on_img == "https://rocknation.su/upload/images/albums/75.jpg"

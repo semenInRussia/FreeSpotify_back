@@ -39,3 +39,7 @@ def test_create_from_dto():
 
 def test_get_link(artist):
     assert artist.link == "https://rocknation.su/mp3/band-31"
+
+
+def test_get_link_on_img(artist):
+    assert artist.link_on_img == "https://rocknation.su/upload/images/bands/31.jpg"

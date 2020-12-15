@@ -48,6 +48,12 @@ class Artist(_Entity):
             self._instance.name
         )
 
+    @property
+    def link_on_img(self):
+        return self._music_mgr.artists.get_link_on_img(
+            self.name
+        )
+
     @classmethod
     def create_from_dto(cls, dto):
         return cls(
