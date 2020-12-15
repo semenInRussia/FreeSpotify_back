@@ -13,7 +13,7 @@ class RocknationCore:
     def get_bs(self, url: str):
         html = self.get_html(url)
 
-        return BeautifulSoup(html)
+        return BeautifulSoup(html, "html.parser")
 
     def get_html(self, url: str, method_name: str = 'get'):
 

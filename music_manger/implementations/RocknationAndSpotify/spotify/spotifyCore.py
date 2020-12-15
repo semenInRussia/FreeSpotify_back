@@ -64,8 +64,6 @@ class AuthenticationSpotifyMixIn:
 
         auth_json_data = self._post_response_JSON(url, headers=headers, data=data)
 
-        logger.debug(auth_json_data)
-
         try:
             token = auth_json_data['access_token']
         except KeyError:

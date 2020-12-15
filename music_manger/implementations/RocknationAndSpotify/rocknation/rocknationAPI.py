@@ -3,15 +3,15 @@ from typing import Optional
 import requests
 from bs4 import BeautifulSoup
 
-from core.exceptions import NotFoundArtistException
+from core.exceptions import NotFoundArtistException, NotFoundAlbumException
 from music_manger.implementations.RocknationAndSpotify.rocknation.rocknationCore import RocknationCore
 
 base_url = 'https://rocknation.su'
 
 
-def get_link_on_artist(name):
+def get_link_on_artist(name, safe: bool = True):
     html = _get_html_search_artist(name)
-    return _get_artist_link_by_html(html)
+    return _get_artist_link_by_html(html, safe)
 
 
 def _get_html_search_artist(name: str) -> str:
@@ -20,16 +20,18 @@ def _get_html_search_artist(name: str) -> str:
     return request.text
 
 
-def _get_artist_link_by_html(html: str) -> str:
+def _get_artist_link_by_html(html: str, safe: bool = True) -> str:
     try:
         element = _find_artist_elements(html)[0]
     except IndexError:
-        raise NotFoundArtistException
-    link_for_rocknation = element.get('href')
+        if not safe:
+            raise NotFoundArtistException
+    else:
+        link_for_rocknation = element.get('href')
 
-    link = base_url + link_for_rocknation
+        link = base_url + link_for_rocknation
 
-    return link
+        return link
 
 
 def _post_on_search(name: str) -> requests.request:
@@ -78,7 +80,8 @@ class _BaseRocknationObject:
 
 
 class RocknationAlbums(_BaseRocknationObject):
-    def get_link_on_img(self, artist_name: str = None, album_name: str = None, link_on_album: str = None):
+    def get_link_on_img(self, artist_name: str = None, album_name: str = None, link_on_album: str = None,
+                        safe: bool = False):
         """
         Get link on album image.
         You must take  (artist & album  name) or (link_on_album).
@@ -88,55 +91,60 @@ class RocknationAlbums(_BaseRocknationObject):
         if not link_on_album:
             link_on_album = self.get_link(artist_name, album_name)
 
-        return self._get_link_on_img_by_album_link(link_on_album)
+        return self._get_link_on_img_by_album_link(link_on_album, safe=safe)
 
     @staticmethod
     def _assert_is_valid_args_for_link_on_img(album_name, artist_name, link_on_album):
         assert (artist_name and album_name) or link_on_album
 
-    def _get_link_on_img_by_album_link(self, link: str):
+    def _get_link_on_img_by_album_link(self, link: str, safe: bool):
         soup = self._rocknation_core.get_bs(link)
 
         img = soup.select_one(f"img[src^='/upload/images/albums/']")
         src = img.get("src")
 
-        url = base_url + src
+        self._if_should_raise_not_found_artist_exception(src, safe)
 
+        url = base_url + src
         return url
 
-    def get_link(self, artist_name: str, album_name: str, raise_exception: bool = True) -> Optional[str]:
-        try:
-            album_name = self._delete_value_in_brackets(album_name)
-        except AttributeError:
-            return None
+    def get_link(self, artist_name: str, album_name: str, safe: bool = True) -> Optional[str]:
+        album_name = self._delete_value_in_brackets(album_name)
 
-        link_on_artist = get_link_on_artist(artist_name)
+        link_on_artist = get_link_on_artist(artist_name, safe=safe)
 
-        return self._get_link_by_link_on_artist(link_on_artist, album_name, raise_exception)
+        return self._get_link_by_link_on_artist(link_on_artist, album_name, safe)
 
-    def _get_link_by_link_on_artist(self, link_on_artist: str, album_name: str, raise_exception: bool):
+    def _get_link_by_link_on_artist(self, link_on_artist: str, album_name: str, safe: bool):
 
         soup = self._rocknation_core.get_bs(link_on_artist)
-        link_on_album = self._find_link_on_album_by_soup(soup, album_name)
+        link_on_album = self._safe_find_link_on_album_by_soup(soup, album_name)
 
-        if self._should_raise_not_found_artist_exception(link_on_album, raise_exception):
-            raise NotFoundArtistException
+        self._if_should_raise_not_found_artist_exception(link_on_album, safe)
 
         return link_on_album
+
+    def _safe_find_link_on_album_by_soup(self, soup: BeautifulSoup, album_name: str) -> Optional[str]:
+        try:
+            return self._find_link_on_album_by_soup(soup, album_name)
+        except NotFoundAlbumException:
+            return None
 
     def _find_link_on_album_by_soup(self, soup: BeautifulSoup, album_name: str) -> str:
         albums_links = self._find_links_on_album(soup)
 
         album_link = self._find_album_link(albums_links, album_name)
+        try:
+            url_for_rocknation = album_link.get('href')
+        except AttributeError:
+            raise NotFoundAlbumException
 
-        url_for_rocknation = album_link.get('href')
         url = base_url + url_for_rocknation
-
         return url
 
     @staticmethod
-    def _should_raise_not_found_artist_exception(link_on_album: str, raise_exception: bool):
-        return (not link_on_album) and raise_exception
+    def _should_raise_not_found_artist_exception(link_on_album: str, safe: bool):
+        return (not link_on_album) and (not safe)
 
     @staticmethod
     def _find_album_link(albums_links: list, album_name: str):
@@ -164,11 +172,15 @@ class RocknationAlbums(_BaseRocknationObject):
 
         return albums_elements
 
+    def _if_should_raise_not_found_artist_exception(self, link_on_album: str, safe: bool):
+        if self._should_raise_not_found_artist_exception(link_on_album, safe):
+            raise NotFoundArtistException
+
 
 class RocknationArtists(_BaseRocknationObject):
     @staticmethod
-    def get_link(name: str):
-        return get_link_on_artist(name)
+    def get_link(name: str, safe: bool = True):
+        return get_link_on_artist(name, safe=safe)
 
     def get_link_on_img(self, artist_name: str):
         link_on_artist = get_link_on_artist(artist_name)

@@ -69,8 +69,6 @@ class SpotifyAlbums(_BaseSpotifyObject):
     def _search_by_text(self, search_string: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
         searching_data = self._spotify_core.search(q=search_string, type_="album", limit=limit, offset=offset)
 
-        logger.info(f"search_data = {searching_data}")
-
         albums = filter_albums_for_searching(searching_data)
 
         return albums
