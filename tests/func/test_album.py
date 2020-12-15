@@ -40,3 +40,7 @@ def test_get_tracks(album):
 
     assert isinstance(tracks[0], Track)
     assert len(tracks) == num_tracks_in_album
+
+
+def test_get_link(album):
+    assert album.link == "https://rocknation.su/mp3/album-75"

@@ -7,6 +7,7 @@ from entities.track import Track
 artist_name = "Metallica"
 approximate_artist_name = "metallica"
 
+
 @pytest.fixture
 def artist():
     return Artist(artist_name=approximate_artist_name)
@@ -27,9 +28,14 @@ def test_get_top(artist):
 
     _assert_is_track_top(top)
 
+
 def test_create_from_dto():
     dto = ArtistDto(artist_name)
 
     artist = Artist.create_from_dto(dto)
 
     assert isinstance(artist, Artist)
+
+
+def test_get_link(artist):
+    assert artist.link == "https://rocknation.su/mp3/band-31"

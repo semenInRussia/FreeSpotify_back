@@ -6,11 +6,13 @@ class Album(_Entity):
     def __init__(self, album_name: str, artist_name: str):
         super().__init__()
 
+        self._init_instance(album_name, artist_name)
+
+    def _init_instance(self, album_name, artist_name):
         self._instance = AlbumDto(
             artist_name=artist_name,
             name=album_name
         )
-
         self._update_instance()
 
     def _update_instance(self):
@@ -52,6 +54,13 @@ class Album(_Entity):
     @property
     def release_date(self) -> str:
         return self._instance.release_date
+
+    @property
+    def link(self):
+        return self._music_mgr.albums.get_link(
+            self._instance.artist_name,
+            self._instance.name
+        )
 
     @classmethod
     def create_from_dto(cls, dto: AlbumDto):

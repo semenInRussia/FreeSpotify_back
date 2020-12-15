@@ -42,6 +42,12 @@ class Artist(_Entity):
 
         return top
 
+    @property
+    def link(self):
+        return self._music_mgr.artists.get_link(
+            self._instance.name
+        )
+
     @classmethod
     def create_from_dto(cls, dto):
         return cls(
