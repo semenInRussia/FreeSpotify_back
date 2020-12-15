@@ -1,4 +1,4 @@
-from music_manger.implementations.RocknationAndSpotify.rocknation_and_spotify import RocknationAndSpotify
+from music_manger.implementations import RocknationAndSpotify, MockMusicManager
 from settings.flask import default_port
 
 description = "This is app for to download music from spotify."
