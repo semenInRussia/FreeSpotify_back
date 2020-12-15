@@ -1,8 +1,8 @@
 from dto import AlbumDto
-from entities._mixins import SaveSpotifyObjectMixIn
+from entities._mixins import _Entity
 
 
-class Album(SaveSpotifyObjectMixIn):
+class Album(_Entity):
     def __init__(self, album_name: str, artist_name: str):
         super().__init__()
 
@@ -14,7 +14,7 @@ class Album(SaveSpotifyObjectMixIn):
         self._update_instance()
 
     def _update_instance(self):
-        self._instance = self._spotify.albums.get(
+        self._instance = self._music_mgr.albums.get(
             self._instance.artist_name,
             self._instance.name
         )
@@ -40,7 +40,7 @@ class Album(SaveSpotifyObjectMixIn):
         return tracks
 
     def _get_dto_tracks(self):
-        return self._spotify.albums.get_tracks(
+        return self._music_mgr.albums.get_tracks(
             self._instance.artist_name,
             self.name
         )

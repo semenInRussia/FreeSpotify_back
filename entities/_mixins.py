@@ -1,11 +1,10 @@
-from loguru import logger
-
-from music_manger.implementations.RocknationAndSpotify.spotify import Spotify
+from settings.general import music_manager_impl
 
 
-class SaveSpotifyObjectMixIn:
+class _Entity:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        logger.debug("BaseEntityMixIn called...")
-        self._spotify = Spotify()
+    @property
+    def _music_mgr(self):
+        return music_manager_impl()

@@ -1,36 +1,72 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from typing import List
+
+from dto import TrackDto, AlbumDto, ArtistDto
 
 
 class _AbstractObjects:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def get(self, *args, **kwargs) -> AlbumDto:
+        return self.search(*args, **kwargs)[0]
 
-    def get(self, *args, **kwargs):
-        return self.search(*args, **kwargs)
-
-    def search(self, *args, **kwargs):
+    def search(self, *args, **kwargs) -> list:
         pass
 
-    def get_link(self, *args, **kwargs):
+    def get_tracks(self, *args, **kwargs) -> list:
         pass
 
-    def get_img(self, *args, **kwargs):
+    def get_link(self, *args, **kwargs) -> str:
         pass
 
-
-class AbstractArtists(_AbstractObjects):
-    def get_top(self, *args, **kwargs):
+    def get_link_on_img(self, *args, **kwargs) -> str:
         pass
 
 
-class AbstractAlbums(_AbstractObjects):
-    @abstractmethod
-    def get_tracks(self, *args, **kwargs):
+class AbstractArtists(_AbstractObjects, ABC):
+    def get(self, artist_name: str) -> ArtistDto:
+        return self.search(artist_name)[0]
+
+    def search(self, artist_name: str) -> List[ArtistDto]:
+        pass
+
+    def get_top(self, artist_name: str) -> List[TrackDto]:
+        pass
+
+    def get_link(self, artist_name: str) -> str:
+        pass
+
+    def get_link_on_img(self, artist_name: str) -> str:
         pass
 
 
-class AbstractTracks(_AbstractObjects):
-    pass
+class AbstractAlbums(_AbstractObjects, ABC):
+    def get(self, artist_name: str, album_name: str) -> AlbumDto:
+        return self.search(artist_name, album_name)[0]
+
+    def search(self, artist_name: str, album_name: str) -> List[AlbumDto]:
+        pass
+
+    def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
+        pass
+
+    def get_link(self, artist_name, album_name: str) -> str:
+        pass
+
+    def get_link_on_img(self, artist_name: str, album_name: str) -> str:
+        pass
+
+
+class AbstractTracks(_AbstractObjects, ABC):
+    def get(self, artist_name: str, track_name: str) -> TrackDto:
+        return self.search(artist_name, track_name)[0]
+
+    def search(self, artist_name: str, track_name: str) -> List[TrackDto]:
+        pass
+
+    def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:
+        pass
+
+    def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
+        pass
 
 
 class AbstractMusicManager:

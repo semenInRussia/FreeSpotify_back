@@ -1,9 +1,9 @@
 from dto import TrackDto
-from entities._mixins import SaveSpotifyObjectMixIn
+from entities._mixins import _Entity
 from entities import Album
 
 
-class Track(SaveSpotifyObjectMixIn):
+class Track(_Entity):
     def __init__(self, artist_name: str, album_name: str, track_name: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -15,6 +15,7 @@ class Track(SaveSpotifyObjectMixIn):
             album_name=album_name,
             name=track_name
         )
+
         self._update_instance()
 
     @property
@@ -40,7 +41,7 @@ class Track(SaveSpotifyObjectMixIn):
         )
 
     def _update_instance(self):
-        self._instance = self._spotify.tracks.get(
+        self._instance = self._music_mgr.tracks.get(
             artist_name=self._instance.artist_name,
-            track_name=self.name
+            track_name=self._instance.name
         )
