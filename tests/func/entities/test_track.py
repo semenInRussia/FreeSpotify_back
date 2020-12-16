@@ -30,7 +30,7 @@ def test_track_album(track):
 
 
 def test_track_precise_name(track):
-    assert track.name == track_name
+    assert isinstance(track.name, str)
 
 
 def test_track_create_from_dto():
@@ -43,3 +43,15 @@ def test_track_create_from_dto():
     track = Track.create_from_dto(track_dto)
 
     assert isinstance(track, Track)
+
+
+def test_track_get_all_data(track):
+    json_data = track.data.get_serialized_data()
+
+    assert 'name' in json_data
+
+    assert 'artist' in json_data
+    assert isinstance(json_data.get('artist'), dict)
+
+    assert 'album' in json_data
+    assert isinstance(json_data.get('album'), dict)
