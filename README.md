@@ -1,12 +1,14 @@
+![Python package](https://github.com/semenInRussia/FreeSpotify_back/workflows/Python%20package/badge.svg)
+
 # FreeSpotify_back
 You are can download top rock tracks from db rocknations.su with info of Spotify with FreeSpotify!!!!!!!!!!!!!!  
-![Python package](https://github.com/semenInRussia/FreeSpotify_back/workflows/Python%20package/badge.svg)
+
 **(This is backend)**
 
-USE
+USE (as server)
 =====
 ```
-python manage.py runserver 8000
+python run.py
 ```
 INSTALL
 =====
@@ -16,6 +18,18 @@ pip install -r requirements.txt
 ```
 # DEPENDECIES
 We are use:
-- Django
-- bs4 and requests
-- Cors
+* Flask
+* bs4 & requests
+
+# DEV
+
+## USE  entity ALBUM
+```
+>> album = Album("AC DC", "BACK IN BLACK")
+>> album
+'<Back In Black>'
+>> album.name
+'Back In Black'
+>> album.tracks[0]
+'1. AC/DC - Hells Bells'
+```
