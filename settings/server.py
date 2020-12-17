@@ -1,0 +1,6 @@
+PROTOCOL = 'http'
+
+PORT = 8000
+HOST = '127.0.0.1'
+
+ROOT_URL = f'{PROTOCOL}://{HOST}:{PORT}'

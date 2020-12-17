@@ -4,7 +4,7 @@ from argparse import ArgumentParser, Namespace
 from loguru import logger
 
 from server.main import app
-from settings.flask import default_port, host
+from settings.server import PORT, HOST
 from settings.general import description, epilog, help_text_for_port
 
 parser = ArgumentParser(
@@ -14,7 +14,7 @@ parser = ArgumentParser(
 
 parser.add_argument('-p', '--port', '-P', type=int,
                     help=help_text_for_port,
-                    default=default_port)
+                    default=PORT)
 
 
 def run(args: list):
@@ -25,7 +25,7 @@ def run(args: list):
 
     port = namespace.port
 
-    app.run(host=host,
+    app.run(host=HOST,
             port=port)
 
 

@@ -4,3 +4,7 @@ class NotFoundAlbumException(Exception):
 
 class NotFoundArtistException(Exception):
     message = "Artist don't find."
+
+
+class NotValidMethodNameExceptions(Exception):
+    txt = 'You are write not valid method name'

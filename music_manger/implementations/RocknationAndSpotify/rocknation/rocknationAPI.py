@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from core.exceptions import NotFoundArtistException, NotFoundAlbumException
-from music_manger.implementations.RocknationAndSpotify.rocknation.rocknationCore import RocknationCore
+from my_request import Requester
 
 base_url = 'https://rocknation.su'
 
@@ -76,7 +76,7 @@ class _BaseRocknationObject:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._rocknation_core = RocknationCore()
+        self._rocknation_core = Requester()
 
 
 class RocknationAlbums(_BaseRocknationObject):

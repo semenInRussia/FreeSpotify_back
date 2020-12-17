@@ -5,7 +5,8 @@ from loguru import logger
 
 from .core.exceptions import UndefinedErrorMessageException, InvalidClientIdException, \
     AccessTokenExpiredException, NotValidTokenException, InvalidClientException
-from ..settings.spotify import spotify_client_id, spotify_client_secret
+
+from settings.spotify import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 
 version_api = 'v1'
 base_url = f"https://api.spotify.com/{version_api}/"
@@ -56,7 +57,7 @@ class AuthenticationSpotifyMixIn:
         data = {}
 
         # Encode as Base64
-        message = f"{spotify_client_id}:{spotify_client_secret}"
+        message = f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}"
         base64Message = self._encode_as_base64(message)
 
         headers['Authorization'] = f"Basic {base64Message}"
