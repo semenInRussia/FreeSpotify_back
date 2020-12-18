@@ -15,7 +15,6 @@ class DataManager:
 
         if self._is_all_fields(fields):
             fields = self._serializer.all_fields
-
         for field in fields:
             data[field] = self._get_value(field)
 

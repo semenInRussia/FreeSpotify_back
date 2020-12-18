@@ -92,8 +92,6 @@ class Album(_Entity):
 
     @property
     def link_on_img(self):
-        logger.debug(f'name = {self.name}; artist = {self._instance.artist_name}')
-
         return self._music_mgr.albums.get_link_on_img(
             self._instance.artist_name,
             self.name

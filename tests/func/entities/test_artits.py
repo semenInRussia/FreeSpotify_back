@@ -45,12 +45,9 @@ def test_get_link_on_img(artist):
     assert artist.link_on_img == "https://rocknation.su/upload/images/bands/31.jpg"
 
 
-def test_get_all_data(artist):
-    data = artist.data.get_serialized_data()
+def test_get_all_data_beside_top(artist):
+    data = artist.data.get_serialized_data('name', 'link', 'link_on_img')
 
     assert 'name' in data
     assert 'link' in data
     assert 'link_on_img' in data
-    assert 'top' in data
-
-    assert isinstance(data.get('top'), list)
