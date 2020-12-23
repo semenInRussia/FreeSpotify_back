@@ -32,7 +32,7 @@ def print_and_ask_artist_top():
     print_artist_top(artist_name)
 
 
-def run():
+def print_artist_tops():
     while True:
         print_and_ask_artist_top()
 
@@ -41,8 +41,12 @@ def by():
     print('Good Luck!')
 
 
-if __name__ == '__main__':
+def run():
     try:
-        run()
-    except KeyboardInterrupt as e:
+        print_artist_tops()
+    except KeyboardInterrupt:
         by()
+
+
+if __name__ == '__main__':
+    run()

@@ -1,4 +1,4 @@
-from run import run
+from runner.run import run
 
 
 def _test_runserver_arg_p():
