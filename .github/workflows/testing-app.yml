@@ -1,8 +1,8 @@
 name: testing_python
 
 on:
-  pull_request:
-    branches: [ main ]
+  push:
+    branches: [ ]
 
 jobs:
   basic_tests:
