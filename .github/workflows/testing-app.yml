@@ -20,8 +20,9 @@ jobs:
           pip install -r requirements.txt
       - name: Export Envirement Vars
         run: |
-          export SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
-          export SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}
+
       - name: Testing
         run: |
-          python . pytest
+         export SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
+         export SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}
+         python . pytest
