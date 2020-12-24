@@ -20,5 +20,5 @@ jobs:
           pip install -r requirements.txt
       - name: Test with pytest
         run: |
-          echo $SPOTIFY_CLIENT_SECRET
+          echo ${{ secrets.SPOTIFY_CLIENT_ID }}
           python . pytest
