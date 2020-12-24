@@ -38,7 +38,9 @@ def print_artist_tops():
 
 
 def by():
+    print()
     print('Good Luck!')
+    print()
 
 
 def run():

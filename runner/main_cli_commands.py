@@ -1,38 +1,17 @@
 from argparse import ArgumentParser, Namespace
 
 import console_gui
+from commands.commands import CLICommand
+from commands.commands_collections import CLICommandsCollection
 from server.main import app
 from settings.general import help_text_for_port
 from settings.server import PORT, HOST
 
+import pytest
 
-class Command:
-    aliases: list = []
-
-    @staticmethod
-    def run(self):
-        # There are run code logic ...
-        pass
-
-    def is_selected(self, *args, **kwargs) -> bool:
-        if self.get_selected_alias(*args, **kwargs) in self.aliases:
-            return True
-
-        return False
-
-    def get_selected_alias(self, *args, **kwargs) -> str:
-        pass
-
-
-class CLICommand(Command):
-    def get_selected_alias(self, args: list) -> str:
-        try:
-            return args[0]
-        except IndexError:
-            raise AttributeError('You input not valid data. Not inputted command name.')
 
 class ServerCommand(CLICommand):
-    aliases = ['server', 'rest-api']
+    aliases = ['server', 'run-server', 'runserver', 'rest-api']
 
     @property
     def parser(self):
@@ -54,10 +33,21 @@ class ServerCommand(CLICommand):
 
 
 class ConsoleCommand(CLICommand):
-    aliases = ['console', 'cli-api']
+    aliases = ['console', 'cli-api', 'shell']
 
     def run(self, args: list):
         console_gui.run()
 
+class RunTestsCommand(CLICommand):
+    aliases = ['tests', 'run-tests', 'runtests', 'pytest']
+
+    def run(self, args: list):
+        pytest.main(['..'])
 
 
+class MainCLICommandsCollection(CLICommandsCollection):
+    all_commands = [
+        ServerCommand(),
+        ConsoleCommand(),
+        RunTestsCommand()
+    ]

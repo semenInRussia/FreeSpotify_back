@@ -1,8 +1,6 @@
 from core import exceptions
-from runner.cli_commands import ServerCommand, ConsoleCommand
 
-
-class AbstractCommandsCollection:
+class CommandsCollection:
     all_commands = []
 
     def run(self, *args, **kwargs):
@@ -16,11 +14,7 @@ class AbstractCommandsCollection:
         raise exceptions.NotFoundCommandException
 
 
-class CLICommandsCollection(AbstractCommandsCollection):
-    all_commands = [
-        ServerCommand(),
-        ConsoleCommand()
-    ]
+class CLICommandsCollection(CommandsCollection):
 
     def run(self, args: list):
         command = self.find_command(args)
