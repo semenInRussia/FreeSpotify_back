@@ -5,14 +5,33 @@ You are can download top rock tracks from db rocknations.su with info of Spotify
 
 **(This is backend)**
 
-USE (as server)
+USE
 =====
+AS SERVER:
+```Linux / Mac OS
+python . runserver
 ```
-python run.py
+```WINDOWS
+python3 . runserver
+```
+
+
+RUN SHELL
+```Linux / Mac OS
+python3 . sehll
+```
+
+```WINDOWS
+python . shell
 ```
 INSTALL
 =====
+```Linux / Mac OS
+git clone https://github.com/semenInRussia/FreeSpotify_back.git
+pip install -r requirements.txt
 ```
+
+```WINDOWS
 git clone https://github.com/semenInRussia/FreeSpotify_back.git
 pip install -r requirements.txt
 ```
