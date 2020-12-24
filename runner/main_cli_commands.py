@@ -1,3 +1,4 @@
+import sys
 from argparse import ArgumentParser, Namespace
 
 import console_gui
@@ -42,7 +43,7 @@ class RunTestsCommand(CLICommand):
     aliases = ['tests', 'run-tests', 'runtests', 'pytest']
 
     def run(self, args: list):
-        pytest.main(['..'])
+        sys.exit(pytest.main(['..']))
 
 
 class MainCLICommandsCollection(CLICommandsCollection):
