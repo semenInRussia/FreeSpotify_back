@@ -20,5 +20,6 @@ jobs:
           pip install -r requirements.txt
       - name: Test with pytest
         run: |
-          echo ${{ secrets.SPOTIFY_CLIENT_ID }}
+          export SPOTIFY_CLIENT_ID=${{ secrets.SPOTIFY_CLIENT_ID }}
+          export SPOTIFY_CLIENT_SECRET=${{ secrets.SPOTIFY_CLIENT_SECRET }}
           python . pytest
