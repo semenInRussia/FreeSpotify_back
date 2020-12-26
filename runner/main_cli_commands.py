@@ -1,14 +1,14 @@
 import sys
 from argparse import ArgumentParser, Namespace
 
+import pytest
+
 import console_gui
 from commands.commands import CLICommand
 from commands.commands_collections import CLICommandsCollection
 from server.main import app
 from settings.general import help_text_for_port
 from settings.server import PORT, HOST
-
-import pytest
 
 
 class ServerCommand(CLICommand):
@@ -39,16 +39,27 @@ class ConsoleCommand(CLICommand):
     def run(self, args: list):
         console_gui.run()
 
+
 class RunTestsCommand(CLICommand):
-    aliases = ['tests', 'run-tests', 'runtests', 'pytest']
+    aliases = ['tests', 'run-tests', 'runtests', 'pytest', 'test']
 
     def run(self, args: list):
         sys.exit(pytest.main(['..']))
+
+
+class RunBotCommand(CLICommand):
+    aliases = ['bot', 'run-bot']
+
+    def run(self, *args, **kwargs):
+        from bot.main import run
+
+        run()
 
 
 class MainCLICommandsCollection(CLICommandsCollection):
     all_commands = [
         ServerCommand(),
         ConsoleCommand(),
-        RunTestsCommand()
+        RunTestsCommand(),
+        RunBotCommand(),
     ]

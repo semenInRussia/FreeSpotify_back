@@ -1,5 +1,3 @@
-from loguru import logger
-
 from dto import AlbumDto
 from entities._mixins import _Entity
 from entities.data_manager import DataManager, Serializer
