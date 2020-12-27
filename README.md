@@ -3,9 +3,8 @@ You are can download top rock tracks from db rocknations.su with info of Spotify
 
 **(This is backend)**
 
-USE
-=====
-AS SERVER:
+## USE
+### AS SERVER:
 
 Linux / Mac OS
 ```
@@ -17,8 +16,12 @@ WINDOWS
 python3 . runserver
 ```
 
+## AS TELEGRAM BOT
+```
+python3 . bot
+```
 
-RUN SHELL
+### RUN SHELL
 Linux / Mac OS
 ```
 python3 . sehll
@@ -28,8 +31,7 @@ WINDOWS
 ```
 python . shell
 ```
-INSTALL
-=====
+## INSTALL
 Linux / Mac OS
 ```
 git clone https://github.com/semenInRussia/FreeSpotify_back.git
@@ -42,14 +44,15 @@ git clone https://github.com/semenInRussia/FreeSpotify_back.git
 pip install -r requirements.txt
 ```
 
-# DEPENDECIES
+## DEPENDECIES
 We are use:
 * Flask
 * bs4 & requests
+* aiogram
 
-# DEV
+## DEV
 
-## EXAMPLE OF USE ENTITIES
+### EXAMPLE OF USE ENTITIES
 ```
 >> album = Album("AC DC", "BACK IN BLACK")
 >> album
@@ -60,7 +63,7 @@ We are use:
 '1. AC/DC - Hells Bells'
 ```
 
-## TESTS
+### TESTS
 ```
 pytest
 ```
