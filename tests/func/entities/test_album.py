@@ -1,6 +1,5 @@
 import pytest
 
-import server.tracks
 from dto import AlbumDto
 from entities import Album
 from entities.track import Track

@@ -41,6 +41,12 @@ class Track(_Entity):
 
         self._update_instance()
 
+    def _update_instance(self):
+        self._instance = self._music_mgr.tracks.get(
+            artist_name=self._instance.artist_name,
+            track_name=self._instance.name
+        )
+
     @property
     def name(self):
         return self._instance.name
@@ -61,10 +67,4 @@ class Track(_Entity):
             track_dto.artist_name,
             track_dto.album_name,
             track_dto.name
-        )
-
-    def _update_instance(self):
-        self._instance = self._music_mgr.tracks.get(
-            artist_name=self._instance.artist_name,
-            track_name=self._instance.name
         )

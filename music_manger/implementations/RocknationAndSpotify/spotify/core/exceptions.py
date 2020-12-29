@@ -10,11 +10,5 @@ class UndefinedErrorMessageException(Exception):
 class InvalidClientException(Exception):
     message = 'Invalid client'
 
-class UndefinedArtistException(Exception):
-    message = 'You are enter undefined artist'
-
-class NotResultSearchException(Exception):
-    message = 'Not result search'
-
 class InvalidClientIdException(Exception):
     message = 'invalid id'

@@ -1,2 +1,0 @@
-spotify_client_id = "1878579b79fd4d30b106622791eaa706"
-spotify_client_secret = "09ece004e71740da8f003ba333c7f887"

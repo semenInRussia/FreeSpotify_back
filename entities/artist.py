@@ -1,6 +1,7 @@
 from dto import ArtistDto
 from entities._mixins import _Entity
 from entities.data_manager import DataManager, Serializer
+from music_manger.core.exceptions import NotFoundArtistException
 
 
 class ArtistSerializer(Serializer):
@@ -63,15 +64,21 @@ class Artist(_Entity):
 
     @property
     def link(self):
-        return self._music_mgr.artists.get_link(
-            self._instance.name
-        )
+        try:
+            return self._music_mgr.artists.get_link(
+                self._instance.name
+            )
+        except NotFoundArtistException:
+            return
 
     @property
     def link_on_img(self):
-        return self._music_mgr.artists.get_link_on_img(
-            self.name
-        )
+        try:
+            return self._music_mgr.artists.get_link_on_img(
+                self.name
+            )
+        except NotFoundArtistException:
+            return None
 
     @classmethod
     def create_from_dto(cls, dto):

@@ -2,10 +2,9 @@ from typing import List
 
 from loguru import logger
 
-from core.exceptions import NotFoundAlbumException, NotFoundArtistException
+from music_manger.core.exceptions import NotFoundAlbumException, NotFoundArtistException, NotFoundTrackException
 from dto import AlbumDto, ArtistDto
 
-from .core.exceptions import NotResultSearchException
 from .spotifyCore import SpotifyCore
 from ._filtres import filter_artists_search_data, filter_tracks, filter_albums_for_searching, filter_tracks_of_album
 
@@ -115,7 +114,7 @@ class SpotifyTracks(_BaseSpotifyObject):
         try:
             first_track = tracks[0]
         except IndexError:
-            raise NotResultSearchException
+            raise NotFoundTrackException
 
         return first_track
 
