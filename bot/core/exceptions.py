@@ -1,0 +1,2 @@
+class NotInputtedSearch(Exception):
+    pass
