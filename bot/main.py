@@ -8,6 +8,7 @@ from loguru import logger
 
 from bot.core.exceptions import NotInputtedSearch
 from entities import Artist, Track
+from music_manger.core.exceptions import NotFoundAlbumException, NotFoundTrackException
 from settings.bot import BOT_TOKEN, BOT_DESCRIPTION, stickers
 
 logging.basicConfig(level=logging.INFO)
@@ -65,6 +66,12 @@ async def search_track(message: types.Message):
     except NotInputtedSearch as e:
         await message.answer("You don't enter search")
         logger.debug(e)
+    except NotFoundAlbumException:
+        await message.answer("I'm don't found album")
+        await message.answer_sticker(stickers.FAIL)
+    except NotFoundTrackException:
+        await message.answer("I'm don't found album")
+        await message.answer_sticker(stickers.FAIL)
     else:
         await message.answer(answer_message)
 
