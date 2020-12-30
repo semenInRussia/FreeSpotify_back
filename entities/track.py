@@ -1,27 +1,6 @@
 from dto import TrackDto
-from entities._mixins import _Entity
 from entities import Album
-from entities.data_manager import DataManager, Serializer
-
-
-class TrackSerializer(Serializer):
-    all_fields = ('name', 'artist', 'album',)
-
-    @property
-    def artist(self):
-        artist = self._object.artist
-
-        return artist.data.get_serialized_data(
-            'name', 'link'
-        )
-
-    @property
-    def album(self):
-        album = self._object.album
-
-        return album.data.get_serialized_data(
-            'name', 'link', 'link_on_img', 'release_date'
-        )
+from entities._mixins import _Entity
 
 
 class Track(_Entity):
@@ -29,8 +8,6 @@ class Track(_Entity):
         super().__init__(*args, **kwargs)
 
         self._init_instance(album_name, artist_name, track_name)
-
-        self.data = DataManager(self, TrackSerializer)
 
     def _init_instance(self, album_name, artist_name, track_name):
         self._instance = TrackDto(
