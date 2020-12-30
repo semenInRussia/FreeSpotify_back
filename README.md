@@ -1,48 +1,58 @@
-![Python package](https://github.com/semenInRussia/FreeSpotify_back/workflows/Python%20package/badge.svg)
-
 # FreeSpotify_back
 You are can download top rock tracks from db rocknations.su with info of Spotify with FreeSpotify!!!!!!!!!!!!!!  
 
 **(This is backend)**
 
-USE
-=====
-AS SERVER:
-```Linux / Mac OS
+## USE
+### AS SERVER:
+
+Linux / Mac OS
+```
 python . runserver
 ```
-```WINDOWS
+
+WINDOWS
+```
 python3 . runserver
 ```
 
+## AS TELEGRAM BOT
+```
+python3 . bot
+```
 
-RUN SHELL
-```Linux / Mac OS
+### RUN SHELL
+Linux / Mac OS
+```
 python3 . sehll
 ```
 
-```WINDOWS
+WINDOWS
+```
 python . shell
 ```
-INSTALL
-=====
-```Linux / Mac OS
+## INSTALL
+Linux / Mac OS
+```
 git clone https://github.com/semenInRussia/FreeSpotify_back.git
 pip install -r requirements.txt
 ```
 
-```WINDOWS
+WINDOWS
+```
 git clone https://github.com/semenInRussia/FreeSpotify_back.git
 pip install -r requirements.txt
 ```
-# DEPENDECIES
+
+## DEPENDECIES
 We are use:
 * Flask
 * bs4 & requests
+* aiogram
 
-# DEV
+## DEV
 
-## USE  entity ALBUM
+### EXAMPLE OF USE ENTITIES
 ```
 >> album = Album("AC DC", "BACK IN BLACK")
 >> album
@@ -51,4 +61,20 @@ We are use:
 'Back In Black'
 >> album.tracks[0]
 '1. AC/DC - Hells Bells'
+```
+
+### TESTS
+```
+pytest
+```
+
+or
+
+WINDOWS
+```
+python . tests
+```
+Linux / Mac OS
+```
+python3 . tests
 ```
