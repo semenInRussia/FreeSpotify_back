@@ -1,23 +1,6 @@
 from dto import ArtistDto
 from entities._mixins import _Entity
-from entities.data_manager import DataManager, Serializer
 from music_manger.core.exceptions import NotFoundArtistException
-
-
-class ArtistSerializer(Serializer):
-    all_fields = ('name', 'top', 'link', 'link_on_img',)
-
-    @property
-    def top(self):
-        serialized_top = []
-        top = self._object.top
-
-        for track in top:
-            serialized_top.append(track.data.get_serialized_data(
-                'name', 'album'
-            ))
-
-        return top
 
 
 class Artist(_Entity):
@@ -26,8 +9,6 @@ class Artist(_Entity):
         super().__init__(*args, **kwargs)
 
         self._init_instance(artist_name)
-
-        self.data = DataManager(self, ArtistSerializer)
 
     def _init_instance(self, artist_name):
         self._instance = ArtistDto(

@@ -45,13 +45,3 @@ def test_track_create_from_dto():
     assert isinstance(track, Track)
 
 
-def test_track_get_all_data(track):
-    json_data = track.data.get_serialized_data()
-
-    assert 'name' in json_data
-
-    assert 'artist' in json_data
-    assert isinstance(json_data.get('artist'), dict)
-
-    assert 'album' in json_data
-    assert isinstance(json_data.get('album'), dict)
