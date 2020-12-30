@@ -3,6 +3,7 @@ from typing import Union
 
 class Serializer:
     all_fields = []
+    obj_type = None
 
     def __init__(self, obj):
         self._obj = obj
@@ -27,5 +28,17 @@ class Serializer:
         return field.get_value(self._obj)
 
 
-class GeneralSerializer:
-    pass
+class GeneralSerializer(Serializer):
+    all_serializers = []
+
+    def get_data(self, *fields):
+        serializer = self._get_current_serializer()
+
+        return serializer(self._obj).get_data(*fields)
+
+    def _get_current_serializer(self):
+        current_obj_type = type(self._obj)
+
+        for serializer in self.all_serializers:
+            if serializer.obj_type == current_obj_type:
+                return serializer

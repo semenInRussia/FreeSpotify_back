@@ -4,12 +4,12 @@ from music_manger.core.exceptions import NotFoundAlbumException
 
 
 class Album(_Entity):
-    def __init__(self, album_name: str, artist_name: str):
+    def __init__(self, artist_name: str, album_name: str):
         super().__init__()
 
-        self._init_instance(album_name, artist_name)
+        self._init_instance(artist_name, album_name)
 
-    def _init_instance(self, album_name, artist_name):
+    def _init_instance(self, artist_name, album_name):
         self._instance = AlbumDto(
             artist_name=artist_name,
             name=album_name

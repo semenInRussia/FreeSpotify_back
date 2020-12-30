@@ -7,9 +7,9 @@ class Track(_Entity):
     def __init__(self, artist_name: str, album_name: str, track_name: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._init_instance(album_name, artist_name, track_name)
+        self._init_instance(artist_name, album_name, track_name)
 
-    def _init_instance(self, album_name, artist_name, track_name):
+    def _init_instance(self, artist_name: str, album_name: str, track_name: str):
         self._instance = TrackDto(
             artist_name=artist_name,
             album_name=album_name,
