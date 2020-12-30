@@ -1,6 +1,6 @@
 from entities import Artist, Album, Track
-from server import fields
-from server.serializer import Serializer, GeneralSerializer
+from server.serializers import fields
+from server.serializers.serializer import Serializer, GeneralSerializer
 
 
 def serializing_top(top: list):
@@ -8,22 +8,22 @@ def serializing_top(top: list):
     track_fields = ("name", "album")
 
     for track in top:
-        track_data = EntitiesGeneralSerializer(track).get_data(*track_fields)
+        track_data = EntitiesSerializer(track).get_data(*track_fields)
         serialized_top.append(track_data)
 
-    return top
+    return serialized_top
 
 
 def serializing_artist(artist: Artist):
     artist_fields = ('name',)
 
-    return EntitiesGeneralSerializer(artist).get_data(*artist_fields)
+    return EntitiesSerializer(artist).get_data(*artist_fields)
 
 
 def serializing_album(album: Album):
     album_fields = ('name', 'link', 'link_on_img', 'release_date')
 
-    return EntitiesGeneralSerializer(album).get_data(*album_fields)
+    return EntitiesSerializer(album).get_data(*album_fields)
 
 
 def serializing_tracks(tracks: list):
@@ -31,7 +31,7 @@ def serializing_tracks(tracks: list):
     track_fields = ('name', 'artist')
 
     for track in tracks:
-        tracks_data = EntitiesGeneralSerializer(track).get_data(*track_fields)
+        tracks_data = EntitiesSerializer(track).get_data(*track_fields)
         serialized_tracks.append(tracks_data)
 
     return serialized_tracks
@@ -68,7 +68,7 @@ class TrackSerializer(Serializer):
     album = fields.CustomField('album', serializing_album)
 
 
-class EntitiesGeneralSerializer(GeneralSerializer):
+class EntitiesSerializer(GeneralSerializer):
     all_serializers = [
         ArtistSerializer, AlbumSerializer, TrackSerializer
     ]

@@ -1,26 +1,15 @@
 from entities import Artist, Album, Track
-from server.entities_serializers import ArtistSerializer, EntitiesGeneralSerializer
+from server.serializers.entities_serializers import EntitiesSerializer
 
 artist_name = "Deep Purple"
 album_name = "Burn"
 track_name = "Burn"
 
 
-def test_artist_serializer():
-    artist = Artist(artist_name)
-
-    data = ArtistSerializer(artist).get_data("name", "top")
-
-    fields = ["name", "top"]
-
-    for field in fields:
-        assert field in data
-
-
 def test_general_serializer_artist():
     artist = Artist(artist_name)
 
-    data = EntitiesGeneralSerializer(artist).get_data("name", "top")
+    data = EntitiesSerializer(artist).get_data("name", "top")
 
     fields = ["name", "top"]
 
@@ -33,7 +22,7 @@ def test_general_serializer_album():
 
     fields = ["name", "release_date"]
 
-    data = EntitiesGeneralSerializer(album).get_data(*fields)
+    data = EntitiesSerializer(album).get_data(*fields)
 
     for field in fields:
         assert field in data
@@ -44,7 +33,7 @@ def test_general_serializer_track():
 
     fields = ["name", "album", "artist"]
 
-    data = EntitiesGeneralSerializer(track).get_data(*fields)
+    data = EntitiesSerializer(track).get_data(*fields)
 
     for field in fields:
         assert field in data
