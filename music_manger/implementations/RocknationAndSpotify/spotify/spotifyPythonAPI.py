@@ -1,12 +1,9 @@
 from typing import List
 
-from loguru import logger
-
-from music_manger.core.exceptions import NotFoundAlbumException, NotFoundArtistException, NotFoundTrackException
 from dto import AlbumDto, ArtistDto
-
-from .spotifyCore import SpotifyCore
+from music_manger.core.exceptions import NotFoundAlbumException, NotFoundArtistException, NotFoundTrackException
 from ._filtres import filter_artists_search_data, filter_tracks, filter_albums_for_searching, filter_tracks_of_album
+from .spotifyCore import SpotifyCore
 
 
 class _BaseSpotifyObject:
@@ -37,7 +34,7 @@ class SpotifyArtists(_BaseSpotifyObject):
 
         return filter_artists_search_data(data)
 
-    def get_top(self, artist_name: str, ) -> list:
+    def get_top(self, artist_name: str) -> list:
         artist = self.get(artist_name)
 
         top = self._get_top_by_spotify_id(artist.spotify_id)

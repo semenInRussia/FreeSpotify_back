@@ -4,18 +4,19 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class Requester:
-    def get_bs(self, url: str):
-        html = self.get_content(url)
+def get_bs(url: str, method_name: str = "get", **kwargs) -> BeautifulSoup:
+    html = get_content(url, method_name, **kwargs)
 
-        return BeautifulSoup(html, "html.parser")
+    return BeautifulSoup(html, "html.parser")
 
-    def get_json(self, url: str, method_name: str = 'get'):
-        return json.loads(self.get_content(url, method_name))
 
-    def get_content(self, url: str, method_name: str = 'get'):
-        return self.create_request(url, method_name).text
+def get_json(url: str, method_name: str = 'get'):
+    return json.loads(get_content(url, method_name))
 
-    @staticmethod
-    def create_request(url: str, method_name: str = 'get'):
-        return requests.request(method_name, url)
+
+def get_content(url: str, method_name: str = 'get', **kwargs):
+    return create_request(url, method_name, **kwargs).text
+
+
+def create_request(url: str, method_name: str = 'get', **kwargs):
+    return requests.request(method_name, url, **kwargs)

@@ -1,39 +1,21 @@
 from typing import Optional
 
-import requests
 from bs4 import BeautifulSoup
 
+import my_request
 from music_manger.core.exceptions import NotFoundAlbumException, NotFoundArtistException
-from my_request import Requester
+from music_manger.implementations.RocknationAndSpotify.utils import delete_sound_quality
 
 base_url = 'https://rocknation.su'
 
 
-def get_link_on_artist(name):
-    html = _get_html_search_artist(name)
-    return _get_artist_link_by_html(html)
+def get_link_on_artist(name: str) -> Optional[str]:
+    soup = _get_soup_of_search_artist(name)
+
+    return _get_artist_link_by_soup(soup)
 
 
-def _get_html_search_artist(name: str) -> str:
-    request = _post_on_search(name)
-
-    return request.text
-
-
-def _get_artist_link_by_html(html: str) -> str:
-    try:
-        element = _find_artist_elements(html)[0]
-    except IndexError:
-        raise NotFoundArtistException
-    else:
-        link_for_rocknation = element.get('href')
-
-        link = base_url + link_for_rocknation
-
-        return link
-
-
-def _post_on_search(name: str) -> requests.request:
+def _get_soup_of_search_artist(name: str) -> BeautifulSoup:
     # code from https://curl.trillworks.com
 
     headers = {
@@ -58,27 +40,35 @@ def _post_on_search(name: str) -> requests.request:
         'enter_mp3': 'Search'
     }
 
-    response = requests.post('https://rocknation.su/mp3/searchresult/', headers=headers, data=data)
-    return response
+    soup = my_request.get_bs('https://rocknation.su/mp3/searchresult/', 'post', headers=headers, data=data)
+
+    return soup
 
 
-def _find_artist_elements(html: str):
-    bs = BeautifulSoup(html, features="html.parser")
+def _get_artist_link_by_soup(soup: BeautifulSoup):
+    elements = _find_artist_elements(soup)
 
-    selector_on_link_to_artist = r"a[href^='/mp3/band']"
-    elements_for_rocknation = bs.select(selector_on_link_to_artist)
-
-    return elements_for_rocknation
+    return _get_artist_link_by_elements(elements)
 
 
-class _BaseRocknationObject:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self._rocknation_core = Requester()
+def _find_artist_elements(soup: BeautifulSoup):
+    return soup.select(r"a[href^='/mp3/band']")
 
 
-class RocknationAlbums(_BaseRocknationObject):
+def _get_artist_link_by_elements(elements: list) -> str:
+    try:
+        element = elements[0]
+    except IndexError:
+        raise NotFoundArtistException
+    else:
+        link_for_rocknation = element.get('href')
+
+        link = base_url + link_for_rocknation
+
+        return link
+
+
+class RocknationAlbums:
     def get_link_on_img(self, artist_name: str = None, album_name: str = None, link_on_album: str = None):
         """
         Get link on album image.
@@ -98,7 +88,7 @@ class RocknationAlbums(_BaseRocknationObject):
     def _get_link_on_img_by_album_link(self, link: str):
         self._raise_not_found_error_if_should(link, 'artist')
 
-        soup = self._rocknation_core.get_bs(link)
+        soup = my_request.get_bs(link)
 
         img = soup.select_one(f"img[src^='/upload/images/albums/']")
         src = img.get("src")
@@ -109,7 +99,8 @@ class RocknationAlbums(_BaseRocknationObject):
         return url
 
     def get_link(self, artist_name: str, album_name: str) -> Optional[str]:
-        album_name = self._delete_value_in_brackets(album_name)
+        album_name = delete_sound_quality(album_name)
+        artist_name = delete_sound_quality(artist_name)
 
         link_on_artist = get_link_on_artist(artist_name)
 
@@ -118,7 +109,7 @@ class RocknationAlbums(_BaseRocknationObject):
     def _get_link_by_link_on_artist(self, link_on_artist: str, album_name: str):
         self._raise_not_found_error_if_should(link_on_artist, 'artist')
 
-        soup = self._rocknation_core.get_bs(link_on_artist)
+        soup = my_request.get_bs(link_on_artist)
         link_on_album = self._find_link_on_album_by_soup(soup, album_name)
 
         self._raise_not_found_error_if_should(link_on_album, 'album')
@@ -148,12 +139,6 @@ class RocknationAlbums(_BaseRocknationObject):
             if album_name.lower() in albums_link.text.lower():
                 return albums_link
 
-    def _delete_value_in_brackets(self, string: str) -> Optional[str]:
-        try:
-            return self._try_delete_value_in_brackets(string)
-        except AttributeError:
-            return None
-
     @staticmethod
     def _try_delete_value_in_brackets(string: str) -> str:
         open_bracket = '('
@@ -178,10 +163,10 @@ class RocknationAlbums(_BaseRocknationObject):
                 raise AttributeError(f'{exception_type} - is undefined exception type!')
 
 
-class RocknationArtists(_BaseRocknationObject):
+class RocknationArtists:
     @staticmethod
-    def get_link(name: str):
-        return get_link_on_artist(name)
+    def get_link(artist_name: str):
+        return get_link_on_artist(artist_name)
 
     def get_link_on_img(self, artist_name: str):
         link_on_artist = get_link_on_artist(artist_name)
@@ -191,7 +176,7 @@ class RocknationArtists(_BaseRocknationObject):
         return base_url + image.get('src')
 
     def _get_img_by_soup_by_url(self, url: str):
-        soup = self._rocknation_core.get_bs(url)
+        soup = my_request.get_bs(url)
 
         return self._get_img_by_soup(soup)
 

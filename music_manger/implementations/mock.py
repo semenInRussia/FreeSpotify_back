@@ -6,6 +6,11 @@ from music_manger.music_manger import AbstractMusicManager, AbstractAlbums, Abst
 
 
 class MockAlbums(AbstractAlbums):
+    names = [
+            "cool name", "very cool name", "CAPITAl", "LOWER", "Spaces Ipsum", "I'm Mama",
+            "White Album", "Black Album", "I'm PAPA", "I'm MAMA 2", "Wood Iron", "Bla Bla"
+            ]
+
     def search(self, artist_name: str, album_name: str, limit: int = 4) -> List[AlbumDto]:
         return [
             AlbumDto(
@@ -21,7 +26,7 @@ class MockAlbums(AbstractAlbums):
     def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
         return [
             TrackDto(
-                name=str(random.getstate()),
+                name=random.choice(self.names),
                 artist_name=artist_name,
                 album_name=album_name
             ) for _ in range(random.randint(6, 21))

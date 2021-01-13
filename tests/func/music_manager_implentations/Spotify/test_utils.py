@@ -1,0 +1,11 @@
+from music_manger.implementations.RocknationAndSpotify.utils import delete_sound_quality
+
+
+def test_delete_sound_quality():
+    expected = delete_sound_quality("Black Sabbath (Remastered 2008)")
+
+    assert "Black Sabbath" == expected
+
+    expected = delete_sound_quality("Black Sabbath [Premium Disk]")
+
+    assert "Black Sabbath" == expected
