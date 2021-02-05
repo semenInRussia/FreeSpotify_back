@@ -3,6 +3,7 @@ import pytest
 from dto import ArtistDto
 from entities import Artist
 from entities.track import Track
+from tests.settigs_for_test import settings_with_mock
 
 artist_name = "Metallica"
 approximate_artist_name = "metallica"
@@ -10,8 +11,10 @@ approximate_artist_name = "metallica"
 
 @pytest.fixture
 def artist():
-    return Artist(artist_name=approximate_artist_name)
+    return Artist(artist_name=approximate_artist_name, additional_settings=settings_with_mock)
 
+def test_work_with_settings(artist):
+    assert artist.settings.music_manager_impl == settings_with_mock.music_manager_impl
 
 def test_get_precise_artist_name(artist):
     assert artist.name == artist_name

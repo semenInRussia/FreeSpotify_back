@@ -5,10 +5,11 @@ from music_manger.core.exceptions import NotFoundArtistException
 
 class Artist(AbstractEntity):
 
-    def __init__(self, artist_name: str, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+    def __init__(self, artist_name: str, additional_settings=None):
+        self._init_settings(additional_settings)
         self._init_instance(artist_name)
+
+        super().__init__(additional_settings=additional_settings)
 
     def _init_instance(self, artist_name):
         self._instance = ArtistDto(
