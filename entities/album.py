@@ -1,9 +1,9 @@
 from dto import AlbumDto
-from entities._mixins import _Entity
+from entities._AbstractEntity import AbstractEntity
 from music_manger.core.exceptions import NotFoundAlbumException
 
 
-class Album(_Entity):
+class Album(AbstractEntity):
     def __init__(self, artist_name: str, album_name: str):
         super().__init__()
 

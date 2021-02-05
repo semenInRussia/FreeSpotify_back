@@ -1,9 +1,9 @@
 from dto import TrackDto
 from entities import Album
-from entities._mixins import _Entity
+from entities._AbstractEntity import AbstractEntity
 
 
-class Track(_Entity):
+class Track(AbstractEntity):
     def __init__(self, artist_name: str, album_name: str, track_name: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
