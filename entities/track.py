@@ -4,10 +4,11 @@ from entities._AbstractEntity import AbstractEntity
 
 
 class Track(AbstractEntity):
-    def __init__(self, artist_name: str, album_name: str, track_name: str, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+    def __init__(self, artist_name: str, album_name: str, track_name: str, additional_settings=None):
+        self._init_settings(additional_settings)
         self._init_instance(artist_name, album_name, track_name)
+
+        super().__init__(additional_settings=additional_settings)
 
     def _init_instance(self, artist_name: str, album_name: str, track_name: str):
         self._instance = TrackDto(

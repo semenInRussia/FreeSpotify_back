@@ -4,6 +4,7 @@ from dto import TrackDto
 from entities import Album
 from entities import Artist
 from entities.track import Track
+from tests.settigs_for_test import settings_with_mock
 
 artist_name = "Metallica"
 album_name = "Master of Puppets"
@@ -17,13 +18,17 @@ def track():
     return Track(
         artist_name=artist_name,
         album_name=album_name,
-        track_name=approximate_track_name
+        track_name=approximate_track_name,
+
+        additional_settings=settings_with_mock
     )
 
 
 def test_track_artist(track):
     assert isinstance(track.artist, Artist)
 
+def test_work_with_settings(track):
+    assert track.settings.music_manager_impl == settings_with_mock.music_manager_impl
 
 def test_track_album(track):
     assert isinstance(track.album, Album)
