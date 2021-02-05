@@ -1,4 +1,4 @@
-from settings.general import music_manager_impl
+from settings import entities
 
 
 class _Entity:
@@ -7,4 +7,4 @@ class _Entity:
 
     @property
     def _music_mgr(self):
-        return music_manager_impl()
+        return entities.music_manager_impl()

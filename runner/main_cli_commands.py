@@ -4,11 +4,14 @@ from argparse import ArgumentParser, Namespace
 import pytest
 
 import console_gui
+
 from commands.commands import CLICommand
 from commands.commands_collections import CLICommandsCollection
+
 from server.main import app
-from settings.general import help_text_for_port
-from settings.server import PORT, HOST
+
+from settings import main
+from settings import server
 
 
 class ServerCommand(CLICommand):
@@ -19,8 +22,8 @@ class ServerCommand(CLICommand):
         server_parser = ArgumentParser()
 
         server_parser.add_argument('-p', '--port', '-P', type=int,
-                                   help=help_text_for_port,
-                                   default=PORT)
+                                   help=main.help_text_for_port,
+                                   default=server.PORT)
 
         return server_parser
 
@@ -29,7 +32,7 @@ class ServerCommand(CLICommand):
 
         port = namespace.port
 
-        app.run(host=HOST,
+        app.run(host=server.HOST,
                 port=port)
 
 

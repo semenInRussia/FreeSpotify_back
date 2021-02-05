@@ -3,25 +3,24 @@ import re
 from typing import List
 
 from aiogram import Bot, Dispatcher, executor, types
-# Configure logging
 from loguru import logger
 
 from bot.core.exceptions import NotInputtedSearch
 from entities import Artist, Track
 from music_manger.core.exceptions import NotFoundAlbumException, NotFoundTrackException
-from settings.bot import BOT_TOKEN, BOT_DESCRIPTION, stickers
+from settings import bot
 
 logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=bot.BOT_TOKEN)
 dp = Dispatcher(bot)
 
 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
-    await message.answer_sticker(stickers.WELCOME)
-    await message.answer(BOT_DESCRIPTION)
+    await message.answer_sticker(bot.stickers.WELCOME)
+    await message.answer(bot.BOT_DESCRIPTION)
 
 
 def _parse_search_string(search_string: str) -> tuple:
@@ -68,10 +67,10 @@ async def search_track(message: types.Message):
         logger.debug(e)
     except NotFoundAlbumException:
         await message.answer("I'm don't found album")
-        await message.answer_sticker(stickers.FAIL)
+        await message.answer_sticker(settings.stickers.FAIL)
     except NotFoundTrackException:
         await message.answer("I'm don't found album")
-        await message.answer_sticker(stickers.FAIL)
+        await message.answer_sticker(settings.stickers.FAIL)
     else:
         await message.answer(answer_message)
 
@@ -92,7 +91,7 @@ async def get_top(message: types.Message):
     except AttributeError:
         await message.answer("You are inputted not valid band's name.")
     except Exception as e:
-        await message.answer_sticker(stickers.FAIL)
+        await message.answer_sticker(settings.stickers.FAIL)
         await message.answer("Sorry, I am can't search info about. \n"
                              f"Error: {e.__class__.__name__}. \n")
     else:
