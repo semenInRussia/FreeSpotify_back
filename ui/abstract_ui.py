@@ -2,10 +2,12 @@ from loguru import logger
 
 from entities import Artist, Track
 from my_io.abstract_stream import AbstractStream
+from ui.statuses import Status, Statuses
 
 
 class AbstractUI:
     stream: AbstractStream = None
+    status: Status = Status()
 
     def __init__(self, additional_settings=None):
         self._additional_settings = additional_settings
@@ -23,7 +25,12 @@ class AbstractUI:
         try:
             return self._try_get_string_artist(artist_name)
         except Exception as e:
-            return self._format_exception(e)
+            return self._raise_and_format_exception(e)
+
+    def _raise_and_format_exception(self, exception: Exception) -> str:
+        self.status.set(Statuses.FAIL)
+
+        return self._format_exception(exception)
 
     @staticmethod
     def _format_exception(exception: Exception) -> str:
