@@ -8,6 +8,7 @@ from loguru import logger
 from bot.core.exceptions import NotInputtedSearch
 from entities import Artist, Track
 from music_manger.core.exceptions import NotFoundAlbumException, NotFoundTrackException
+from my_io.abstract_stream import AbstractStream
 from settings import bot
 
 logging.basicConfig(level=logging.INFO)
@@ -143,6 +144,10 @@ def _get_string_top_item(track: Track, index: int) -> str:
 
 def run():
     executor.start_polling(dp, skip_updates=True)
+
+class BotStream(AbstractStream):
+    def run(self, *args, **kwargs):
+        executor.start_polling(dp, skip_updates=True)
 
 
 if __name__ == '__main__':

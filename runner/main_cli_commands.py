@@ -3,18 +3,16 @@ from argparse import ArgumentParser, Namespace
 
 import pytest
 
-import console_gui
-
-from commands.commands import CLICommand
-from commands.commands_collections import CLICommandsCollection
-
+from commands.simple_commands.cli_command import CLICommand
+from commands.simple_commands_collections.cli_commands_collection import CLICommandsCollection
 from server.main import app
-
 from settings import main
 from settings import server
+from ui.bot.main import BotProgram
+from ui.console_ui import ConsoleUI
 
 
-class ServerCommand(CLICommand):
+class RunServerCommand(CLICommand):
     aliases = ['server', 'run-server', 'runserver', 'rest-api']
 
     @property
@@ -36,11 +34,14 @@ class ServerCommand(CLICommand):
                 port=port)
 
 
-class ConsoleCommand(CLICommand):
+class RunConsoleUICommand(CLICommand):
     aliases = ['console', 'cli-api', 'shell']
 
+    def __init__(self):
+        self.console_ui = ConsoleUI()
+
     def run(self, args: list):
-        console_gui.run()
+        self.console_ui.run()
 
 
 class RunTestsCommand(CLICommand):
@@ -53,16 +54,15 @@ class RunTestsCommand(CLICommand):
 class RunBotCommand(CLICommand):
     aliases = ['bot', 'run-bot']
 
-    def run(self, *args, **kwargs):
-        from bot.main import run
-
-        run()
+    def run(self, args: list, additional_settings=None, **kwargs):
+        program = BotProgram(additional_settings)
+        program.run()
 
 
 class MainCLICommandsCollection(CLICommandsCollection):
     all_commands = [
-        ServerCommand(),
-        ConsoleCommand(),
+        RunServerCommand(),
+        RunConsoleUICommand(),
         RunTestsCommand(),
         RunBotCommand(),
     ]

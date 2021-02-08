@@ -14,9 +14,3 @@ class CommandsCollection:
         raise exceptions.NotFoundCommandException
 
 
-class CLICommandsCollection(CommandsCollection):
-
-    def run(self, args: list):
-        command = self.find_command(args)
-
-        command.run(args[1:])

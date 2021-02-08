@@ -23,6 +23,9 @@ class Album(AbstractEntity):
             self._instance.name
         )
 
+    def __repr__(self):
+        return repr(self._instance)
+
     @property
     def artist(self):
         from entities import Artist

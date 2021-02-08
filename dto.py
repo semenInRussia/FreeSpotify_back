@@ -10,11 +10,8 @@ class TrackDto(NamedTuple):
     disc_number: int = None
     top_number: int = None
 
-    def __str__(self):
-        return f"{self.artist_name} - {self.disc_number}.{self.name}"
-
     def __repr__(self):
-        return self.__str__()
+        return f"{self.artist_name} - {self.disc_number}.{self.name}"
 
 
 class AlbumDto(NamedTuple):
@@ -25,11 +22,8 @@ class AlbumDto(NamedTuple):
 
     spotify_id: str = None
 
-    def __str__(self):
-        return f"{self.artist_name} - {self.name}"
-
     def __repr__(self):
-        return self.__str__()
+        return f"{self.artist_name} - {self.name}"
 
 
 class ArtistDto(NamedTuple):
@@ -37,8 +31,4 @@ class ArtistDto(NamedTuple):
     spotify_id: str = None
 
     def __repr__(self):
-        return self.__str__()
-
-    def __str__(self):
         return self.name
-

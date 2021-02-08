@@ -20,6 +20,9 @@ class Artist(AbstractEntity):
     def _update_instance(self):
         self._instance = self._music_mgr.artists.get(self.name)
 
+    def __repr__(self):
+        return repr(self._instance)
+
     @property
     def name(self) -> str:
         return self._instance.name

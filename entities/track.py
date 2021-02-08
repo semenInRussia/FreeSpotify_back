@@ -25,6 +25,9 @@ class Track(AbstractEntity):
             track_name=self._instance.name
         )
 
+    def __repr__(self):
+        return repr(self._instance)
+
     @property
     def name(self):
         return self._instance.name
