@@ -1,14 +1,18 @@
 class NotValidTokenException(Exception):
-    message = 'No token provided'
+    """No Spotify token provided"""
+
 
 class AccessTokenExpiredException(Exception):
-    message = 'The access token expired'
+    """The access Spotify token expired"""
 
-class UndefinedErrorMessageException(Exception):
-    message = 'Undefined error'
 
 class InvalidClientException(Exception):
-    message = 'Invalid client'
+    """Invalid Spotify client"""
 
-class InvalidClientIdException(Exception):
-    message = 'invalid id'
+
+class InvalidObjectIdException(Exception):
+    """Invalid Spotify object(Artist, Album, Track)  id"""
+
+
+class UndefinedErrorMessageException(Exception):
+    """Undefined error in Spotify"""

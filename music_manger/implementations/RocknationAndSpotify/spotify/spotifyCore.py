@@ -4,7 +4,7 @@ import requests
 from loguru import logger
 
 from settings import spotify
-from .core.exceptions import UndefinedErrorMessageException, InvalidClientIdException, \
+from .core.exceptions import UndefinedErrorMessageException, InvalidObjectIdException, \
     AccessTokenExpiredException, NotValidTokenException, InvalidClientException
 
 version_api = 'v1'
@@ -24,8 +24,8 @@ class ExceptionsMangerSpotifyCore:
             raise NotValidTokenException
         elif response_data['error']['message'] == AccessTokenExpiredException.message:
             raise AccessTokenExpiredException
-        elif response_data['error']['message'] == InvalidClientIdException.message:
-            raise InvalidClientIdException
+        elif response_data['error']['message'] == InvalidObjectIdException.message:
+            raise InvalidObjectIdException
         else:
             raise UndefinedErrorMessageException
 
