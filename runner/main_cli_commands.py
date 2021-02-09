@@ -8,7 +8,7 @@ from commands.simple_commands_collections.cli_commands_collection import CLIComm
 from server.main import app
 from settings import main
 from settings import server
-from ui.bot.main import BotProgram
+from ui.bot_programm import BotProgram
 from ui.console_ui import ConsoleUI
 
 

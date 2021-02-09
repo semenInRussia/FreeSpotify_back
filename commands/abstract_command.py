@@ -7,10 +7,7 @@ class Command:
         pass
 
     def is_selected(self, *args) -> bool:
-        if self.get_selected_alias(*args) in self.aliases:
-            return True
-
-        return False
+        return self.get_selected_alias(*args) in self.aliases
 
     def get_selected_alias(self, alias) -> str:
         return alias
