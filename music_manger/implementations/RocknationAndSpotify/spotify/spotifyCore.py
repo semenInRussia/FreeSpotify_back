@@ -37,6 +37,8 @@ class AuthenticationSpotifyMixIn:
 
     @property
     def token(self) -> str:
+        self._set_new_token()
+
         return self._token
 
     @staticmethod
