@@ -24,9 +24,13 @@ class AbstractUI:
 
     def get_string_artist(self, artist_name: str) -> str:
         try:
-            return self._try_get_string_artist(artist_name)
+            string_artist = self._try_get_string_artist(artist_name)
         except Exception as e:
             return self._raise_and_format_exception(e)
+        else:
+            self.status.set(statuses.OK)
+
+            return string_artist
 
     def _raise_and_format_exception(self, exception: Exception) -> str:
         self.status.set(statuses.FAIL)

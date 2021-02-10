@@ -6,12 +6,46 @@ from loguru import logger
 
 from settings import bot
 from tests.settigs_for_test import settings_with_mock
+from ui.abstract_ui import AbstractUI
 from ui.basic_ui import BasicUI
 from ui.statuses import Status, statuses
 
 logging.basicConfig(level=logging.INFO)
 
 _default_settings = bot
+
+
+def _add_message_handlers_to_dispatcher(dispatcher: Dispatcher, ui: AbstractUI, settings):
+    @dispatcher.message_handler()
+    async def message_handler(message: types.Message):
+        logger.debug(f"Message handler - OK, message={message.text}")
+
+        text_answer = ui.get_string_artist(message.text)
+
+        await _answer_on_message(message, text_answer, ui.status)
+
+        logger.debug("Message sent!")
+
+    async def _answer_on_message(message: types.Message, text_answer: str, status: Status):
+        current_status_handler = status_handlers.get(status.value)
+
+        await current_status_handler(message, text_answer)
+
+    async def _answer_on_fail_message(message: types.Message, text_answer: str):
+        logger.info("send FAIL result")
+
+        await message.answer_sticker(settings.stickers.FAIL)
+        await message.answer(text_answer)
+
+    async def _answer_on_ok_message(message: types.Message, text_answer: str):
+        logger.info("send GOOD result")
+
+        await message.answer(text_answer)
+
+    status_handlers = {
+        statuses.FAIL: _answer_on_fail_message,
+        statuses.OK: _answer_on_ok_message
+    }
 
 
 class BotProgram:
@@ -35,35 +69,11 @@ class BotProgram:
         self._basic_ui = BasicUI(settings_with_mock)
 
     def _add_message_handler_to_dispatcher(self):
-        @self._dispatcher.message_handler()
-        async def message_handler(message: types.Message):
-            logger.debug(f"Message handler - OK, message={message.text}")
-
-            text_answer = self._basic_ui.get_string_artist(message.text)
-
-            await self._answer_on_message(message, text_answer, status=self._basic_ui.status)
-
-            logger.debug("Message sent!")
-
-    @property
-    def status_handlers(self):
-        return {
-            statuses.FAIL: self._answer_on_fail_message,
-            statuses.OK: self._answer_on_ok_message
-        }
-
-    async def _answer_on_message(self, message: types.Message, text_answer: str, status: Status):
-        current_status_handler = self.status_handlers.get(status.value)
-
-        await current_status_handler(message, text_answer)
-
-    async def _answer_on_fail_message(self, message: types.Message, text_answer: str):
-        await message.answer_sticker(self._settings.stickers.FAIL)
-        await message.answer(text_answer)
-
-    @staticmethod
-    async def _answer_on_ok_message(message: types.Message, text_answer: str):
-        await message.answer(text_answer)
+        _add_message_handlers_to_dispatcher(
+            dispatcher=self._dispatcher,
+            ui=self._basic_ui,
+            settings=self._settings
+        )
 
     def run(self):
         executor.start_polling(self._dispatcher, skip_updates=True)
