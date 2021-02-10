@@ -20,12 +20,15 @@ class ExceptionsMangerSpotifyCore:
 
         logger.warning(response_data['error']['message'])
         # Here are errors
-        if response_data['error']['message'] == NotValidTokenException.message:
-            raise NotValidTokenException
-        elif response_data['error']['message'] == AccessTokenExpiredException.message:
-            raise AccessTokenExpiredException
-        elif response_data['error']['message'] == InvalidObjectIdException.message:
-            raise InvalidObjectIdException
+        exceptions = [
+            NotValidTokenException,
+            AccessTokenExpiredException,
+            InvalidObjectIdException,
+        ]
+
+        for exception in exceptions:
+            if exception.message == response_data["error"]["message"]:
+                raise exception
         else:
             raise UndefinedErrorMessageException
 
