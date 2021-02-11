@@ -1,4 +1,5 @@
 import logging
+import re
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
@@ -16,15 +17,30 @@ _default_settings = bot
 
 
 def _add_message_handlers_to_dispatcher(dispatcher: Dispatcher, ui: AbstractUI, settings):
-    @dispatcher.message_handler()
+    def _select_user_argument_by_message_text(message_text: str) -> str:
+        res = re.search(r"/(?P<command_name>\w+)\s+(?P<argument>.+)", message_text)
+
+        return res.group('argument')
+
+    @dispatcher.message_handler(commands=["help"])
+    async def get_bot_help_information(message: types.Message):
+        await message.answer(settings.BOT_DESCRIPTION)
+        await message.answer_sticker(settings.stickers.WELCOME)
+
+    @dispatcher.message_handler(commands=["top"])
     async def message_handler(message: types.Message):
         logger.debug(f"Message handler - OK, message={message.text}")
 
-        text_answer = ui.get_string_artist(message.text)
+        text_answer = _get_string_artist(message)
 
         await _answer_on_message(message, text_answer, ui.status)
 
         logger.debug("Message sent!")
+
+    def _get_string_artist(message):
+        artist_name = _select_user_argument_by_message_text(message.text)
+        text_answer = ui.get_string_artist(artist_name)
+        return text_answer
 
     async def _answer_on_message(message: types.Message, text_answer: str, status: Status):
         current_status_handler = status_handlers.get(status.value)
