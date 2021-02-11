@@ -1,6 +1,6 @@
 import pytest
 
-from dto import ArtistDto
+from dto import ArtistDto, TrackDto
 from music_manger.implementations.DirectoryMusicManager.directory_music_manager import DirectoryMusicManager
 from music_manger.music_manger import AbstractMusicManager
 
@@ -22,3 +22,11 @@ def test_get_artist(directory_music_manager: AbstractMusicManager):
 
     assert isinstance(artist2, ArtistDto)
     assert artist2.name == "artist2"
+
+def test_search(directory_music_manager: AbstractMusicManager):
+    artists = directory_music_manager.artists.search("artist1")
+
+    assert isinstance(artists, list)
+
+    for artist in artists:
+        assert isinstance(artist, ArtistDto)
