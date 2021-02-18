@@ -1,10 +1,9 @@
 import pytest
 
-from dto import ArtistDto, TrackDto
+from dto import ArtistDto
 from music_manger.implementations.DirectoryMusicManager.directory_music_manager import DirectoryMusicManager
 from music_manger.music_manger import AbstractMusicManager
-
-path_to_music = r"C:\Users\Asus\PycharmProjects\FreeSpotify_back\tests\func\music_manager_implentations\directory_music_manager\music"
+from tests.func.music_manager_implentations.directory_music_manager.testdata import path_to_music
 
 
 @pytest.fixture()
@@ -22,6 +21,7 @@ def test_get_artist(directory_music_manager: AbstractMusicManager):
 
     assert isinstance(artist2, ArtistDto)
     assert "artist2" == artist2.name
+
 
 def test_search(directory_music_manager: AbstractMusicManager):
     artists = directory_music_manager.artists.search("artist1")
