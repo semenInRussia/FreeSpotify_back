@@ -16,12 +16,12 @@ def test_get_artist(directory_music_manager: AbstractMusicManager):
     artist = directory_music_manager.artists.get("artist1")
 
     assert isinstance(artist, ArtistDto)
-    assert artist.name == "artist1"
+    assert "artist1" == artist.name
 
     artist2 = directory_music_manager.artists.get("artist2")
 
     assert isinstance(artist2, ArtistDto)
-    assert artist2.name == "artist2"
+    assert "artist2" == artist2.name
 
 def test_search(directory_music_manager: AbstractMusicManager):
     artists = directory_music_manager.artists.search("artist1")
