@@ -13,11 +13,15 @@ approximate_artist_name = "metallica"
 def artist():
     return Artist(artist_name=approximate_artist_name, additional_settings=settings_with_mock)
 
+@pytest.fixture()
+def artist_dto():
+    return ArtistDto(name=artist_name)
+
 def test_work_with_settings(artist):
     assert artist.settings.music_manager_impl == settings_with_mock.music_manager_impl
 
 def test_get_precise_artist_name(artist):
-    assert artist.name == artist_name
+    assert isinstance(artist.name, str)
 
 
 def _assert_is_track_top(top):
@@ -32,19 +36,22 @@ def test_get_top(artist):
     _assert_is_track_top(top)
 
 
-def test_create_from_dto():
-    dto = ArtistDto(artist_name)
-
-    artist = Artist.create_from_dto(dto)
+def test_create_from_dto(artist_dto: ArtistDto):
+    artist = Artist.create_from_dto(artist_dto)
 
     assert isinstance(artist, Artist)
 
 
+def test_work_with_settings_when_create_from_dto(artist_dto: ArtistDto):
+    artist = Artist.create_from_dto(artist_dto, additional_settings=settings_with_mock)
+
+    assert settings_with_mock.music_manager_impl == artist.settings.music_manager_impl
+
 def test_get_link(artist):
-    assert artist.link == "https://rocknation.su/mp3/band-31"
+    assert isinstance(artist.link, str)
 
 
 def test_get_link_on_img(artist):
-    assert artist.link_on_img == "https://rocknation.su/upload/images/bands/31.jpg"
+    assert isinstance(artist.link_on_img, str)
 
 

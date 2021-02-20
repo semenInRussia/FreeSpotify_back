@@ -40,12 +40,14 @@ class Track(AbstractEntity):
 
     @property
     def album(self):
-        return Album(self._instance.artist_name, self._instance.album_name)
+        return Album(self._instance.artist_name, self._instance.album_name, additional_settings=self.settings)
 
     @classmethod
-    def create_from_dto(cls, track_dto: TrackDto):
+    def create_from_dto(cls, track_dto: TrackDto, additional_settings=None):
         return cls(
             track_dto.artist_name,
             track_dto.album_name,
-            track_dto.name
+            track_dto.name,
+
+            additional_settings=additional_settings,
         )

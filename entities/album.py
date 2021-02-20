@@ -1,4 +1,6 @@
-from dto import AlbumDto
+from typing import List
+
+from dto import AlbumDto, TrackDto
 from entities._AbstractEntity import AbstractEntity
 from music_manger.core.exceptions import NotFoundAlbumException
 
@@ -34,14 +36,17 @@ class Album(AbstractEntity):
 
     @property
     def tracks(self) -> list:
-        from entities.track import Track
+        dto_tracks = self._get_dto_tracks()
+        tracks = self._get_tracks_from_dto_tracks(dto_tracks)
 
+        return tracks
+
+    def _get_tracks_from_dto_tracks(self, dto_tracks: List[TrackDto]) -> list:
+        from entities.track import Track
         tracks = []
 
-        dto_tracks = self._get_dto_tracks()
-
         for dto_track in dto_tracks:
-            track = Track.create_from_dto(dto_track)
+            track = Track.create_from_dto(dto_track, additional_settings=self.settings)
             tracks.append(track)
 
         return tracks
@@ -81,8 +86,10 @@ class Album(AbstractEntity):
             return None
 
     @classmethod
-    def create_from_dto(cls, dto: AlbumDto):
+    def create_from_dto(cls, dto: AlbumDto, additional_settings=None):
         return cls(
             dto.artist_name,
-            dto.name
+            dto.name,
+
+            additional_settings=additional_settings
         )

@@ -5,7 +5,7 @@ import pytest
 from dto import ArtistDto
 from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.implementations.RocknationAndSpotify.spotify import Spotify
-from tests.func.music_manager_implentations.Spotify.test_tracks import assert_is_valid_track_collection
+from tests.music_manager_implentations.Spotify.test_tracks import assert_is_valid_track_collection
 
 artist_name = "Queen"
 not_valid_name = "$#@!-"

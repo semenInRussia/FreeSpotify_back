@@ -41,7 +41,7 @@ class Artist(AbstractEntity):
         top = []
 
         for dto_track in track_dto_top:
-            track = Track.create_from_dto(dto_track)
+            track = Track.create_from_dto(dto_track, additional_settings=self.settings)
 
             top.append(track)
 
@@ -66,7 +66,9 @@ class Artist(AbstractEntity):
             return None
 
     @classmethod
-    def create_from_dto(cls, dto):
+    def create_from_dto(cls, dto: ArtistDto, additional_settings=None):
         return cls(
-            dto.name
+            dto.name,
+
+            additional_settings=additional_settings
         )
