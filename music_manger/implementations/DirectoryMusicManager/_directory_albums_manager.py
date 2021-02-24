@@ -7,61 +7,126 @@ from music_manger.implementations.DirectoryMusicManager._directory_artists_manag
 from music_manger.music_manger import AbstractAlbums, AbstractArtists
 
 
+RATIO_OF_SIMILARITY_OF_ALBUMS = 0.5
+
 class DirectoryAlbumsManager(AbstractAlbums):
     def __init__(self, path_to_music: str):
         self._path = path_to_music
 
-    @property
-    def _artists(self) -> AbstractArtists:
-        return DirectoryArtistsManager(self._path)
-
     def search(self, artist_name: str, album_name: str) -> List[AlbumDto]:
-        artist = self._get_artist(artist_name)
+        current_album = AlbumDto(artist_name, album_name)
 
-        albums = self._get_similar_albums_by_name_and_artist(album_name, artist)
+        similar_albums = self._get_albums_similar_to(current_album)
+
+        return similar_albums
+
+    def _get_albums_similar_to(self, album: AlbumDto) -> List[AlbumDto]:
+        all_albums = self._get_all_albums()
+        filtered_and_sorted_by_similarity_albums = self._filtered_and_sorted_albums_by_similarity_to(album, all_albums)
+
+        return filtered_and_sorted_by_similarity_albums
+
+    def _get_all_albums(self) -> List[AlbumDto]:
+        all_artists = self._get_all_artists()
+        all_albums = self._get_albums_by_artists(all_artists)
+
+        return all_albums
+
+    def _get_all_artists(self) -> List[ArtistDto]:
+        artist_names = self._get_all_artists_names()
+        artists = self._get_artists_by_names(artist_names)
+
+        return artists
+
+    def _get_all_artists_names(self) -> List[str]:
+        return os.listdir(self._path)
+
+    def _get_artists_by_names(self, artist_names: List[str]) -> List[ArtistDto]:
+        return list(map(
+            ArtistDto,
+
+            artist_names
+        ))
+
+    def _get_albums_by_artists(self, artists: List[ArtistDto]) -> List[AlbumDto]:
+        albums = []
+
+        for artist in artists:
+            artist_albums = self._get_albums_by_artist(artist)
+            albums.extend(artist_albums)
 
         return albums
 
-    def _get_artist(self, artist_name: str) -> ArtistDto:
-        return self._artists.get(artist_name)
-
-    def _get_similar_albums_by_name_and_artist(self, album_name: str, artist: ArtistDto) -> List[AlbumDto]:
-        similar_albums_names = self._get_albums_names_of_artist_similar_to(album_name, artist)
-
-        albums = self._get_albums_by_names(similar_albums_names, artist)
-
-        return albums
-
-    def _get_albums_names_of_artist_similar_to(self, album_name: str, artist: ArtistDto) -> List[str]:
-        all_albums_names = self._get_all_albums_names_by_artist(artist)
-
-        albums_names_simple_to_name = similarity_lib.filter_and_sort_strings_by_min_similarity_to(
-            album_name,
-            all_albums_names
-        )
-
-        return albums_names_simple_to_name
-
-    def _get_all_albums_names_by_artist(self, artist: ArtistDto) -> List[str]:
+    def _get_albums_by_artist(self, artist: ArtistDto) -> List[AlbumDto]:
         path_to_artist = self._get_path_to_artist(artist)
-        all_albums_names = self._get_all_albums_names_by_path_to_artist(path_to_artist)
+        albums = self._get_albums_by_path_to_artist(path_to_artist)
 
-        return all_albums_names
+        return albums
 
     def _get_path_to_artist(self, artist: ArtistDto) -> str:
-        return os.path.join(self._path, artist.name)
+        real_artist = self._artists.get(artist.name)
 
-    def _get_all_albums_names_by_path_to_artist(self, path_to_artist: str) -> List[str]:
-        for _, all_albums_names, _ in os.walk(path_to_artist):
-            return all_albums_names
+        return os.path.join(self._path, real_artist.name)
 
-    def _get_albums_by_names(self, albums_names: List[str], artist: ArtistDto) -> List[AlbumDto]:
-        return list(
-            map(
-                lambda album_name: AlbumDto(artist.name, album_name),
+    def _get_albums_by_path_to_artist(self, path_to_artist: str) -> List[AlbumDto]:
+        albums_names = self._get_albums_names_by_path_to_artist(path_to_artist)
 
-                albums_names
-            )
+        artist = self._get_artist_by_path(path_to_artist)
+
+        albums = self._get_albums_by_names_and_artist(albums_names, artist)
+
+        return albums
+
+    def _get_albums_names_by_path_to_artist(self, path_to_artist: str) -> List[str]:
+        return os.listdir(path_to_artist)
+
+    def _get_albums_by_names_and_artist(self, albums_names: List[str], artist: ArtistDto) -> List[AlbumDto]:
+        return list(map(
+            lambda album_name: AlbumDto(artist.name, album_name),
+
+            albums_names
+        ))
+
+    def _get_artist_by_path(self, path_to_artist: str) -> ArtistDto:
+        artist_name = self._get_artist_name_by_path(path_to_artist)
+
+        return ArtistDto(artist_name)
+
+    def _get_artist_name_by_path(self, path_to_artist: str) -> str:
+        return os.path.basename(path_to_artist)
+
+    def _filtered_and_sorted_albums_by_similarity_to(self, album: AlbumDto, albums: List[AlbumDto]) -> List[AlbumDto]:
+        filtered_albums = self._filtered_albums_by_min_similarity_to(album, albums)
+        filtered_and_sorted_albums = self._sorted_albums_by_similarity_to(album, filtered_albums)
+
+        return filtered_and_sorted_albums
+
+    def _filtered_albums_by_min_similarity_to(self, album: AlbumDto, albums: List[AlbumDto]) -> List[AlbumDto]:
+        return list(filter(
+            lambda current_album: self._is_similar_albums(album, current_album),
+
+            albums
+        ))
+
+    def _sorted_albums_by_similarity_to(self, album: AlbumDto, albums: List[AlbumDto]) -> List[AlbumDto]:
+        return list(sorted(
+            albums,
+
+            key=lambda current_album: -(self._get_ratio_of_similarity_albums(album, current_album))
+        ))
+
+    def _is_similar_albums(self, actual_album: AlbumDto, expected_album: AlbumDto) -> bool:
+        return similarity_lib.is_similar_strings(
+            str(actual_album),
+            str(expected_album),
+
+            RATIO_OF_SIMILARITY_OF_ALBUMS
+        )
+
+    def _get_ratio_of_similarity_albums(self, actual_album: AlbumDto, expected_album: AlbumDto) -> float:
+        return similarity_lib.get_ratio_of_similarity(
+            str(actual_album),
+            str(expected_album)
         )
 
     def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
@@ -107,3 +172,7 @@ class DirectoryAlbumsManager(AbstractAlbums):
                 tracks_names
             )
         )
+
+    @property
+    def _artists(self) -> AbstractArtists:
+        return DirectoryArtistsManager(self._path)
