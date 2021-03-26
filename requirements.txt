@@ -8,3 +8,4 @@ Flask~=1.1.2
 pytest~=5.3.5
 python-dotenv~=0.15.0
 aiogram==2.4.0
+pydantic~=1.8.1

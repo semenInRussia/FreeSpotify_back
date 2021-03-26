@@ -10,9 +10,9 @@ track_name = "Burn"
 def test_general_serializer_artist():
     artist = Artist(artist_name, additional_settings=settings_with_mock)
 
-    data = EntitiesSerializer(artist).get_data("name", "top")
+    fields = ["name", "top", "link", "link_on_img"]
 
-    fields = ["name", "top"]
+    data = EntitiesSerializer(artist).get_data(*fields)
 
     for field in fields:
         assert field in data
@@ -21,7 +21,7 @@ def test_general_serializer_artist():
 def test_general_serializer_album():
     album = Album(artist_name, album_name, additional_settings=settings_with_mock)
 
-    fields = ["name", "release_date"]
+    fields = ["name", "release_date", "artist", "link", "link_on_img"]
 
     data = EntitiesSerializer(album).get_data(*fields)
 
@@ -32,7 +32,7 @@ def test_general_serializer_album():
 def test_general_serializer_track():
     track = Track(artist_name, album_name, track_name, additional_settings=settings_with_mock)
 
-    fields = ["name", "album", "artist"]
+    fields = ["name", "album", "artist", "disc_number"]
 
     data = EntitiesSerializer(track).get_data(*fields)
 

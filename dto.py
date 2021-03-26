@@ -6,9 +6,7 @@ class TrackDto(NamedTuple):
     artist_name: str
     album_name: str
 
-    release_date: str = None
     disc_number: int = None
-    top_number: int = None
 
     def __repr__(self):
         return f"{self.artist_name} - {self.disc_number}.{self.name}"

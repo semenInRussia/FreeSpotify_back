@@ -19,7 +19,6 @@ def assert_is_valid_track(track: TrackDto):
         "artist_name": str,
         "album_name": str,
 
-        "release_date": str,
         "disc_number": int
     }
 

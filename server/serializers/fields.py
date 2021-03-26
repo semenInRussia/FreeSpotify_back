@@ -1,32 +1,65 @@
-class Field:
-    func = None
+class FieldSerializer:
+    serialize = None
 
-    def __init__(self, field_name: str):
-        self._field_name = field_name
+    def __init__(self, field_name_for_serialize: str = None):
+        self._field_name_for_serialize = field_name_for_serialize
 
-    def get_value(self, obj):
-        field_value = getattr(obj, self._field_name)
+    @property
+    def field_name_for_serialize(self):
+        return self._field_name_for_serialize
 
-        return self.func(field_value)
+    @field_name_for_serialize.setter
+    def field_name_for_serialize(self, value: str):
+        print('OK')
 
+        self._field_name_for_serialize = value
 
-class CustomField(Field):
-    def __init__(self, field_name: str, func):
-        super().__init__(field_name)
-        self.func = func
+    def serialize_field_of(self, obj):
+        not_serialized_value = getattr(obj, self.field_name_for_serialize)
 
+        if not_serialized_value is None:
+            return None
 
-class StringField(Field):
-    func = str
+        return self.serialize(not_serialized_value)
 
-
-class IntegerField(Field):
-    func = int
-
-
-class FloatField(Field):
-    func = float
+    def has_not_field_name_for_serialize(self):
+        return not bool(self.field_name_for_serialize)
 
 
-class BooleanField(Field):
-    func = bool
+class CustomFieldSerializer(FieldSerializer):
+    def __init__(self, serialize_function, field_name_for_serializing: str = None):
+        super().__init__(field_name_for_serializing)
+
+        self.serialize = serialize_function
+
+
+class StringFieldSerializer(FieldSerializer):
+    serialize = str
+
+
+class IntegerFieldSerializer(FieldSerializer):
+    serialize = int
+
+
+class FloatFieldSerializer(FieldSerializer):
+    serialize = float
+
+
+class BooleanFieldSerializer(FieldSerializer):
+    serialize = bool
+
+
+class ListFieldSerializer(FieldSerializer):
+    serialize_elements_of_list = None
+
+    def serialize(self, value):
+        return list(map(
+            self.serialize_elements_of_list, value
+        ))
+
+
+class CustomListFieldSerializer(ListFieldSerializer):
+    def __init__(self, serialize_elements_of_list, field_name_for_serializing: str = None):
+        self.serialize_elements_of_list = serialize_elements_of_list
+
+        super().__init__(field_name_for_serializing)

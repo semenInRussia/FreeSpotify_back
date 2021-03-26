@@ -4,6 +4,8 @@ from entities._AbstractEntity import AbstractEntity
 
 
 class Track(AbstractEntity):
+    _instance: TrackDto
+
     def __init__(self, artist_name: str, album_name: str, track_name: str, additional_settings=None):
         self._init_settings(additional_settings)
         self._init_instance(artist_name, album_name, track_name)
@@ -28,9 +30,23 @@ class Track(AbstractEntity):
     def __repr__(self):
         return repr(self._instance)
 
+    @classmethod
+    def create_from_dto(cls, track_dto: TrackDto, additional_settings=None):
+        return cls(
+            track_dto.artist_name,
+            track_dto.album_name,
+            track_dto.name,
+
+            additional_settings=additional_settings,
+        )
+
     @property
-    def name(self):
+    def name(self) -> str:
         return self._instance.name
+
+    @property
+    def disc_number(self) -> int:
+        return self._instance.disc_number
 
     @property
     def artist(self):
@@ -41,13 +57,3 @@ class Track(AbstractEntity):
     @property
     def album(self):
         return Album(self._instance.artist_name, self._instance.album_name, additional_settings=self.settings)
-
-    @classmethod
-    def create_from_dto(cls, track_dto: TrackDto, additional_settings=None):
-        return cls(
-            track_dto.artist_name,
-            track_dto.album_name,
-            track_dto.name,
-
-            additional_settings=additional_settings,
-        )

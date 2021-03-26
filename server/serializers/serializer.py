@@ -1,31 +1,40 @@
-from typing import Union
+from server.serializers.fields import FieldSerializer
 
 
 class Serializer:
     all_fields = []
-    obj_type = None
+    object_type = None
 
     def __init__(self, obj):
         self._obj = obj
 
-    def get_data(self, *fields) -> Union[dict, list]:
-        data = {}
+    def get_data(self, *fields_for_serialize) -> dict:
+        if self._is_all_fields(fields_for_serialize):
+            fields_for_serialize = self.all_fields
 
-        if self._is_all_fields(fields):
-            fields = self.all_fields
+        return self._serialize_object(fields_for_serialize)
 
-        for field_name in fields:
-            data[field_name] = self._get_field_value_by_name(field_name)
+    def _is_all_fields(self, fields) -> bool:
+        return self.all_fields == fields
 
-        return data
+    def _serialize_object(self, fields) -> dict:
+        return {
+            field_name: self._serialize_field_by_name(field_name)
+            for field_name in fields
+        }
 
-    @staticmethod
-    def _is_all_fields(fields) -> bool:
-        return bool(not fields)
+    def _serialize_field_by_name(self, field_for_serialize: str):
+        field_serializer = self._get_field_serializer_for(field_for_serialize)
 
-    def _get_field_value_by_name(self, field_name):
-        field = getattr(self, field_name)
-        return field.get_value(self._obj)
+        return field_serializer.serialize_field_of(self._obj)
+
+    def _get_field_serializer_for(self, field_name_for_serialize: str) -> FieldSerializer:
+        field_serializer = getattr(self, field_name_for_serialize)
+
+        if field_serializer.has_not_field_name_for_serialize():
+            field_serializer.field_name_for_serialize = field_name_for_serialize
+
+        return field_serializer
 
 
 class GeneralSerializer(Serializer):
@@ -40,5 +49,5 @@ class GeneralSerializer(Serializer):
         current_obj_type = type(self._obj)
 
         for serializer in self.all_serializers:
-            if serializer.obj_type == current_obj_type:
+            if serializer.object_type == current_obj_type:
                 return serializer

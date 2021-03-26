@@ -1,74 +1,56 @@
-from entities import Artist, Album, Track
+from entities import Album, Artist, Track
 from server.serializers import fields
 from server.serializers.serializer import Serializer, GeneralSerializer
 
 
-def serializing_top(top: list):
-    serialized_top = []
-    track_fields = ("name", "album")
-
-    for track in top:
-        track_data = EntitiesSerializer(track).get_data(*track_fields)
-        serialized_top.append(track_data)
-
-    return serialized_top
+def get_serialize_artist_function(*fields_for_serialize):
+    return lambda artist: ArtistSerializer(artist).get_data(*fields_for_serialize)
 
 
-def serializing_artist(artist: Artist):
-    artist_fields = ('name',)
-
-    return EntitiesSerializer(artist).get_data(*artist_fields)
+def get_serialize_album_function(*fields_for_serialize):
+    return lambda album: AlbumSerializer(album).get_data(*fields_for_serialize)
 
 
-def serializing_album(album: Album):
-    album_fields = ('name', 'link', 'link_on_img', 'release_date')
-
-    return EntitiesSerializer(album).get_data(*album_fields)
-
-
-def serializing_tracks(tracks: list):
-    serialized_tracks = []
-    track_fields = ('name', 'artist')
-
-    for track in tracks:
-        tracks_data = EntitiesSerializer(track).get_data(*track_fields)
-        serialized_tracks.append(tracks_data)
-
-    return serialized_tracks
+def get_serialize_track_function(*fields_for_serialize):
+    return lambda track: TrackSerializer(track).get_data(*fields_for_serialize)
 
 
 class ArtistSerializer(Serializer):
-    obj_type = Artist
-    all_fields = ('name', 'top', 'link', 'link_on_img',)
+    object_type = Artist
 
-    name = fields.StringField("name")
-    link = fields.StringField("link")
-    link_on_img = fields.StringField("link_on_img")
-    top = fields.CustomField("top", serializing_top)
+    name = fields.StringFieldSerializer()
+    link = fields.StringFieldSerializer()
+    link_on_img = fields.StringFieldSerializer()
+
+    top = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number", "album"))
 
 
 class AlbumSerializer(Serializer):
-    obj_type = Album
-    all_fields = ['name', 'tracks', 'release_date', 'artist', 'link_on_img', 'link']
+    object_type = Album
 
-    name = fields.StringField("name")
-    release_date = fields.StringField("release_date")
-    link = fields.StringField("link")
-    link_on_img = fields.StringField("link_on_img")
-    artist = fields.CustomField("artist", serializing_artist)
-    tracks = fields.CustomField("tracks", serializing_tracks)
+    name = fields.StringFieldSerializer()
+    release_date = fields.StringFieldSerializer()
+    link = fields.StringFieldSerializer()
+    link_on_img = fields.StringFieldSerializer()
+
+    artist = fields.CustomFieldSerializer(get_serialize_artist_function("name"))
+
+    tracks = fields.CustomListFieldSerializer(get_serialize_track_function("name", "artist", "disc_number"))
 
 
 class TrackSerializer(Serializer):
-    obj_type = Track
-    all_fields = ('name', 'artist', 'album',)
+    object_type = Track
 
-    name = fields.StringField('name')
-    artist = fields.CustomField('artist', serializing_artist)
-    album = fields.CustomField('album', serializing_album)
+    name = fields.StringFieldSerializer()
+    disc_number = fields.IntegerFieldSerializer()
+
+    artist = fields.CustomFieldSerializer(get_serialize_artist_function("name"))
+    album = fields.CustomFieldSerializer(get_serialize_album_function("name", "release_date"))
 
 
 class EntitiesSerializer(GeneralSerializer):
     all_serializers = [
-        ArtistSerializer, AlbumSerializer, TrackSerializer
+        ArtistSerializer,
+        AlbumSerializer,
+        TrackSerializer,
     ]

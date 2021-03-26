@@ -24,12 +24,12 @@ def filter_albums(albums_info: dict) -> list:
 
 def filter_tracks(tracks: dict) -> list:
     return [
-        TrackDto(release_date=track['album']["release_date"],
-                 name=delete_sound_quality(track['name']),
-                 album_name=delete_sound_quality(track['album']['name']),
-                 disc_number=track['track_number'],
-                 artist_name=track['artists'][0]['name']
-                 ) for index, track in enumerate(tracks)
+        TrackDto(
+            name=delete_sound_quality(track['name']),
+            album_name=delete_sound_quality(track['album']['name']),
+            disc_number=track['track_number'],
+            artist_name=track['artists'][0]['name']
+        ) for index, track in enumerate(tracks)
     ]
 
 
