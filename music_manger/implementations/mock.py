@@ -4,29 +4,28 @@ from typing import List
 from dto import AlbumDto, ArtistDto, TrackDto
 from music_manger.music_manger import AbstractMusicManager, AbstractAlbums, AbstractArtists, AbstractTracks
 
+def _create_random_name():
+    names = ["I AM DIED?", "Me and dog: forever", "Gob vs Devil", "!!!SUpEr CoOl!!!",
+             "My crazy cats!", "I am eat my T_SHORT", "Please, kill me!?",
+             "I am your FATHER \\0_0/", "Basic", "IV White Album", "III White Album",
+             "We are the gobs: I", "We are the gobs: II"]
+
+    return random.choice(names)
 
 class MockAlbums(AbstractAlbums):
-    names = [
-            "cool name", "very cool name", "CAPITAl", "LOWER", "Spaces Ipsum", "I'm Mama",
-            "White Album", "Black Album", "I'm PAPA", "I'm MAMA 2", "Wood Iron", "Bla Bla"
-            ]
-
     def search(self, artist_name: str, album_name: str, limit: int = 4) -> List[AlbumDto]:
         return [
             AlbumDto(
                 artist_name=artist_name,
-                name='test_name',
-                release_date='2020-14-12'
+                name=_create_random_name(),
+                release_date='2020-14-12',
             ) for _ in range(limit)
         ]
-
-    def get(self, artist_name: str, album_name: str) -> AlbumDto:
-        return self.search(artist_name, album_name)[0]
 
     def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
         return [
             TrackDto(
-                name=random.choice(self.names),
+                name=_create_random_name(),
                 artist_name=artist_name,
                 album_name=album_name
             ) for _ in range(random.randint(6, 21))
@@ -43,19 +42,16 @@ class MockArtists(AbstractArtists):
     def search(self, artist_name: str, limit: int = 3) -> List[ArtistDto]:
         return [
             ArtistDto(
-                name=artist_name
+                name=_create_random_name()
             ) for _ in range(limit)
         ]
-
-    def get(self, artist_name: str) -> ArtistDto:
-        return self.search(artist_name)[0]
 
     def get_top(self, artist_name: str) -> List[TrackDto]:
         return [
             TrackDto(
-                name=f"track{i}",
+                name=_create_random_name() + str(i),
                 artist_name=artist_name,
-                album_name="Cool White Album"
+                album_name=_create_random_name()
             ) for i in range(10)
         ]
 
@@ -67,16 +63,14 @@ class MockArtists(AbstractArtists):
 
 
 class MockTracks(AbstractTracks):
-    def get(self, artist_name: str, track_name: str) -> TrackDto:
-        return self.search(artist_name, track_name)[0]
-
     def search(self, artist_name: str, track_name: str) -> List[TrackDto]:
         return [
             TrackDto(
                 artist_name=artist_name,
-                album_name="cool white ALBUM!",
+                album_name=_create_random_name(),
                 name=track_name,
-            )
+                disc_number=111
+            ) for _ in range(3)
         ]
 
     def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:

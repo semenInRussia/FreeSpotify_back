@@ -2,6 +2,7 @@ from abc import ABC
 from typing import List
 
 from dto import TrackDto, AlbumDto, ArtistDto
+from music_manger.core.exceptions import NotFoundArtistException, NotFoundAlbumException, NotFoundTrackException
 
 
 class _AbstractObjects:
@@ -23,7 +24,10 @@ class _AbstractObjects:
 
 class AbstractArtists(_AbstractObjects, ABC):
     def get(self, artist_name: str) -> ArtistDto:
-        return self.search(artist_name)[0]
+        try:
+            return self.search(artist_name)[0]
+        except IndexError:
+            raise NotFoundArtistException
 
     def search(self, artist_name: str) -> List[ArtistDto]:
         pass
@@ -40,7 +44,10 @@ class AbstractArtists(_AbstractObjects, ABC):
 
 class AbstractAlbums(_AbstractObjects, ABC):
     def get(self, artist_name: str, album_name: str) -> AlbumDto:
-        return self.search(artist_name, album_name)[0]
+        try:
+            return self.search(artist_name, album_name)[0]
+        except IndexError:
+            raise NotFoundAlbumException
 
     def search(self, artist_name: str, album_name: str) -> List[AlbumDto]:
         pass
@@ -57,7 +64,10 @@ class AbstractAlbums(_AbstractObjects, ABC):
 
 class AbstractTracks(_AbstractObjects, ABC):
     def get(self, artist_name: str, track_name: str) -> TrackDto:
-        return self.search(artist_name, track_name)[0]
+        try:
+            return self.search(artist_name, track_name)[0]
+        except IndexError:
+            raise NotFoundTrackException
 
     def search(self, artist_name: str, track_name: str) -> List[TrackDto]:
         pass

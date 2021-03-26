@@ -45,9 +45,11 @@ def test_track_album(track):
     assert isinstance(track.album, Album)
 
 
-def test_track_precise_name(track):
+def test_track_get_name(track):
     assert isinstance(track.name, str)
 
+def test_track_get_disc_number(track: Track):
+    assert isinstance(track.disc_number, int)
 
 def test_track_create_from_dto(track_dto: TrackDto):
     track = Track.create_from_dto(track_dto)

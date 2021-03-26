@@ -1,7 +1,7 @@
 from typing import List
 
 from dto import AlbumDto, ArtistDto
-from music_manger.core.exceptions import NotFoundAlbumException, NotFoundArtistException, NotFoundTrackException
+from music_manger.music_manger import AbstractArtists, AbstractAlbums, AbstractTracks
 from ._filtres import filter_artists_search_data, filter_tracks, filter_albums_for_searching, filter_tracks_of_album
 from .spotifyCore import SpotifyCore
 
@@ -19,13 +19,7 @@ class _BaseSpotifyObject:
             self._spotify_core = spotify_core
 
 
-class SpotifyArtists(_BaseSpotifyObject):
-    def get(self, artist_name: str) -> ArtistDto:
-        try:
-            return self.search(artist_name)[0]
-        except IndexError:
-            raise NotFoundArtistException
-
+class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     def search(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[ArtistDto]:
         data = self._spotify_core.search(artist_name,
                                          type_="artist",
@@ -48,7 +42,7 @@ class SpotifyArtists(_BaseSpotifyObject):
         return filter_tracks(tracks)
 
 
-class SpotifyAlbums(_BaseSpotifyObject):
+class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
     def search(self, artist_name: str, album_name: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
         # "album" - type searching
         # link on doc for search -
@@ -69,14 +63,6 @@ class SpotifyAlbums(_BaseSpotifyObject):
 
         return albums
 
-    def get(self, artist_name: str, album_name: str) -> AlbumDto:
-        albums = self.search(artist_name, album_name)
-
-        try:
-            return albums[0]
-        except IndexError:
-            raise NotFoundAlbumException
-
     def get_tracks(self, artist_name: str, album_name: str):
         album_id = self.get(artist_name, album_name).spotify_id
 
@@ -87,14 +73,15 @@ class SpotifyAlbums(_BaseSpotifyObject):
         return tracks
 
 
-class SpotifyTracks(_BaseSpotifyObject):
-
+class SpotifyTracks(AbstractTracks, _BaseSpotifyObject):
     def search(self, artist_name: str, track_name: str, limit: int = 1, offset: int = 0):
         search_text = f"{artist_name} - {track_name}"
 
-        track = self._search_by_text(search_text,
-                                     limit=limit,
-                                     offset=offset)
+        track = self._search_by_text(
+            search_text,
+            limit=limit,
+            offset=offset
+        )
 
         return track
 
@@ -104,16 +91,6 @@ class SpotifyTracks(_BaseSpotifyObject):
         full_data_items = full_data['tracks']['items']
 
         return filter_tracks(full_data_items)
-
-    def get(self, artist_name: str, track_name: str):
-        tracks = self.search(artist_name, track_name)
-
-        try:
-            first_track = tracks[0]
-        except IndexError:
-            raise NotFoundTrackException
-
-        return first_track
 
 
 class Spotify:
