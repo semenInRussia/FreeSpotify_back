@@ -12,6 +12,12 @@ track_name = "Master of Puppets"
 
 approximate_track_name = "master of puppet"
 
+difference_artist_name = "Airbourne"
+difference_album_name = "... And Justice For All"
+difference_track_name = "Battery"
+
+additional_settings = settings_with_mock
+
 
 @pytest.fixture()
 def track():
@@ -22,6 +28,7 @@ def track():
 
         additional_settings=settings_with_mock
     )
+
 
 @pytest.fixture()
 def track_dto():
@@ -41,6 +48,39 @@ def test_work_with_settings(track):
     assert track.settings.music_manager_impl == settings_with_mock.music_manager_impl
 
 
+def test_equal_tracks():
+    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
+    second_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
+
+    assert first_track == second_track
+
+
+def test_notequal_by_artists_tracks():
+    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
+    second_track = Track(difference_artist_name, album_name, track_name, additional_settings=additional_settings)
+
+    assert first_track != second_track
+
+
+def test_notequal_by_albums_tracks():
+    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
+    second_track = Track(artist_name, difference_album_name, track_name, additional_settings=additional_settings)
+
+    assert first_track != second_track
+
+
+def test_notequal_by_names_tracks():
+    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
+    second_track = Track(artist_name, album_name, difference_track_name, additional_settings=additional_settings)
+
+    assert first_track != second_track
+
+
+def test_notequal_with_other_types():
+    assert Track(artist_name, album_name, track_name, additional_settings=additional_settings) != 0
+    assert Track(artist_name, album_name, track_name, additional_settings=additional_settings) != "STRING"
+
+
 def test_track_album(track):
     assert isinstance(track.album, Album)
 
@@ -48,8 +88,10 @@ def test_track_album(track):
 def test_track_get_name(track):
     assert isinstance(track.name, str)
 
+
 def test_track_get_disc_number(track: Track):
     assert isinstance(track.disc_number, int)
+
 
 def test_track_create_from_dto(track_dto: TrackDto):
     track = Track.create_from_dto(track_dto)

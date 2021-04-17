@@ -30,6 +30,9 @@ class Track(AbstractEntity):
     def __repr__(self):
         return repr(self._instance)
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.album == other.album and self.name == other.name
+
     @classmethod
     def create_from_dto(cls, track_dto: TrackDto, additional_settings=None):
         return cls(

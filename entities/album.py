@@ -30,6 +30,9 @@ class Album(AbstractEntity):
     def __repr__(self):
         return repr(self._instance)
 
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.artist == other.artist and self.name == other.name
+
     @property
     def artist(self):
         from entities import Artist
