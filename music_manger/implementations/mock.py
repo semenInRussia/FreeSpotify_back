@@ -4,20 +4,24 @@ from typing import List
 from dto import AlbumDto, ArtistDto, TrackDto
 from music_manger.music_manger import AbstractMusicManager, AbstractAlbums, AbstractArtists, AbstractTracks
 
+
 def _create_random_name():
-    names = ["I AM DIED?", "Me and dog: forever", "Gob vs Devil", "!!!SUpEr CoOl!!!",
-             "My crazy cats!", "I am eat my T_SHORT", "Please, kill me!?",
-             "I am your FATHER \\0_0/", "Basic", "IV White Album", "III White Album",
-             "We are the gobs: I", "We are the gobs: II"]
+    names = [
+        "I AM DIED?", "Me and dog: forever", "Gob vs Devil", "!!!SUpEr CoOl!!!",
+        "My crazy cats!", "I am eat my T_SHORT", "Please, kill me!?",
+        "I am your FATHER \\0_0/", "Basic", "IV White Album", "III White Album",
+        "We are the gobs: I", "We are the gobs: II"
+    ]
 
     return random.choice(names)
+
 
 class MockAlbums(AbstractAlbums):
     def search(self, artist_name: str, album_name: str, limit: int = 4) -> List[AlbumDto]:
         return [
             AlbumDto(
                 artist_name=artist_name,
-                name=_create_random_name(),
+                name=album_name,
                 release_date='2020-14-12',
             ) for _ in range(limit)
         ]
