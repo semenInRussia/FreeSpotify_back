@@ -44,11 +44,15 @@ class MockAlbums(AbstractAlbums):
 
 class MockArtists(AbstractArtists):
     def search(self, artist_name: str, limit: int = 3) -> List[ArtistDto]:
-        return [
+        res = [
             ArtistDto(
                 name=_create_random_name()
             ) for _ in range(limit)
         ]
+
+        res[0] = ArtistDto(artist_name)
+
+        return res
 
     def get_top(self, artist_name: str) -> List[TrackDto]:
         return [
