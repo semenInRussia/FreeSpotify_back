@@ -1,8 +1,16 @@
 from typing import List
 
 from dto import AlbumDto, ArtistDto
-from music_manger.music_manger import AbstractArtists, AbstractAlbums, AbstractTracks
-from ._filtres import filter_artists_search_data, filter_tracks, filter_albums_for_searching, filter_tracks_of_album
+
+from music_manger.music_manger import AbstractArtists
+from music_manger.music_manger import AbstractAlbums
+from music_manger.music_manger import AbstractTracks
+
+from ._filtres import filter_albums_for_searching
+from ._filtres import filter_artists_search_data
+from ._filtres import filter_tracks
+from ._filtres import filter_tracks_of_album
+
 from .spotifyCore import SpotifyCore
 
 
@@ -33,7 +41,7 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
         return top
 
     def _get_top_by_spotify_id(self, spotify_artist_id: str, country: str = 'US'):
-        full_data = self._spotify_core.get_top_tracks(spotify_artist_id, country=country)
+        full_data = self._spotify_core.get_top_tracks(spotify_artist_id, market=country)
         tracks = full_data['tracks']
 
         return filter_tracks(tracks)
