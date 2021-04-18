@@ -37,7 +37,7 @@ class Album(AbstractEntity):
     def artist(self):
         from entities import Artist
 
-        return Artist(self._instance.artist_name)
+        return Artist(self._instance.artist_name, additional_settings=self.settings)
 
     @property
     def tracks(self) -> list:
