@@ -24,6 +24,7 @@ class Track(AbstractEntity):
     def _update_instance(self):
         self._instance = self._music_mgr.tracks.get(
             artist_name=self._instance.artist_name,
+            album_name=self._instance.album_name,
             track_name=self._instance.name
         )
 
@@ -55,7 +56,7 @@ class Track(AbstractEntity):
     def artist(self):
         from entities import Artist
 
-        return Artist(self._instance.artist_name)
+        return Artist(self._instance.artist_name, additional_settings=self.settings)
 
     @property
     def album(self):
