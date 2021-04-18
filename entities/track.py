@@ -13,19 +13,10 @@ class Track(AbstractEntity):
         super().__init__(additional_settings=additional_settings)
 
     def _init_instance(self, artist_name: str, album_name: str, track_name: str):
-        self._instance = TrackDto(
+        self._instance = self._music_mgr.tracks.get(
             artist_name=artist_name,
             album_name=album_name,
-            name=track_name
-        )
-
-        self._update_instance()
-
-    def _update_instance(self):
-        self._instance = self._music_mgr.tracks.get(
-            artist_name=self._instance.artist_name,
-            album_name=self._instance.album_name,
-            track_name=self._instance.name
+            track_name=track_name
         )
 
     def __repr__(self):
