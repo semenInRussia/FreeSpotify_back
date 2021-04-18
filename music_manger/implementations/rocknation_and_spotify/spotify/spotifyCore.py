@@ -4,8 +4,12 @@ import requests
 from loguru import logger
 
 from settings import spotify
-from .core.exceptions import UndefinedErrorMessageException, InvalidObjectIdException, \
-    AccessTokenExpiredException, NotValidTokenException, InvalidClientException
+
+from .core.exceptions import UndefinedErrorMessageException
+from .core.exceptions import InvalidObjectIdException
+from .core.exceptions import AccessTokenExpiredException
+from .core.exceptions import NotValidTokenException
+from .core.exceptions import InvalidClientException
 
 version_api = 'v1'
 base_url = f"https://api.spotify.com/{version_api}/"
@@ -14,22 +18,23 @@ base_url = f"https://api.spotify.com/{version_api}/"
 class ExceptionsMangerSpotifyCore:
     @staticmethod
     def _raise_spotify_web_api_errors(response_data: dict):
-        # Here not errors
         if not response_data.get('error'):
             return None
 
-        logger.warning(response_data['error']['message'])
-        # Here are errors
         exceptions = [
             NotValidTokenException,
             AccessTokenExpiredException,
             InvalidObjectIdException,
         ]
 
+        current_error_message = response_data["error"]["message"]
+
         for exception in exceptions:
-            if exception.message == response_data["error"]["message"]:
+            if exception.message == current_error_message:
                 raise exception
         else:
+            logger.warning(current_error_message)
+
             raise UndefinedErrorMessageException
 
 
