@@ -39,20 +39,21 @@ class Album(AbstractEntity):
 
         return tracks
 
-    def _get_tracks_from_dto_tracks(self, dto_tracks: List[TrackDto]) -> list:
-        from entities.track import Track
-        tracks = []
-
-        for dto_track in dto_tracks:
-            track = Track.create_from_dto(dto_track, additional_settings=self.settings)
-            tracks.append(track)
-
-        return tracks
-
     def _get_dto_tracks(self):
         return self._music_mgr.albums.get_tracks(
             self._instance.artist_name,
-            self.name
+            self._instance.name
+        )
+
+    def _get_tracks_from_dto_tracks(self, tracks: List[TrackDto]) -> list:
+        return list(map(self._create_track_from_dto, tracks))
+
+    def _create_track_from_dto(self, dto_track: TrackDto):
+        from entities import Track
+
+        return Track.create_from_dto(
+            dto_track,
+            additional_settings=self.settings
         )
 
     @property

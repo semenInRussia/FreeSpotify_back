@@ -1,3 +1,3 @@
-from music_manger.implementations import MockMusicManager as _MockMusicManager
+from music_manger.implementations import RocknationAndSpotify
 
-music_manager_impl = _MockMusicManager
+music_manager_impl = RocknationAndSpotify

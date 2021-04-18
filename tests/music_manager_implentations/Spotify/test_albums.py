@@ -63,6 +63,9 @@ def test_get(spotify: Spotify):
 
     assert_is_valid_album(album)
 
+    assert album.name == album_name
+    assert album.artist_name == artist_name
+
 
 def test_get_raise_not_found_album(spotify: Spotify):
     with pytest.raises(NotFoundAlbumException):
@@ -79,10 +82,14 @@ def test_search_limit(spotify: Spotify):
     albums = spotify.albums.search(limit=4, **albums_params)
 
     assert len(albums) == 4
+
     assert_is_valid_album_collection(albums)
 
 
 def test_get_tracks(spotify: Spotify):
-    top = spotify.albums.get_tracks(**albums_params)
+    tracks = spotify.albums.get_tracks(**albums_params)
 
-    assert_is_valid_track_collection(top)
+    assert len(tracks) == 18
+
+    assert_is_valid_track_collection(tracks)
+
