@@ -24,7 +24,7 @@ def test_get_artist(directory_music_manager: AbstractMusicManager):
 
 
 def test_search(directory_music_manager: AbstractMusicManager):
-    artists = directory_music_manager.artists.search("artist1")
+    artists = directory_music_manager.artists.search("artist1", )
 
     assert isinstance(artists, list)
 

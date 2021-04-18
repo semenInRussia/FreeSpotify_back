@@ -21,10 +21,7 @@ class _BaseSpotifyObject:
 
 class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     def search(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[ArtistDto]:
-        data = self._spotify_core.search(artist_name,
-                                         type_="artist",
-                                         limit=limit,
-                                         offset=offset)
+        data = self._spotify_core.search(artist_name, type_="artist", limit=limit, offset=offset)
 
         return filter_artists_search_data(data)
 
@@ -44,20 +41,23 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
 
 class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
     def search(self, artist_name: str, album_name: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
-        # "album" - type searching
-        # link on doc for search -
-        # https://developer.spotify.com/console/get-search-item/https://developer.spotify.com/documentation/web-api/reference/search/search/
-
         search_string = f"{artist_name} - {album_name}"
 
-        albums = self._search_by_text(search_string,
-                                      limit=limit,
-                                      offset=offset)
+        albums = self._search_by_text(
+            search_string,
+            limit=limit,
+            offset=offset
+        )
 
         return albums
 
     def _search_by_text(self, search_string: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
-        searching_data = self._spotify_core.search(q=search_string, type_="album", limit=limit, offset=offset)
+        searching_data = self._spotify_core.search(
+            q=search_string,
+            type_="album",
+            limit=limit,
+            offset=offset
+        )
 
         albums = filter_albums_for_searching(searching_data)
 

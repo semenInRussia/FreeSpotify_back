@@ -76,7 +76,7 @@ def test_search(spotify: Spotify):
 
 
 def test_search_limit(spotify: Spotify):
-    albums = spotify.albums.search(**albums_params, limit=4)
+    albums = spotify.albums.search(limit=4, **albums_params)
 
     assert len(albums) == 4
     assert_is_valid_album_collection(albums)

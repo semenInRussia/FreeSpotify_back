@@ -44,7 +44,7 @@ def test_search(spotify: Spotify):
     assert_is_valid_track_collection(tracks)
 
 def test_search_limit(spotify: Spotify):
-    tracks = spotify.tracks.search(**track_params, limit=4)
+    tracks = spotify.tracks.search(limit=4, **track_params)
 
     assert len(tracks) == 4
     assert_is_valid_track_collection(tracks)
