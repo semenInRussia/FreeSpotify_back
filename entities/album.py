@@ -15,16 +15,9 @@ class Album(AbstractEntity):
         super().__init__(additional_settings=additional_settings)
 
     def _init_instance(self, artist_name, album_name):
-        self._instance = AlbumDto(
-            artist_name=artist_name,
-            name=album_name
-        )
-        self._update_instance()
-
-    def _update_instance(self):
         self._instance = self._music_mgr.albums.get(
-            self._instance.artist_name,
-            self._instance.name
+            artist_name,
+            album_name
         )
 
     def __repr__(self):
