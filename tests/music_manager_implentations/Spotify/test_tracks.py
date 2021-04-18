@@ -9,6 +9,7 @@ track_name = "We are the CHAMPIONS"
 
 track_params = {
     "artist_name": artist_name,
+    "album_name": album_name,
     "track_name": track_name
 }
 

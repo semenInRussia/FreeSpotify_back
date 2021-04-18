@@ -4,6 +4,8 @@ from typing import List
 from dto import AlbumDto, ArtistDto, TrackDto
 from music_manger.music_manger import AbstractMusicManager, AbstractAlbums, AbstractArtists, AbstractTracks
 
+SEED = 1000
+
 
 def _create_random_name():
     names = [
@@ -13,7 +15,15 @@ def _create_random_name():
         "We are the gobs: I", "We are the gobs: II"
     ]
 
+    random.seed(SEED)
+
     return random.choice(names)
+
+
+def _create_random_disc_number():
+    random.seed(SEED)
+
+    return random.randint(1, 77)  # Search "Ella Fitzgerald - Sings The George And Ira Gershwin Song Book" on Google!
 
 
 class MockAlbums(AbstractAlbums):
@@ -43,6 +53,7 @@ class MockAlbums(AbstractAlbums):
 
 
 class MockArtists(AbstractArtists):
+
     def search(self, artist_name: str, limit: int = 3) -> List[ArtistDto]:
         res = [
             ArtistDto(
@@ -71,13 +82,13 @@ class MockArtists(AbstractArtists):
 
 
 class MockTracks(AbstractTracks):
-    def search(self, artist_name: str, track_name: str) -> List[TrackDto]:
+    def search(self, artist_name: str, album_name: str, track_name: str) -> List[TrackDto]:
         return [
             TrackDto(
                 artist_name=artist_name,
-                album_name=_create_random_name(),
+                album_name=album_name,
                 name=track_name,
-                disc_number=111
+                disc_number=_create_random_disc_number()
             ) for _ in range(3)
         ]
 

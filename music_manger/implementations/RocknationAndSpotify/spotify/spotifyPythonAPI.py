@@ -74,7 +74,7 @@ class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
 
 
 class SpotifyTracks(AbstractTracks, _BaseSpotifyObject):
-    def search(self, artist_name: str, track_name: str, limit: int = 1, offset: int = 0):
+    def search(self, artist_name: str, album_name: str, track_name: str, limit: int = 1, offset: int = 0):
         search_text = f"{artist_name} - {track_name}"
 
         track = self._search_by_text(

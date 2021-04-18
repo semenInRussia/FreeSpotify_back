@@ -63,13 +63,13 @@ class AbstractAlbums(_AbstractObjects, ABC):
 
 
 class AbstractTracks(_AbstractObjects, ABC):
-    def get(self, artist_name: str, track_name: str) -> TrackDto:
+    def get(self, artist_name: str, album_name:str, track_name: str) -> TrackDto:
         try:
-            return self.search(artist_name, track_name)[0]
+            return self.search(artist_name, album_name, track_name)[0]
         except IndexError:
             raise NotFoundTrackException
 
-    def search(self, artist_name: str, track_name: str) -> List[TrackDto]:
+    def search(self, artist_name: str, album_name: str, track_name: str) -> List[TrackDto]:
         pass
 
     def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:
