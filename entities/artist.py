@@ -13,13 +13,7 @@ class Artist(AbstractEntity):
         super().__init__(additional_settings=additional_settings)
 
     def _init_instance(self, artist_name):
-        self._instance = ArtistDto(
-            name=artist_name
-        )
-        self._update_instance()
-
-    def _update_instance(self):
-        self._instance = self._music_mgr.artists.get(self.name)
+        self._instance = self._music_mgr.artists.get(artist_name)
 
     def __repr__(self):
         return repr(self._instance)
