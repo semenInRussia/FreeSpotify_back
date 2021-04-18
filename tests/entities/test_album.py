@@ -38,7 +38,7 @@ def test_get_release_date(album):
 def test_create_from_dto():
     dto = AlbumDto(artist_name, album_name)
 
-    album = Album.create_from_dto(dto)
+    album = Album.create_from_dto(dto, additional_settings=additional_settings)
 
     assert isinstance(album, Album)
 
@@ -87,8 +87,8 @@ def test_notequal_by_name_albums():
 
 
 def test_notequal_with_other_type():
-    assert Album(artist_name, album_name) != 1
-    assert Album(artist_name, album_name) != "STRING"
+    assert Album(artist_name, album_name, additional_settings=additional_settings) != 1
+    assert Album(artist_name, album_name, additional_settings=additional_settings) != "STRING"
 
 
 def test_get_artist(album):

@@ -62,7 +62,7 @@ def test_get_top(artist):
 
 
 def test_create_from_dto(artist_dto: ArtistDto):
-    artist = Artist.create_from_dto(artist_dto)
+    artist = Artist.create_from_dto(artist_dto, additional_settings=additional_settings)
 
     assert isinstance(artist, Artist)
 

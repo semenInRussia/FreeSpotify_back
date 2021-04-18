@@ -52,6 +52,9 @@ def test_equal_tracks():
     first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
     second_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
 
+    assert first_track.name == second_track.name
+    assert first_track.album == second_track.album
+
     assert first_track == second_track
 
 
@@ -65,6 +68,8 @@ def test_notequal_by_artists_tracks():
 def test_notequal_by_albums_tracks():
     first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
     second_track = Track(artist_name, difference_album_name, track_name, additional_settings=additional_settings)
+
+    assert first_track.album != second_track.album
 
     assert first_track != second_track
 
@@ -94,7 +99,7 @@ def test_track_get_disc_number(track: Track):
 
 
 def test_track_create_from_dto(track_dto: TrackDto):
-    track = Track.create_from_dto(track_dto)
+    track = Track.create_from_dto(track_dto, additional_settings=additional_settings)
 
     assert isinstance(track, Track)
 
