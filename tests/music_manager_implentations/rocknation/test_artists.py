@@ -1,7 +1,7 @@
 import pytest
 
 from music_manger.core.exceptions import NotFoundArtistException
-from music_manger.implementations.RocknationAndSpotify.rocknation.rocknationAPI import Rocknation
+from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import Rocknation
 
 artist_name = "AC DC"
 

@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 import my_request
 from music_manger.core.exceptions import NotFoundAlbumException, NotFoundArtistException
-from music_manger.implementations.RocknationAndSpotify.utils import delete_sound_quality
+from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
 
 base_url = 'https://rocknation.su'
 

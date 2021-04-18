@@ -1,7 +1,7 @@
 import pytest
 
 from dto import ArtistDto
-from music_manger.implementations.DirectoryMusicManager.directory_music_manager import DirectoryMusicManager
+from music_manger.implementations.directory_music_manager.directory_music_manager import DirectoryMusicManager
 from music_manger.music_manger import AbstractMusicManager
 from tests.music_manager_implentations.directory_music_manager.testdata import path_to_music
 

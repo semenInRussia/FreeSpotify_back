@@ -1,2 +1,2 @@
 from .mock import MockMusicManager
-from .RocknationAndSpotify import RocknationAndSpotify
+from .rocknation_and_spotify import RocknationAndSpotify

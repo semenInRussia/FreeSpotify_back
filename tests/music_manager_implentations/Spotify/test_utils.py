@@ -1,4 +1,4 @@
-from music_manger.implementations.RocknationAndSpotify.utils import delete_sound_quality
+from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
 
 
 def test_delete_sound_quality():
