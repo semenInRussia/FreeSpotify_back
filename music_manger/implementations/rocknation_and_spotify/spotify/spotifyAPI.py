@@ -2,14 +2,15 @@ from typing import List
 
 from dto import AlbumDto, ArtistDto
 
-from music_manger.music_manger import AbstractArtists
 from music_manger.music_manger import AbstractAlbums
+from music_manger.music_manger import AbstractArtists
 from music_manger.music_manger import AbstractTracks
 
-from ._filtres import filter_albums_for_searching
-from ._filtres import filter_artists_search_data
-from ._filtres import filter_tracks
-from ._filtres import filter_tracks_of_album
+from ._deserializers import deserialize_albums_when_search
+from ._deserializers import deserialize_artists_when_search
+from ._deserializers import deserialize_tracks_of_album
+from ._deserializers import deserialize_tracks_of_artist_top
+from ._deserializers import deserialize_tracks_when_search
 
 from .spotify_core import SpotifyCore
 
@@ -29,14 +30,9 @@ class _BaseSpotifyObject:
 
 class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     def search(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[ArtistDto]:
-        data = self._spotify_core.search(
-            artist_name,
-            type_="artist",
-            limit=limit,
-            offset=offset
-        )
+        json_response = self._spotify_core.parse_search_json(artist_name, type_="artist", limit=limit, offset=offset)
 
-        return filter_artists_search_data(data)
+        return deserialize_artists_when_search(json_response)
 
     def get_top(self, artist_name: str) -> list:
         artist_id = self.get(artist_name).spotify_id
@@ -46,10 +42,10 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
         return top
 
     def _get_top_by_spotify_id(self, spotify_artist_id: str, country: str = 'US'):
-        full_data = self._spotify_core.get_top_tracks(spotify_artist_id, market=country)
-        tracks = full_data['tracks']
+        json_response = self._spotify_core.parse_tracks_of_top(spotify_artist_id, market=country)
+        top = deserialize_tracks_of_artist_top(json_response)
 
-        return filter_tracks(tracks)
+        return top
 
 
 class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
@@ -65,23 +61,18 @@ class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
         return albums
 
     def _search_by_text(self, search_string: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
-        searching_data = self._spotify_core.search(
-            q=search_string,
-            type_="album",
-            limit=limit,
-            offset=offset
-        )
+        json_response = self._spotify_core.parse_search_json(q=search_string, type_="album", limit=limit, offset=offset)
 
-        albums = filter_albums_for_searching(searching_data)
+        albums = deserialize_albums_when_search(json_response)
 
         return albums
 
     def get_tracks(self, artist_name: str, album_name: str):
         album_id = self.get(artist_name, album_name).spotify_id
 
-        not_filtered_tracks = self._spotify_core.get_tracks_of_album(album_id)
+        json_response = self._spotify_core.parse_tracks_of_album(album_id)
 
-        tracks = filter_tracks_of_album(not_filtered_tracks, album_name)
+        tracks = deserialize_tracks_of_album(json_response, album_name)
 
         return tracks
 
@@ -90,20 +81,18 @@ class SpotifyTracks(AbstractTracks, _BaseSpotifyObject):
     def search(self, artist_name: str, album_name: str, track_name: str, limit: int = 1, offset: int = 0):
         search_text = f"{artist_name} - {track_name}"
 
-        track = self._search_by_text(
+        tracks = self._search_by_text(
             search_text,
             limit=limit,
             offset=offset
         )
 
-        return track
+        return tracks
 
     def _search_by_text(self, search_text: str, limit: int = 1, offset: int = 0):
-        full_data = self._spotify_core.search(q=search_text, type_='track', limit=limit, offset=offset)
+        json_response = self._spotify_core.parse_search_json(q=search_text, type_='track', limit=limit, offset=offset)
 
-        full_data_items = full_data['tracks']['items']
-
-        return filter_tracks(full_data_items)
+        return deserialize_tracks_when_search(json_response)
 
 
 class Spotify:
