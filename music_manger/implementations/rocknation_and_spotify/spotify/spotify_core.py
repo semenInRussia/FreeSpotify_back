@@ -4,6 +4,7 @@ from loguru import logger
 
 import my_request
 from settings import spotify
+
 from .core.exceptions import AccessTokenExpiredException
 from .core.exceptions import InvalidClientException
 from .core.exceptions import InvalidObjectIdException
@@ -119,14 +120,15 @@ class SpotifyJsonParser:
 class SpotifyCore:
     """
     Object for work with base operations with spotify on level with rest api.
+    All methods of THIS class, are parsing json from spotify api.
 
-    For additional info watch https://api.spotify.com/v1/search.
+    For additional info watch https://developer.spotify.com/documentation/ .
     """
 
     def __init__(self):
         self._json_parser = SpotifyJsonParser()
 
-    def search(self, q: str, type_: str, market: str = None, limit: int = 1, offset: int = 0) -> dict:
+    def parse_search_json(self, q: str, type_: str, market: str = None, limit: int = 1, offset: int = 0) -> dict:
         """
         Search ANYTHING in Spotify.
 
@@ -177,7 +179,7 @@ class SpotifyCore:
         return self._json_parser.parse_json_from_spotify(second_part_of_links='search', q=q, type=type_, limit=limit,
                                                          offset=offset, market=market)
 
-    def get_top_tracks(self, artist_id: str, market: str = 'US') -> dict:
+    def parse_tracks_of_top(self, artist_id: str, market: str = 'US') -> dict:
         """
         Get Artist's top.
 
@@ -194,7 +196,7 @@ class SpotifyCore:
 
         return self._json_parser.parse_json_from_spotify(second_part_of_links=url, country=market)
 
-    def get_album_info(self, album_ids: str, market: str = 'ES'):
+    def parse_albums(self, album_ids: str, market: str = 'ES'):
         """
         Get info about current albums by ids.
         Info from https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-multiple-albums
@@ -208,7 +210,7 @@ class SpotifyCore:
 
         return self._json_parser.parse_json_from_spotify(second_part_of_links='albums', market=market, ids=album_ids)
 
-    def get_tracks_of_album(self, album_id: str):
+    def parse_tracks_of_album(self, album_id: str):
         url = f'albums/{album_id}/tracks'
 
         return self._json_parser.parse_json_from_spotify(url)
