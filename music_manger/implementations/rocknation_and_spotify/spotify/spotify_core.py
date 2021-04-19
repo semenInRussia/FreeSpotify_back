@@ -40,22 +40,29 @@ def _is_response_has_error(json_response: dict):
     return json_response.get('error')
 
 
+def _encode_as_base64(message: str) -> str:
+    message_bytes = message.encode('ascii')
+    base64_bytes = base64.b64encode(message_bytes)
+    base64_message = base64_bytes.decode('ascii')
+
+    return base64_message
+
+
 class SpotifyAuthenticator:
     @property
     def token(self) -> str:
-        self._set_new_token()
+        self._update_token()
 
         return self._token
 
-    def _set_new_token(self):
+    def _update_token(self):
         self._token = self._create_token()
 
     def _create_token(self) -> str:
         url = "https://accounts.spotify.com/api/token"
 
-        # Encode as Base64
         message = f"{spotify.SPOTIFY_CLIENT_ID}:{spotify.SPOTIFY_CLIENT_SECRET}"
-        base64_message = self._encode_as_base64(message)
+        base64_message = _encode_as_base64(message)
 
         headers = {
             'Authorization': f"Basic {base64_message}"
@@ -77,20 +84,12 @@ class SpotifyAuthenticator:
 
         return token
 
-    @staticmethod
-    def _encode_as_base64(message: str) -> str:
-        message_bytes = message.encode('ascii')
-        base64_bytes = base64.b64encode(message_bytes)
-        base64_message = base64_bytes.decode('ascii')
-
-        return base64_message
-
 
 class SpotifyJsonParser:
     def __init__(self):
         self._authenticator = SpotifyAuthenticator()
 
-    def get_json_from_spotify(
+    def parse_json_from_spotify(
             self,
             second_part_of_links: str,
             method_name: str = 'get',
@@ -129,7 +128,7 @@ class SpotifyCore:
 
     def search(self, q: str, type_: str, market: str = None, limit: int = 1, offset: int = 0) -> dict:
         """
-        Search ANY in Spotify.
+        Search ANYTHING in Spotify.
 
         Info from https://developer.spotify.com/documentation/web-api/reference/#endpoint-search .
 
@@ -175,15 +174,8 @@ class SpotifyCore:
         Use with limit to get the next page of search results.
        """
 
-        return self._json_parser.get_json_from_spotify(
-            second_part_of_links='search',
-
-            q=q,
-            type=type_,
-            limit=limit,
-            offset=offset,
-            market=market
-        )
+        return self._json_parser.parse_json_from_spotify(second_part_of_links='search', q=q, type=type_, limit=limit,
+                                                         offset=offset, market=market)
 
     def get_top_tracks(self, artist_id: str, market: str = 'US') -> dict:
         """
@@ -200,11 +192,7 @@ class SpotifyCore:
 
         url = f'artists/{artist_id}/top-tracks'
 
-        return self._json_parser.get_json_from_spotify(
-            second_part_of_links=url,
-
-            country=market
-        )
+        return self._json_parser.parse_json_from_spotify(second_part_of_links=url, country=market)
 
     def get_album_info(self, album_ids: str, market: str = 'ES'):
         """
@@ -218,14 +206,9 @@ class SpotifyCore:
         Relinking.
         """
 
-        return self._json_parser.get_json_from_spotify(
-            second_part_of_links='albums',
-
-            market=market,
-            ids=album_ids
-        )
+        return self._json_parser.parse_json_from_spotify(second_part_of_links='albums', market=market, ids=album_ids)
 
     def get_tracks_of_album(self, album_id: str):
         url = f'albums/{album_id}/tracks'
 
-        return self._json_parser.get_json_from_spotify(url)
+        return self._json_parser.parse_json_from_spotify(url)

@@ -11,7 +11,7 @@ from ._filtres import filter_artists_search_data
 from ._filtres import filter_tracks
 from ._filtres import filter_tracks_of_album
 
-from .spotifyCore import SpotifyCore
+from .spotify_core import SpotifyCore
 
 
 class _BaseSpotifyObject:
@@ -21,22 +21,27 @@ class _BaseSpotifyObject:
         self._init_spotify_core(spotify_core)
 
     def _init_spotify_core(self, spotify_core):
-        if spotify_core is None:
-            self._spotify_core = SpotifyCore()
-        else:
+        if spotify_core:
             self._spotify_core = spotify_core
+        else:
+            self._spotify_core = SpotifyCore()
 
 
 class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     def search(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[ArtistDto]:
-        data = self._spotify_core.search(artist_name, type_="artist", limit=limit, offset=offset)
+        data = self._spotify_core.search(
+            artist_name,
+            type_="artist",
+            limit=limit,
+            offset=offset
+        )
 
         return filter_artists_search_data(data)
 
     def get_top(self, artist_name: str) -> list:
-        artist = self.get(artist_name)
+        artist_id = self.get(artist_name).spotify_id
 
-        top = self._get_top_by_spotify_id(artist.spotify_id)
+        top = self._get_top_by_spotify_id(artist_id)
 
         return top
 
