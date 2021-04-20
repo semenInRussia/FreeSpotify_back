@@ -1,5 +1,5 @@
 """
-This package has functions for deserializing from JSON (From spotify API),
+This package has functions for deserializing JSON response from spotify API,
 To DTO objects (ArtistDto, AlbumDto, TrackDto).
 """
 
@@ -11,7 +11,7 @@ from dto import TrackDto
 from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
 
 
-def deserialize_artists(json_response: list) -> list:
+def deserialize_artists_from_response(json_response: list) -> list:
     return [
         ArtistDto(
             name=delete_sound_quality(artist_data['name']),
@@ -20,11 +20,11 @@ def deserialize_artists(json_response: list) -> list:
     ]
 
 
-def deserialize_artists_when_search(json_response: dict) -> list:
-    return deserialize_artists(json_response['artists']['items'])
+def deserialize_artists_from_search_response(json_response: dict) -> list:
+    return deserialize_artists_from_response(json_response['artists']['items'])
 
 
-def deserialize_albums(json_response: dict) -> list:
+def deserialize_albums_from_response(json_response: dict) -> list:
     return [
         AlbumDto(
             name=delete_sound_quality(album["name"]),
@@ -35,15 +35,11 @@ def deserialize_albums(json_response: dict) -> list:
     ]
 
 
-def deserialize_albums_by_spotify_id(json_response: dict) -> list:
-    return deserialize_albums(json_response["albums"])
+def deserialize_albums_from_search_response(json_response: dict) -> list:
+    return deserialize_albums_from_response(json_response['albums']['items'])
 
 
-def deserialize_albums_when_search(json_response: dict) -> list:
-    return deserialize_albums(json_response['albums']['items'])
-
-
-def deserialize_tracks(json_response: dict) -> list:
+def deserialize_tracks_from_response(json_response: dict) -> list:
     return [
         TrackDto(
             name=delete_sound_quality(track['name']),
@@ -54,13 +50,11 @@ def deserialize_tracks(json_response: dict) -> list:
     ]
 
 
-def deserialize_tracks_when_search(json_response: dict) -> list:
-    return deserialize_tracks(
-        json_response['tracks']['items']
-    )
+def deserialize_tracks_from_search_response(json_response: dict) -> list:
+    return deserialize_tracks_from_response(json_response['tracks']['items'])
 
 
-def deserialize_tracks_of_album(json_response: dict, album_name: str):
+def deserialize_tracks_of_album_from_response(json_response: dict, album_name: str):
     items = json_response['items']
 
     return [
@@ -73,7 +67,5 @@ def deserialize_tracks_of_album(json_response: dict, album_name: str):
     ]
 
 
-def deserialize_tracks_of_artist_top(json_response: dict) -> list:
-    return deserialize_tracks(
-        json_response['tracks']
-    )
+def deserialize_tracks_from_artist_top_response(json_response: dict) -> list:
+    return deserialize_tracks_from_response(json_response['tracks'])
