@@ -30,7 +30,7 @@ class HandlersCollection:
     def calls_queue(self) -> List[Call]:
         return self._calls_queue
 
-    def handler(self, event_name: str):
+    def new_handler(self, event_name: str):
         def wrapper(func):
             self.bind_one_handler_to_event(func, event_name)
 
@@ -47,6 +47,9 @@ class HandlersCollection:
             self._handlers_on_events[event_name] = []
 
         self._handlers_on_events[event_name].append(handler)
+
+    def is_has_handlers_on_events(self, event_name: str) -> bool:
+        return bool(self._handlers_on_events.get(event_name))
 
     def raise_event(self, event_name: str, *handlers_args, **handlers_kwargs):
         handlers_of_current_event = self._handlers_on_events[event_name]

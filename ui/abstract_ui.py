@@ -1,39 +1,91 @@
-from loguru import logger
+from typing import Callable
 
 from entities import Artist, Track
-from ui.statuses import Status, statuses
+from ui.handler_collection import HandlersCollection
 
 
 class AbstractUI:
-    status: Status = None
+    handlers: HandlersCollection
 
-    def __init__(self, additional_settings=None):
-        self._additional_settings = additional_settings
-        self.status = Status()
+    def __init__(self, additional_entities_settings=None):
+        self._additional_settings = additional_entities_settings
+
+    def run(self):
+        if self.handlers.is_has_handlers_on_events("start"):
+            self.handlers.raise_event("start")
+        else:
+            self._start()
+
+        self.handlers.execute_calls_queue()
+
+        try:
+            while True:
+                user_message = self.get_user_message()
+                self.print_artist(user_message)
+                self.handlers.execute_calls_queue()
+
+        except KeyboardInterrupt:
+            if self.handlers.is_has_handlers_on_events("finish"):
+                self.handlers.raise_event("finish")
+            else:
+                self._finish()
+
+        self.handlers.execute_calls_queue()
+
+    def get_user_message(self) -> str:
+        pass
+
+    def _print_normal_message(self, message: str):
+        self.handlers.raise_event("print normal message", message)
 
     def print_artist(self, artist_name: str):
-        logger.debug(f"print_artist - OK, artist_name={artist_name}")
+        message = self.get_message_about_artist(artist_name)
 
-        self.stream.write(
-            self.get_string_artist(artist_name)
+        self._print_normal_message(message)
+
+    def get_message_about_artist(self, artist_name: str) -> str:
+        artist = Artist(artist_name, additional_settings=self._additional_settings)
+
+        res = ""
+
+        res += self._get_string_artist_info_by_artist(artist)
+        res += self._get_string_artist_top(artist.top)
+
+        return res
+
+    def _get_string_artist_top(self, top) -> str:
+        result = ""
+
+        for i, track in enumerate(top):
+            result += self._get_string_top_item(i, track)
+
+        return result
+
+    @staticmethod
+    def _get_string_top_item(index, track: Track) -> str:
+        num_in_top = index + 1
+
+        return (
+            "\n"
+            f"    {num_in_top}. {track.name} \n"
+            f"        {track.album.name} ({track.album.release_date})\n"
+            f"        URL - {track.album.link}"
+            "\n"
         )
 
-        logger.debug(f"artist printed successfully!")
+    @staticmethod
+    def _get_string_artist_info_by_artist(artist: Artist) -> str:
+        return (
+            f"{artist.name}\n"
+            f"    IMG URL - {artist.link_on_img}\n"
+            f"    URL - {artist.link}\n"
+            "\n"
+        )
 
-    def get_string_artist(self, artist_name: str) -> str:
-        try:
-            string_artist = self._try_get_string_artist(artist_name)
-        except Exception as e:
-            return self._raise_and_format_exception(e)
-        else:
-            self.status.set(statuses.OK)
-
-            return string_artist
-
-    def _raise_and_format_exception(self, exception: Exception) -> str:
-        self.status.set(statuses.FAIL)
-
-        return self._format_exception(exception)
+    def _display_error(self, exception: Exception):
+        self.handlers.raise_event(
+            "print error", self._format_exception(exception)
+        )
 
     @staticmethod
     def _format_exception(exception: Exception) -> str:
@@ -48,61 +100,24 @@ class AbstractUI:
             f"{formatted_exception_description}"
         )
 
-    def _try_get_string_artist(self, artist_name: str) -> str:
-        logger.info(f"get artist - OK, artist_name={artist_name}")
+    def _start(self):
+        self._print_normal_message((
+            "Hello, Good Luck!"
+        ))
 
-        artist = Artist(artist_name, additional_settings=self._additional_settings)
-        top = artist.top
+    def _finish(self):
+        self._print_normal_message((
+            "I am leave this, GOOD BY!"
+        ))
 
-        res = ""
-        res += self._get_string_artist_info_by_artist(artist)
-        res += self._get_string_artist_top(top)
 
-        return res
+def create_ui(handlers: HandlersCollection, get_user_message_func: Callable):
+    class UI(AbstractUI):
+        def __init__(self, *args, **kwargs):
+            self.handlers = handlers
 
-    def _get_string_artist_top(self, top) -> str:
-        result = ""
+            super().__init__(*args, **kwargs)
 
-        for i, track in enumerate(top):
-            result += self._get_string_top_item(i, track)
+    UI.get_user_message = staticmethod(get_user_message_func)
 
-        return result
-
-    @staticmethod
-    def _get_string_top_item(index, track: Track) -> str:
-        logger.info(f"get top item - OK, index={index}; track={track}")
-        num_in_top = index + 1
-
-        return (
-            "\n"
-            f"    {num_in_top}. {track.name} \n"
-            f"        {track.album.name} ({track.album.release_date})\n"
-            f"        URL - {track.album.link}"
-            "\n"
-        )
-
-    @staticmethod
-    def _get_string_artist_info_by_artist(artist: Artist) -> str:
-        logger.info(f"get top - OK, artist={artist}")
-        return (
-            f"{artist.name}\n"
-            f"    IMG URL - {artist.link_on_img}\n"
-            f"    URL - {artist.link}\n"
-            "\n"
-        )
-
-    def by(self):
-        logger.info("by - OK")
-
-        self.stream.write()
-        self.stream.write("By, I am Master, you are not master!")
-        self.stream.write()
-
-    def run(self):
-        try:
-            while not self.stream.is_stop:
-                self.print_artist(
-                    str(self.stream.listen())
-                )
-        except KeyboardInterrupt:
-            self.by()
+    return UI
