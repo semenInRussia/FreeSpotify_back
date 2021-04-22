@@ -8,7 +8,7 @@ from commands.simple_commands_collections.cli_commands_collection import CLIComm
 from server.main import app
 from settings import main
 from settings import server
-from ui.bot_programm import BotProgram
+from ui.bot_programm import TelegramUI
 from ui.console_ui import ConsoleUI
 
 
@@ -37,11 +37,17 @@ class RunServerCommand(CLICommand):
 class RunConsoleUICommand(CLICommand):
     aliases = ['console', 'cli-api', 'shell']
 
-    def __init__(self):
-        self.console_ui = ConsoleUI()
-
     def run(self, args: list):
-        self.console_ui.run()
+        console_ui = ConsoleUI()
+        console_ui.run()
+
+
+class RunBotCommand(CLICommand):
+    aliases = ['bot', 'run-bot']
+
+    def run(self, args: list, additional_settings=None, **kwargs):
+        ui = TelegramUI(additional_settings)
+        ui.run()
 
 
 class RunTestsCommand(CLICommand):
@@ -49,14 +55,6 @@ class RunTestsCommand(CLICommand):
 
     def run(self, args: list):
         sys.exit(pytest.main(['..']))
-
-
-class RunBotCommand(CLICommand):
-    aliases = ['bot', 'run-bot']
-
-    def run(self, args: list, additional_settings=None, **kwargs):
-        program = BotProgram(additional_settings)
-        program.run()
 
 
 class MainCLICommandsCollection(CLICommandsCollection):
