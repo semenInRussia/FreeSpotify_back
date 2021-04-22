@@ -5,10 +5,10 @@ from ui.handler_collection import HandlersCollection
 
 
 class AbstractUI:
-    handlers: HandlersCollection
+    handlers: HandlersCollection = HandlersCollection()
 
     def __init__(self, additional_entities_settings=None):
-        self._additional_settings = additional_entities_settings
+        self._additional_entities_settings = additional_entities_settings
 
     def run(self):
         if self.handlers.is_has_handlers_on_events("start"):
@@ -44,7 +44,7 @@ class AbstractUI:
         self._print_normal_message(message)
 
     def get_message_about_artist(self, artist_name: str) -> str:
-        artist = Artist(artist_name, additional_settings=self._additional_settings)
+        artist = Artist(artist_name, additional_settings=self._additional_entities_settings)
 
         res = ""
 
@@ -101,14 +101,14 @@ class AbstractUI:
         )
 
     def _start(self):
-        self._print_normal_message((
+        self._print_normal_message(
             "Hello, Good Luck!"
-        ))
+        )
 
     def _finish(self):
-        self._print_normal_message((
+        self._print_normal_message(
             "I am leave this, GOOD BY!"
-        ))
+        )
 
 
 def create_ui(handlers: HandlersCollection, get_user_message_func: Callable):

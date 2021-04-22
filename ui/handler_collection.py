@@ -9,7 +9,7 @@ class Call(NamedTuple):
     kwargs: dict = dict()
 
     def execute(self, *additional_args, **additional_kwargs):
-        args = additional_args + self.args
+        args = self.args + additional_args
         kwargs = dict(
             **additional_kwargs,
             **self.kwargs
@@ -18,8 +18,25 @@ class Call(NamedTuple):
         self.callback(*args, **kwargs)
 
 
+class AsyncCall(NamedTuple):
+    callback: Callable
+    args: tuple = tuple()
+    kwargs: dict = dict()
+
+    async def execute(self, *additional_args, **additional_kwargs):
+        args = self.args + additional_args
+        kwargs = dict(
+            **additional_kwargs,
+            **self.kwargs
+        )
+
+        await self.callback(*args, **kwargs)
+
+
 class HandlersCollection:
-    _calls_queue: List[Call] = []
+    CurrentCallType = Call
+
+    _calls_queue: List[CurrentCallType] = []
     _handlers_on_events: Dict[str, List[Handler]] = {}
 
     @property
@@ -27,7 +44,7 @@ class HandlersCollection:
         return self._handlers_on_events
 
     @property
-    def calls_queue(self) -> List[Call]:
+    def calls_queue(self) -> List[CurrentCallType]:
         return self._calls_queue
 
     def new_handler(self, event_name: str):
@@ -55,7 +72,7 @@ class HandlersCollection:
         handlers_of_current_event = self._handlers_on_events[event_name]
 
         new_calls = list(map(
-            lambda callback: Call(callback, args=handlers_args, kwargs=handlers_kwargs),
+            lambda callback: self.CurrentCallType(callback, args=handlers_args, kwargs=handlers_kwargs),
 
             handlers_of_current_event
         ))
@@ -80,3 +97,20 @@ class HandlersCollection:
         last_call = self._calls_queue.pop()
 
         last_call.execute(*additional_args, **additional_kwargs)
+
+
+class AsyncHandlersCollection(HandlersCollection):
+    CurrentCallType = AsyncCall
+    _calls_queue: List[CurrentCallType] = []
+
+    async def execute_calls_queue(
+            self,
+            *additional_args,
+            **additional_kwargs
+    ):
+        await self.execute_last_call_from_queue(*additional_args, **additional_kwargs)
+
+    async def execute_last_call_from_queue(self, *additional_args, **additional_kwargs):
+        last_call = self._calls_queue.pop()
+
+        await last_call.execute(*additional_args, **additional_kwargs)

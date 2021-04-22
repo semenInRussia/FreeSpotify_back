@@ -87,3 +87,21 @@ def test_execute_calls_queue_with_additional_args(
 
     handler.assert_called_with(1)
     handler2.assert_called_with(1)
+
+
+def test_execute_calls_queue_and_raise_event_with_args(handlers_collection, handler):
+    handlers_collection.bind_one_handler_to_event(handler, "test event")
+
+    handlers_collection.raise_event("test event", "STRING...")
+    handlers_collection.execute_calls_queue(1)
+
+    handler.assert_called_with("STRING...", 1)
+
+
+def test_execute_calls_queue_and_raise_event_with_some_args(handlers_collection, handler):
+    handlers_collection.bind_one_handler_to_event(handler, "test event")
+
+    handlers_collection.raise_event("test event", 1, 2, 3)
+    handlers_collection.execute_calls_queue(4)
+
+    handler.assert_called_with(1, 2, 3, 4)
