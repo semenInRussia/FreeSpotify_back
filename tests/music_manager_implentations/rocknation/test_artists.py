@@ -18,12 +18,12 @@ def rocknation():
     return Rocknation()
 
 def test_get_link(rocknation: Rocknation):
-    assert rocknation.artists.get_link(**artist_params) == "https://rocknation.su/mp3/band-1"
+    assert rocknation.artists.get_link(, == "https://rocknation.su/mp3/band-1"
 
 
 def test_get_link_should_raise_not_found_exception(rocknation: Rocknation):
     with pytest.raises(NotFoundArtistException):
-        artist = rocknation.artists.get_link(**not_valid_params)
+        artist = rocknation.artists.get_link(,
 
 def test_get_link_on_img(rocknation: Rocknation):
     assert rocknation.artists.get_link_on_img(**artist_params) == "https://rocknation.su/upload/images/bands/1.jpg"

@@ -5,14 +5,16 @@ from bs4 import BeautifulSoup
 import my_request
 from music_manger.core.exceptions import NotFoundAlbumException, NotFoundArtistException
 from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
+from music_manger.music_manger import AbstractArtists, AbstractAlbums
 
 base_url = 'https://rocknation.su'
 
 
 def get_link_on_artist(name: str) -> Optional[str]:
     soup = _get_soup_of_search_artist(name)
+    link = _get_artist_link_by_soup(soup)
 
-    return _get_artist_link_by_soup(soup)
+    return link
 
 
 def _get_soup_of_search_artist(name: str) -> BeautifulSoup:
@@ -47,8 +49,9 @@ def _get_soup_of_search_artist(name: str) -> BeautifulSoup:
 
 def _get_artist_link_by_soup(soup: BeautifulSoup):
     elements = _find_artist_elements(soup)
+    link = _get_artist_link_by_elements(elements)
 
-    return _get_artist_link_by_elements(elements)
+    return link
 
 
 def _find_artist_elements(soup: BeautifulSoup):
@@ -68,7 +71,29 @@ def _get_artist_link_by_elements(elements: list) -> str:
         return link
 
 
-class RocknationAlbums:
+class RocknationArtists(AbstractArtists):
+    @staticmethod
+    def get_link(artist_name: str, **kwargs):
+        return get_link_on_artist(artist_name)
+
+    def get_link_on_img(self, artist_name: str):
+        link_on_artist = get_link_on_artist(artist_name)
+        link_on_image = self._get_link_on_img_by_url_on_artist(link_on_artist)
+
+        return base_url + link_on_image
+
+    def _get_link_on_img_by_url_on_artist(self, artist_url: str):
+        soup = my_request.get_bs(artist_url)
+        link = self._get_link_on_img_by_soup_of_artist(soup)
+
+        return link
+
+    @staticmethod
+    def _get_link_on_img_by_soup_of_artist(soup: BeautifulSoup) -> str:
+        return soup.select_one('img[src^="/upload/images/bands"]').get('src')
+
+
+class RocknationAlbums(AbstractAlbums):
     def get_link_on_img(self, artist_name: str = None, album_name: str = None, link_on_album: str = None):
         """
         Get link on album image.
@@ -85,17 +110,18 @@ class RocknationAlbums:
     def _assert_is_valid_args_for_link_on_img(album_name, artist_name, link_on_album):
         assert (artist_name and album_name) or link_on_album
 
-    def _get_link_on_img_by_album_link(self, link: str):
-        self._raise_not_found_error_if_should(link, 'artist')
+    def _get_link_on_img_by_album_link(self, link_on_album: str):
+        self._raise_not_found_error_if_should(link_on_album, 'artist')
 
-        soup = my_request.get_bs(link)
+        soup_of_album = my_request.get_bs(link_on_album)
 
-        img = soup.select_one(f"img[src^='/upload/images/albums/']")
+        img = soup_of_album.select_one(f"img[src^='/upload/images/albums/']")
         src = img.get("src")
 
         self._raise_not_found_error_if_should(src, 'album')
 
         url = base_url + src
+
         return url
 
     def get_link(self, artist_name: str, album_name: str) -> Optional[str]:
@@ -104,9 +130,9 @@ class RocknationAlbums:
 
         link_on_artist = get_link_on_artist(artist_name)
 
-        return self._get_link_by_link_on_artist(link_on_artist, album_name)
+        return self._get_link_on_album_by_link_on_artist(link_on_artist, album_name)
 
-    def _get_link_by_link_on_artist(self, link_on_artist: str, album_name: str):
+    def _get_link_on_album_by_link_on_artist(self, link_on_artist: str, album_name: str):
         self._raise_not_found_error_if_should(link_on_artist, 'artist')
 
         soup = my_request.get_bs(link_on_artist)
@@ -130,22 +156,10 @@ class RocknationAlbums:
         return url
 
     @staticmethod
-    def _is_not_valid_url(link: str):
-        return not link
-
-    @staticmethod
     def _find_album_link(albums_links: list, album_name: str):
         for albums_link in albums_links:
             if album_name.lower() in albums_link.text.lower():
                 return albums_link
-
-    @staticmethod
-    def _try_delete_value_in_brackets(string: str) -> str:
-        open_bracket = '('
-
-        index_bracket = string.find(open_bracket)
-        index_space_before_bracket = index_bracket - 1
-        return string[:index_space_before_bracket]
 
     @staticmethod
     def _find_links_on_album(soup: BeautifulSoup) -> list:
@@ -162,28 +176,6 @@ class RocknationAlbums:
             else:
                 raise AttributeError(f'{exception_type} - is undefined exception type!')
 
-
-class RocknationArtists:
     @staticmethod
-    def get_link(artist_name: str):
-        return get_link_on_artist(artist_name)
-
-    def get_link_on_img(self, artist_name: str):
-        link_on_artist = get_link_on_artist(artist_name)
-
-        image = self._get_img_by_soup_by_url(link_on_artist)
-
-        return base_url + image.get('src')
-
-    def _get_img_by_soup_by_url(self, url: str):
-        soup = my_request.get_bs(url)
-
-        return self._get_img_by_soup(soup)
-
-    def _get_img_by_soup(self, soup: BeautifulSoup):
-        return soup.select_one('img[src^="/upload/images/bands"]')
-
-
-class Rocknation:
-    artists = RocknationArtists()
-    albums = RocknationAlbums()
+    def _is_not_valid_url(link: str):
+        return not link
