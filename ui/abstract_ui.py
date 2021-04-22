@@ -1,12 +1,10 @@
 from loguru import logger
 
 from entities import Artist, Track
-from my_io.abstract_stream import AbstractStream
 from ui.statuses import Status, statuses
 
 
 class AbstractUI:
-    stream: AbstractStream = None
     status: Status = None
 
     def __init__(self, additional_settings=None):

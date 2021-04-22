@@ -60,6 +60,7 @@ def test_get_link_on_img(album):
 
 def test_work_with_settings_when_create_from_dto():
     album_dto = AlbumDto(artist_name, album_name)
+
     album = Album.create_from_dto(album_dto, additional_settings=settings_with_mock)
 
     assert album.settings.music_manager_impl == settings_with_mock.music_manager_impl

@@ -134,11 +134,12 @@ class SpotifyCore:
 
         Info from https://developer.spotify.com/documentation/web-api/reference/#endpoint-search .
 
-        :param q: str
+        :param q:
         Search query keywords and optional field filters and operators.
         For example:
         q="AC DC - Down Payment Blue".
-        :param type_: str
+
+        :param type_:
         A comma-separated list of item types to search across.
 
         Valid types are:
@@ -151,7 +152,7 @@ class SpotifyCore:
 
         Search results include hits from all the specified item types.
 
-        :param market: str | None
+        :param market:
         An ISO 3166-1 alpha-2 country code or the string from_token.
         If a country code is specified, only content that is playable in that market is returned.
         Note:
@@ -161,7 +162,7 @@ class SpotifyCore:
         - Users can view the country that is associated with their account in the account settings. A user must grant
           access to the user-read-private scope prior to when the access token is issued. 	String 	Optional
 
-        :param limit: int | None
+        :param limit:
         Maximum number of results to return.
         * Default: 20
         * Minimum: 1
@@ -169,7 +170,7 @@ class SpotifyCore:
         Note: The limit is applied within each type, not on the total response.
         For example, if the limit value is 3 and the type is artist,album, the response contains 3 artists and 3 albums. 	Integer 	Optional
 
-        :param offset: int
+        :param offset:
         The index of the first result to return.
         * Default: 0 (the first result).
         * Maximum offset (including limit): 1,000.

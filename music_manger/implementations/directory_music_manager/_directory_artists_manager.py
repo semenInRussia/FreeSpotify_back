@@ -28,7 +28,8 @@ class DirectoryArtistsManager(AbstractArtists):
         for _, artist_names, _ in os.walk(self.path):
             return artist_names
 
-    def _get_artists_from_names(self, similar_artist_names) -> List[ArtistDto]:
+    @staticmethod
+    def _get_artists_from_names(similar_artist_names) -> List[ArtistDto]:
         return list(map(
             lambda name: ArtistDto(name),
             similar_artist_names
