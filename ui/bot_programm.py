@@ -1,95 +1,67 @@
 import logging
-import re
 
-from aiogram import Bot, Dispatcher, types
+from aiogram import types, Bot, Dispatcher
 from aiogram.utils import executor
-from loguru import logger
 
 from settings import bot
-from tests.settigs_for_test import settings_with_mock
 from ui.abstract_ui import AbstractUI
-from ui.basic_ui import BasicUI
-from ui.statuses import Status, statuses
+from ui.handler_collection import AsyncHandlersCollection
 
 logging.basicConfig(level=logging.INFO)
 
 _default_settings = bot
 
-
-def _add_message_handlers_to_dispatcher(dispatcher: Dispatcher, ui: AbstractUI, settings):
-    def _select_user_argument_by_message_text(message_text: str) -> str:
-        res = re.search(r"/(?P<command_name>\w+)\s+(?P<argument>.+)", message_text)
-
-        return res.group('argument')
-
-    @dispatcher.message_handler(commands=["help"])
-    async def get_bot_help_information(message: types.Message):
-        await message.answer(settings.BOT_DESCRIPTION)
-        await message.answer_sticker(settings.stickers.WELCOME)
-
-    @dispatcher.message_handler(commands=["top"])
-    async def message_handler(message: types.Message):
-        logger.debug(f"Message handler - OK, message={message.text}")
-
-        text_answer = _get_string_artist(message)
-
-        await _answer_on_message(message, text_answer, ui.status)
-
-        logger.debug("Message sent!")
-
-    def _get_string_artist(message):
-        artist_name = _select_user_argument_by_message_text(message.text)
-        text_answer = ui.get_string_artist(artist_name)
-        return text_answer
-
-    async def _answer_on_message(message: types.Message, text_answer: str, status: Status):
-        current_status_handler = status_handlers.get(status.value)
-
-        await current_status_handler(message, text_answer)
-
-    async def _answer_on_fail_message(message: types.Message, text_answer: str):
-        logger.info("send FAIL result")
-
-        await message.answer_sticker(settings.stickers.FAIL)
-        await message.answer(text_answer)
-
-    async def _answer_on_ok_message(message: types.Message, text_answer: str):
-        logger.info("send GOOD result")
-
-        await message.answer(text_answer)
-
-    status_handlers = {
-        statuses.FAIL: _answer_on_fail_message,
-        statuses.OK: _answer_on_ok_message
-    }
+handlers_telegram = AsyncHandlersCollection()
 
 
-class BotProgram:
-    def __init__(self, additional_settings=None):
-        self._init_settings(additional_settings)
-        self._init_dispatcher()
-        self._init_basic_ui()
+@handlers_telegram.new_handler("print normal message")
+async def print_normal_message(message: str, aiogram_message: types.Message, *args):
+    await aiogram_message.answer(message)
 
-        self._add_message_handler_to_dispatcher()
 
-    def _init_settings(self, additional_settings=None):
-        self._settings = _default_settings
-        self._settings += additional_settings
+@handlers_telegram.new_handler("print error")
+async def print_error(message: str, aiogram_message: types.Message, settings):
+    await aiogram_message.answer_sticker(settings.stickers.FAIL)
+    await aiogram_message.answer(message)
 
-    def _init_dispatcher(self):
-        bot_ = Bot(token=self._settings.BOT_TOKEN)
 
-        self._dispatcher = Dispatcher(bot_)
+def _create_telegram_settings(additional_settings=None):
+    return _default_settings + additional_settings
 
-    def _init_basic_ui(self):
-        self._basic_ui = BasicUI(settings_with_mock)
 
-    def _add_message_handler_to_dispatcher(self):
-        _add_message_handlers_to_dispatcher(
-            dispatcher=self._dispatcher,
-            ui=self._basic_ui,
-            settings=self._settings
-        )
+class TelegramUI(AbstractUI):
+    handlers: AsyncHandlersCollection = handlers_telegram
+
+    def __init__(self, additional_telegram_settings=None, additional_entities_settings=None):
+        self._telegram_settings = _create_telegram_settings(additional_telegram_settings)
+
+        super().__init__(additional_entities_settings)
 
     def run(self):
-        executor.start_polling(self._dispatcher, skip_updates=True)
+        bot_ = Bot(token=self._telegram_settings.BOT_TOKEN)
+
+        dispatcher = Dispatcher(bot_)
+
+        @dispatcher.message_handler(commands=["help"])
+        async def get_bot_help_information(message: types.Message):
+            await message.answer(self._telegram_settings.BOT_DESCRIPTION)
+            await message.answer_sticker(self._telegram_settings.stickers.WELCOME)
+
+        @dispatcher.message_handler()
+        async def get_top(message: types.Message):
+            artist_name = message.text
+
+            self.print_artist(artist_name)
+
+            await self.handlers.execute_calls_queue(
+                message,
+                self._telegram_settings
+            )
+
+        executor.start_polling(dispatcher, skip_updates=True)
+
+
+if __name__ == "__main__":
+    telegram_ui = TelegramUI()
+
+    telegram_ui.run()
