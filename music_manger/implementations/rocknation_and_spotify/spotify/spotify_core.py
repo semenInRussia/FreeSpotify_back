@@ -19,6 +19,8 @@ def _check_json_spotify_response(json_response: dict):
     if not _is_response_has_error(json_response):
         return
 
+    logger.warning(json_response)
+
     all_excepted_exceptions = [
         NotValidTokenException,
         AccessTokenExpiredException,
@@ -32,7 +34,6 @@ def _check_json_spotify_response(json_response: dict):
         if exception.message == current_exception_message:
             raise exception
 
-    logger.warning(current_exception_message)
 
     raise UndefinedErrorMessageException
 

@@ -67,7 +67,10 @@ class Album(AbstractEntity):
     @property
     def link(self):
         try:
-            return self._music_mgr.albums.get_link(self._instance.artist_name, )
+            return self._music_mgr.albums.get_link(
+                self._instance.artist_name,
+                self._instance.name
+            )
         except NotFoundAlbumException:
             return None
 
