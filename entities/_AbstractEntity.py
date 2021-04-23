@@ -1,4 +1,4 @@
-from settings import entities
+from settings.entities import entities
 
 
 class AbstractEntity:

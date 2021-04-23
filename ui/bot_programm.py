@@ -3,7 +3,8 @@ import logging
 from aiogram import types, Bot, Dispatcher
 from aiogram.utils import executor
 
-from settings import bot
+from settings.bot import bot
+
 from ui.abstract_ui import AbstractUI
 from ui.handler_collection import AsyncHandlersCollection
 

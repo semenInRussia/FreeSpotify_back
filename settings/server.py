@@ -1,6 +1,5 @@
-PROTOCOL = 'http'
+from settings_master import Settings
 
-PORT = 8000
-HOST = '127.0.0.1'
+from . import _server
 
-ROOT_URL = f'{PROTOCOL}://{HOST}:{PORT}'
+server = Settings(_server)

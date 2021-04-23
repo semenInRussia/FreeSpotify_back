@@ -3,7 +3,7 @@ import base64
 from loguru import logger
 
 import my_request
-from settings import spotify
+from settings.spotify import spotify
 
 from .core.exceptions import AccessTokenExpiredException
 from .core.exceptions import InvalidClientException

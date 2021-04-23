@@ -1,3 +1,6 @@
-from . import server as _server
+from settings_master import Settings
 
-help_text_for_port = f"This is port, he will open. (default: {_server.PORT})"
+from settings import _main
+
+
+main = Settings(_main)

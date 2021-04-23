@@ -6,8 +6,10 @@ import pytest
 from commands.simple_commands.cli_command import CLICommand
 from commands.simple_commands_collections.cli_commands_collection import CLICommandsCollection
 from server.main import app
-from settings import main
-from settings import server
+
+from settings.main import main
+from settings.server import server
+
 from ui.bot_programm import TelegramUI
 from ui.console_ui import ConsoleUI
 

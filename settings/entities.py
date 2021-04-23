@@ -1,3 +1,7 @@
-from music_manger.implementations import RocknationAndSpotify
+from settings_master import Settings
 
-music_manager_impl = RocknationAndSpotify
+from settings import _entities
+
+
+entities = Settings(_entities)
+

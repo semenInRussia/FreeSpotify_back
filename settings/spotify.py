@@ -1,8 +1,6 @@
-import os as _os
+from settings_master import Settings
 
-from dotenv import load_dotenv as _load_dotenv
+from settings import _spotify
 
-_load_dotenv()
 
-SPOTIFY_CLIENT_ID = _os.getenv('SPOTIFY_CLIENT_ID')
-SPOTIFY_CLIENT_SECRET = _os.getenv('SPOTIFY_CLIENT_SECRET')
+spotify = Settings(_spotify)
