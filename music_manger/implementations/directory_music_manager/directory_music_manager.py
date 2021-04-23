@@ -1,5 +1,5 @@
-from music_manger.implementations.directory_music_manager._directory_albums_manager import DirectoryAlbumsManager
-from music_manger.implementations.directory_music_manager._directory_artists_manager import DirectoryArtistsManager
+from music_manger.implementations.directory_music_manager._albums import DirectoryAlbumsManager
+from music_manger.implementations.directory_music_manager._artists import DirectoryArtistsManager
 from music_manger.music_manger import AbstractMusicManager
 
 

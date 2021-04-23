@@ -3,7 +3,7 @@ from typing import List
 
 import similarity_lib
 from dto import AlbumDto, ArtistDto, TrackDto
-from music_manger.implementations.directory_music_manager._directory_artists_manager import DirectoryArtistsManager
+from music_manger.implementations.directory_music_manager._artists import DirectoryArtistsManager
 from music_manger.music_manger import AbstractAlbums, AbstractArtists
 
 
