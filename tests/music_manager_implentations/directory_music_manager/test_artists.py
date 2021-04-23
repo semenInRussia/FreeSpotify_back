@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from dto import ArtistDto
@@ -24,9 +26,12 @@ def test_get_artist(directory_music_manager: AbstractMusicManager):
 
 
 def test_search(directory_music_manager: AbstractMusicManager):
-    artists = directory_music_manager.artists.search("artist1", )
+    artists = directory_music_manager.artists.search("artist1")
 
     assert isinstance(artists, list)
 
-    for artist in artists:
-        assert isinstance(artist, ArtistDto)
+    assert artists[0] == ArtistDto(name="artist1")
+
+def test_get_link(directory_music_manager: DirectoryMusicManager):
+    assert directory_music_manager.artists.get_link("artist 1") == os.path.join(path_to_music, "artist1")
+

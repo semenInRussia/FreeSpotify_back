@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 import my_os
@@ -27,3 +28,8 @@ class DirectoryArtistsManager(AbstractArtists):
             lambda name: ArtistDto(name),
             similar_artist_names
         ))
+
+    def get_link(self, artist_name: str) -> str:
+        artist = self.get(artist_name)
+
+        return os.path.join(self._path_to_all_artists, artist.name)
