@@ -17,17 +17,24 @@ class DirectoryArtistsManager(AbstractArtists):
         return self.path
 
     def search(self, artist_name: str) -> List[ArtistDto]:
-        similar_artist_names = my_os.dirs_similar_to(artist_name, self._path_to_all_artists)
-        artists = self._get_artists_from_names(similar_artist_names)
+        artists_paths = my_os.dirs_similar_to(artist_name, self._path_to_all_artists)
+        artists = self._get_artists_from_paths(artists_paths)
 
         return artists
 
-    @staticmethod
-    def _get_artists_from_names(similar_artist_names) -> List[ArtistDto]:
+    def _get_artists_from_paths(self, artists_paths: List[str]):
         return list(map(
-            lambda name: ArtistDto(name),
-            similar_artist_names
+            self._artist_from_path,
+            artists_paths
         ))
+
+    @staticmethod
+    def _artist_from_path(path: str):
+        parts_of_path = my_os.get_parts_of_path(path)
+
+        artist_name = parts_of_path[-1]
+
+        return ArtistDto(artist_name)
 
     def get_link(self, artist_name: str) -> str:
         artist = self.get(artist_name)

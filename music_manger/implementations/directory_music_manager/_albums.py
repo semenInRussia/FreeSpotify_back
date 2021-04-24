@@ -19,12 +19,8 @@ class DirectoryAlbumsManager(AbstractAlbums):
 
     def _search_paths_to_albums(self, artist_name: str, album_name: str) -> List[str]:
         return my_os.search_dirs_by_pattern(
-            f"{self._path_to_artists}/~{artist_name}/~{album_name}"
+            f"{self._path}/~{artist_name}/~{album_name}"
         )
-
-    @property
-    def _path_to_artists(self):
-        return self._path
 
     def _get_albums_by_paths(self, paths_to_albums: List[str]) -> List[AlbumDto]:
         return list(map(

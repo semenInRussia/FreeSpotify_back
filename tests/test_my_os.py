@@ -10,11 +10,13 @@ from my_os import search_dirs_by_pattern
 
 @pytest.fixture()
 def path_to_dir():
-    listdir = os.listdir(os.path.dirname(__file__))
+    listdir = dirs('')
+    print(listdir)
 
     if "dir" in listdir:
         return "dir"
     else:
+
         return os.path.join(
             "tests",
             "dir"

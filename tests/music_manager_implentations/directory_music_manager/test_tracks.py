@@ -4,7 +4,7 @@ import pytest
 
 from dto import TrackDto
 from music_manger.implementations.directory_music_manager._tracks import DirectoryTracksMusicManager
-from tests.music_manager_implentations.directory_music_manager.testdata import path_to_music
+from tests.testdata import path_to_music
 
 
 @pytest.fixture()
