@@ -29,7 +29,10 @@ def dirs_names_similar_to(string_for_compare: str, path: str) -> List[str]:
 
 
 def dirs_names(path: str) -> List[str]:
-    return os.listdir(parse_path(path))
+    try:
+        return os.listdir(parse_path(path))
+    except NotADirectoryError:
+        return []
 
 
 def dirs(path: str) -> List[str]:
@@ -41,6 +44,9 @@ def dirs(path: str) -> List[str]:
 
 
 def parse_path(path: str) -> str:
+    if path == '':
+        return '.'
+
     res = ""
 
     for path_part in path.split("/"):
@@ -49,34 +55,85 @@ def parse_path(path: str) -> str:
     return res
 
 
+def get_parts_of_path(path: str):
+    return pathlib.Path(path).parts
+
+
 def search_dirs_by_pattern(pattern: str) -> List[str]:
-    pattern = parse_path(pattern)
-
     found_dirs = [""]
-    parts_of_patterns = pathlib.Path(pattern).parts
 
-    for part_of_pattern in parts_of_patterns:
-        if _is_pattern_similarity(part_of_pattern):
-            just_found_dirs = list(map(
-                lambda found_dir: dirs_similar_to(_ignore_target_similarity(part_of_pattern), found_dir),
-                found_dirs
-            ))
+    pattern = parse_path(pattern)
+    parts_of_patterns = get_parts_of_path(pattern)
 
-            just_found_dirs = sum_of_lists(*just_found_dirs)
+    possible_search_expressions = [
+        SimilarSearchExpression(),
+        AllDirsSearchExpression(),
+        DefaultSearchExpression(),
+    ]
 
-            found_dirs = just_found_dirs
-        else:
-            found_dirs = join_all_paths_with(part_of_pattern, found_dirs)
+    for expression in parts_of_patterns:
+        for search_expression in possible_search_expressions:
+            if search_expression.is_this_expression(expression):
+                found_dirs = search_expression.get_listdir_from_dirs(found_dirs, expression)
+                break
 
     return found_dirs
 
 
-def _is_pattern_similarity(pattern: str) -> bool:
-    return pattern[0] == SIMILARITY_TARGET
+class SearchExpression:
+    def is_this_expression(self, string: str) -> bool:
+        pass
+
+    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
+        pass
 
 
-def _ignore_target_similarity(pattern: str) -> str:
-    return pattern[SIMILARITY_TARGET_LENGTH:]
+class SimilarSearchExpression(SearchExpression):
+    token: str = '~'
+    token_length: int = 1
+
+    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
+        string_for_compare = self._ignore_token(concrete_expression)
+
+        listdir = list(map(
+            lambda path: dirs_similar_to(string_for_compare, path),
+            paths
+        ))
+
+        listdir = sum_of_lists(*listdir)
+
+        return listdir
+
+    def _ignore_token(self, string: str) -> str:
+        return string[self.token_length:]
+
+    def is_this_expression(self, string: str) -> bool:
+        return string.startswith(self.token)
+
+
+class AllDirsSearchExpression(SearchExpression):
+    token = '*'
+
+    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
+        listdir = list(map(
+            lambda path: dirs(path),
+            paths
+        ))
+
+        listdir = sum_of_lists(*listdir)
+
+        return listdir
+
+    def is_this_expression(self, string: str) -> bool:
+        return string.startswith(self.token)
+
+
+class DefaultSearchExpression(SearchExpression):
+    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
+        return join_all_paths_with(concrete_expression, paths)
+
+    def is_this_expression(self, string: str) -> bool:
+        return True
 
 
 def join_all_paths_with(path_for_joining: str, paths: List[str]):
