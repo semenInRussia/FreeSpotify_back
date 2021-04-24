@@ -24,15 +24,6 @@ def test_search_albums(directory_music_manager: AbstractMusicManager):
     assert excepted[0] == AlbumDto(artist_name="artist2", name="album1")
 
 
-def test_search_albums_by_empty_artist_name(directory_music_manager: AbstractMusicManager):
-    expected = directory_music_manager.albums.search("", "album1")
-
-    assert_is_equal_list_without_positions_elements(
-        [AlbumDto("artist1", "album1"), AlbumDto("artist2", "album1"), AlbumDto("artist2", "album2")],
-        expected
-    )
-
-
 def assert_is_equal_list_without_positions_elements(actual: list, excepted: list):
     assert set(actual) == set(excepted)
 
