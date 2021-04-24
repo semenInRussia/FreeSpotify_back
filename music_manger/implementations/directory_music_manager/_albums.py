@@ -7,15 +7,6 @@ from music_manger.music_manger import AbstractAlbums
 RATIO_OF_SIMILARITY_OF_ALBUMS = 0.5
 
 
-def _sum_of_lists(*lists) -> list:
-    result = []
-
-    for current_list in lists:
-        result.extend(current_list)
-
-    return result
-
-
 class DirectoryAlbumsManager(AbstractAlbums):
     def __init__(self, path_to_music: str):
         self._path = path_to_music

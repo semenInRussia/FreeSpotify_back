@@ -142,3 +142,9 @@ def join_all_paths_with(path_for_joining: str, paths: List[str]):
 
         paths
     ))
+
+
+def file_without_file_extension(path: str) -> str:
+    parts_of_filename = path.split('.')
+
+    return ''.join(parts_of_filename[:-1])
