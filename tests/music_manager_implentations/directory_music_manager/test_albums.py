@@ -19,12 +19,9 @@ def test_get_album(directory_music_manager: AbstractMusicManager):
 
 
 def test_search_albums(directory_music_manager: AbstractMusicManager):
-    excepted = directory_music_manager.albums.search("artist2", "album")
+    excepted = directory_music_manager.albums.search("artist2", "album1")
 
-    assert isinstance(excepted, list)
-
-    for album in excepted:
-        assert isinstance(album, AlbumDto)
+    assert excepted[0] == AlbumDto(artist_name="artist2", name="album1")
 
 
 def test_search_albums_by_empty_artist_name(directory_music_manager: AbstractMusicManager):
