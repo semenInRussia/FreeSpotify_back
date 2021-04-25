@@ -40,7 +40,7 @@ def artist_detail_handle(artist_name):
     return serializer.get_data()
 
 
-@app.route(ARTISTS_URL)
+@app.route(ALBUMS_URL)
 @cross_origin()
 def albums_handle():
     return {
