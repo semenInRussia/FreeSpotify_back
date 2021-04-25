@@ -1,6 +1,7 @@
 import pytest
 
 from dto import ArtistDto
+from entities import Album
 from entities import Artist
 from entities.track import Track
 from tests.settigs_for_test import settings_with_mock
@@ -59,6 +60,15 @@ def test_get_top(artist):
     top = artist.top
 
     _assert_is_track_top(top)
+
+
+def test_get_albums(artist: Artist):
+    albums = artist.albums
+
+    assert albums
+    assert isinstance(albums, list)
+
+    assert isinstance(albums[0], Album)
 
 
 def test_create_from_dto(artist_dto: ArtistDto):

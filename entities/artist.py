@@ -1,3 +1,6 @@
+from typing import List
+
+from dto import AlbumDto
 from dto import ArtistDto
 from entities._AbstractEntity import AbstractEntity
 from music_manger.core.exceptions import NotFoundArtistException
@@ -27,11 +30,11 @@ class Artist(AbstractEntity):
 
     @property
     def top(self):
-        track_dto_top = self._music_mgr.artists.get_top(self.name)
+        tracks_dto_top = self._music_mgr.artists.get_top(self.name)
 
-        track_top = self._get_top_from_dto_top(track_dto_top)
+        tracks_top = self._get_top_from_dto_top(tracks_dto_top)
 
-        return track_top
+        return tracks_top
 
     def _get_top_from_dto_top(self, track_dto_top):
         from entities.track import Track
@@ -44,6 +47,22 @@ class Artist(AbstractEntity):
             top.append(track)
 
         return top
+
+    @property
+    def albums(self):
+        dto_albums = self._music_mgr.artists.get_albums(self.name)
+        albums = self._get_albums_from_dto_albums(dto_albums)
+
+        return albums
+
+    def _get_albums_from_dto_albums(self, dto_albums: List[AlbumDto]):
+        from . import Album
+
+        return list(map(
+            lambda dto_album: Album.create_from_dto(dto_album, additional_settings=self.settings),
+
+            dto_albums
+        ))
 
     @property
     def link(self):
