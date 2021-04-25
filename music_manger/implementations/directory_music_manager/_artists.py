@@ -1,6 +1,7 @@
 import os
 from typing import List
 
+from dto import AlbumDto
 import my_os
 from dto import ArtistDto
 from music_manger.music_manger import AbstractArtists
@@ -40,3 +41,19 @@ class DirectoryArtistsManager(AbstractArtists):
         artist = self.get(artist_name)
 
         return os.path.join(self._path_to_all_artists, artist.name)
+
+    def get_albums(self, artist_name: str) -> List[AlbumDto]:
+        path_to_artist = self.get_link(artist_name)
+        albums = self._albums_by_path_to_artist(path_to_artist)
+
+        return albums
+
+    def _albums_by_path_to_artist(self, path_to_artist: str) -> List[AlbumDto]:
+        album_names = my_os.dirs_names(path_to_artist)
+        artist_name = self._artist_from_path(path_to_artist).name
+
+        return list(map(
+            lambda album_name: AlbumDto(artist_name, album_name),
+
+            album_names
+        ))
