@@ -35,6 +35,9 @@ class AbstractArtists(_AbstractObjects, ABC):
     def get_top(self, artist_name: str) -> List[TrackDto]:
         pass
 
+    def get_albums(self, artist_name: str) -> List[AlbumDto]:
+        pass
+
     def get_link(self, artist_name: str) -> str:
         pass
 
