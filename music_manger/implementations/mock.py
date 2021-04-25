@@ -15,19 +15,17 @@ def _create_random_name():
         "We are the gobs: I", "We are the gobs: II"
     ]
 
-    random.seed(SEED)
-
     return random.choice(names)
 
 
 def _create_random_disc_number():
-    random.seed(SEED)
-
     return random.randint(1, 77)  # Search "Ella Fitzgerald - Sings The George And Ira Gershwin Song Book" on Google!
 
 
 class MockAlbums(AbstractAlbums):
     def search(self, artist_name: str, album_name: str, limit: int = 4) -> List[AlbumDto]:
+        random.seed(SEED)
+
         return [
             AlbumDto(
                 artist_name=artist_name,
@@ -37,6 +35,8 @@ class MockAlbums(AbstractAlbums):
         ]
 
     def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
+        random.seed(SEED)
+
         return [
             TrackDto(
                 name=_create_random_name(),
@@ -46,26 +46,32 @@ class MockAlbums(AbstractAlbums):
         ]
 
     def get_link(self, artist_name, album_name: str) -> str:
+        random.seed(SEED)
+
         return f"https://rocknation.su/mp3/album-{random.randint(1, 2500)}"
 
     def get_link_on_img(self, artist_name: str, album_name: str) -> str:
+        random.seed(SEED)
+
         return f"https://rocknation.su/upload/images/albums/{random.randint(1, 2500)}.jpg"
 
 
 class MockArtists(AbstractArtists):
-
     def search(self, artist_name: str, limit: int = 3) -> List[ArtistDto]:
+        random.seed(SEED)
+
         res = [
             ArtistDto(
                 name=_create_random_name()
             ) for _ in range(limit)
         ]
-
         res[0] = ArtistDto(artist_name)
 
         return res
 
     def get_top(self, artist_name: str) -> List[TrackDto]:
+        random.seed(SEED)
+
         return [
             TrackDto(
                 name=_create_random_name() + str(i),
@@ -75,14 +81,23 @@ class MockArtists(AbstractArtists):
         ]
 
     def get_link(self, artist_name: str) -> str:
+        random.seed(SEED)
+
         return f"https://rocknation.su/mp3/band-{random.randint(1, 266)}"
 
+    def get_albums(self, artist_name: str) -> List[AlbumDto]:
+        pass
+
     def get_link_on_img(self, artist_name: str) -> str:
+        random.seed(SEED)
+
         return f"https://rocknation.su/upload/images/bands/{random.randint(1, 266)}.jpg"
 
 
 class MockTracks(AbstractTracks):
     def search(self, artist_name: str, album_name: str, track_name: str) -> List[TrackDto]:
+        random.seed(SEED)
+
         return [
             TrackDto(
                 artist_name=artist_name,
@@ -96,6 +111,8 @@ class MockTracks(AbstractTracks):
         return ""
 
     def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
+        random.seed(SEED)
+
         return f"https://rocknation.su/upload/images/albums/{random.randint(1, 1500)}.jpg"
 
 
