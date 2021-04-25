@@ -10,8 +10,6 @@ class FieldSerializer:
 
     @field_name_for_serialize.setter
     def field_name_for_serialize(self, value: str):
-        print('OK')
-
         self._field_name_for_serialize = value
 
     def serialize_field_of(self, obj):

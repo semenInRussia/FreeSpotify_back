@@ -1,7 +1,10 @@
+from _low_level_utils import get_public_fields_of
 from server.serializers.fields import FieldSerializer
 
 
 class Serializer:
+    public_fields = ["all_fields", "object_type", "get_data", "public_fields"]
+
     all_fields = []
     object_type = None
 
@@ -10,12 +13,19 @@ class Serializer:
 
     def get_data(self, *fields_for_serialize) -> dict:
         if self._is_all_fields(fields_for_serialize):
-            fields_for_serialize = self.all_fields
+            fields_for_serialize = self._all_fields
 
         return self._serialize_object(fields_for_serialize)
 
     def _is_all_fields(self, fields) -> bool:
-        return self.all_fields == fields
+        return (self._all_fields == fields) or (not fields)
+
+    @property
+    def _all_fields(self):
+        if not self.all_fields:
+            self.all_fields = get_public_fields_of(self, ignore=self.public_fields)
+
+        return self.all_fields
 
     def _serialize_object(self, fields) -> dict:
         return {
