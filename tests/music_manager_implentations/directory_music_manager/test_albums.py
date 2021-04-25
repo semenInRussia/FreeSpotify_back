@@ -24,10 +24,6 @@ def test_search_albums(directory_music_manager: AbstractMusicManager):
     assert excepted[0] == AlbumDto(artist_name="artist2", name="album1")
 
 
-def assert_is_equal_list_without_positions_elements(actual: list, excepted: list):
-    assert set(actual) == set(excepted)
-
-
 def test_tracks_of_album(directory_music_manager: AbstractMusicManager):
     tracks = directory_music_manager.albums.get_tracks("artist1", "album1")
 

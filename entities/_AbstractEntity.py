@@ -1,3 +1,4 @@
+from music_manger.music_manger import AbstractMusicManager
 from settings.entities import entities
 
 
@@ -16,5 +17,5 @@ class AbstractEntity:
         self.__settings += additional_settings
 
     @property
-    def _music_mgr(self):
+    def _music_mgr(self) -> AbstractMusicManager:
         return self.settings.music_manager_impl()
