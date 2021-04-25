@@ -10,7 +10,7 @@ track_name = "Burn"
 def test_general_serializer_artist():
     artist = Artist(artist_name, additional_settings=settings_with_mock)
 
-    fields = ["name", "top", "link", "link_on_img"]
+    fields = ["name", "top", "link", "link_on_img", "albums"]
 
     data = EntitiesSerializer(artist).get_data(*fields)
 

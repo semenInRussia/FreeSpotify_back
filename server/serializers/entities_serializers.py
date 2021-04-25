@@ -1,6 +1,9 @@
-from entities import Album, Artist, Track
+from entities import Album
+from entities import Artist
+from entities import Track
 from server.serializers import fields
-from server.serializers.serializer import Serializer, GeneralSerializer
+from server.serializers.serializer import GeneralSerializer
+from server.serializers.serializer import Serializer
 
 
 def get_serialize_artist_function(*fields_for_serialize):
@@ -23,6 +26,7 @@ class ArtistSerializer(Serializer):
     link_on_img = fields.StringFieldSerializer()
 
     top = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number", "album"))
+    albums = fields.CustomListFieldSerializer(get_serialize_album_function("name", "link", "link_on_img"))
 
 
 class AlbumSerializer(Serializer):
