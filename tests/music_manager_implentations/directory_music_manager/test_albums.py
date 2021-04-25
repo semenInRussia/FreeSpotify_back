@@ -34,7 +34,7 @@ def test_get_link(directory_music_manager: AbstractMusicManager):
 def test_tracks_of_album(directory_music_manager: AbstractMusicManager):
     tracks = directory_music_manager.albums.get_tracks("artist1", "album1")
 
-    assert isinstance(tracks, list)
-
-    for track in tracks:
-        assert isinstance(track, TrackDto)
+    assert set(tracks) == {
+        TrackDto(artist_name="artist1", album_name="album1", name="track1"),
+        TrackDto(artist_name="artist1", album_name="album1", name="track2")
+    }

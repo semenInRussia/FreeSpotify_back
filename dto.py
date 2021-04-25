@@ -2,9 +2,9 @@ from typing import NamedTuple
 
 
 class TrackDto(NamedTuple):
-    name: str
     artist_name: str
     album_name: str
+    name: str
 
     disc_number: int = None
 

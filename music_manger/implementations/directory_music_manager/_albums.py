@@ -51,3 +51,18 @@ class DirectoryAlbumsManager(AbstractAlbums):
             album.artist_name,
             album.name
         )
+
+    def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
+        album = self.get(artist_name, album_name)
+        path_to_album = self._path_from_album(album)
+
+        return list(map(
+            lambda track_filename: self._track_from_filename(artist_name, album_name, track_filename),
+            my_os.dirs_names(path_to_album)
+        ))
+
+    @staticmethod
+    def _track_from_filename(artist_name: str, album_name: str, track_filename: str) -> TrackDto:
+        track_name = my_os.file_without_file_extension(track_filename)
+
+        return TrackDto(artist_name, album_name, track_name)
