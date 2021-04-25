@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from dto import AlbumDto, TrackDto
@@ -19,9 +21,14 @@ def test_get_album(directory_music_manager: AbstractMusicManager):
 
 
 def test_search_albums(directory_music_manager: AbstractMusicManager):
-    excepted = directory_music_manager.albums.search("artist2", "album1")
+    actual = directory_music_manager.albums.search("artist2", "album1")
 
-    assert excepted[0] == AlbumDto(artist_name="artist2", name="album1")
+    assert actual[0] == AlbumDto(artist_name="artist2", name="album1")
+
+def test_get_link(directory_music_manager: AbstractMusicManager):
+    actual = directory_music_manager.albums.get_link("artist 1", "1 album")
+
+    assert actual == os.path.join(path_to_music, "artist1", "album1")
 
 
 def test_tracks_of_album(directory_music_manager: AbstractMusicManager):

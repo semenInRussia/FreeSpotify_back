@@ -1,8 +1,10 @@
+import os
 from typing import List
 
-import my_os
 from dto import AlbumDto
+from dto import TrackDto
 from music_manger.music_manger import AbstractAlbums
+import my_os
 
 RATIO_OF_SIMILARITY_OF_ALBUMS = 0.5
 
@@ -38,3 +40,14 @@ class DirectoryAlbumsManager(AbstractAlbums):
 
         return AlbumDto(name=name, artist_name=artist_name)
 
+    def get_link(self, artist_name, album_name: str) -> str:
+        album = self.get(artist_name, album_name)
+
+        return self._path_from_album(album)
+
+    def _path_from_album(self, album: AlbumDto):
+        return os.path.join(
+            self._path,
+            album.artist_name,
+            album.name
+        )
