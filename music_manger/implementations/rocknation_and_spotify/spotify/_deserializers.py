@@ -38,6 +38,9 @@ def deserialize_albums_from_response(json_response: dict) -> list:
 def deserialize_albums_from_search_response(json_response: dict) -> list:
     return deserialize_albums_from_response(json_response['albums']['items'])
 
+def deserialize_albums_of_artist_response(json_response: dict) -> list:
+    return deserialize_albums_from_response(json_response['items'])
+
 
 def deserialize_tracks_from_response(json_response: dict) -> list:
     return [

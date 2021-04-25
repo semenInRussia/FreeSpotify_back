@@ -1,15 +1,19 @@
 from typing import List
 
-from dto import AlbumDto, ArtistDto
+from dto import AlbumDto
+from dto import ArtistDto
+
 from music_manger.music_manger import AbstractAlbums
 from music_manger.music_manger import AbstractArtists
 from music_manger.music_manger import AbstractTracks
 
-from ._deserializers import deserialize_albums_from_search_response, deserialize_artists_from_response, \
-    deserialize_artists_from_search_response
-from ._deserializers import deserialize_tracks_of_album_from_response
+from ._deserializers import deserialize_albums_from_search_response
+from ._deserializers import deserialize_albums_of_artist_response
+from ._deserializers import deserialize_artists_from_search_response
 from ._deserializers import deserialize_tracks_from_artist_top_response
 from ._deserializers import deserialize_tracks_from_search_response
+from ._deserializers import deserialize_tracks_of_album_from_response
+
 from .spotify_core import SpotifyCore
 
 
@@ -45,6 +49,20 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
         top = deserialize_tracks_from_artist_top_response(json_response)
 
         return top
+
+    def get_albums(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
+        artist_id = self.get(artist_name).spotify_id
+
+        return self._get_albums_by_spotify_id(artist_id, limit, offset)
+
+    def _get_albums_by_spotify_id(self, artist_id: str, limit: int, offset: int) -> List[AlbumDto]:
+        json_response = self._spotify_core.parse_albums_of_artist(
+            artist_id,
+            limit=limit,
+            offset=offset
+        )
+
+        return deserialize_albums_of_artist_response(json_response)
 
 
 class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):

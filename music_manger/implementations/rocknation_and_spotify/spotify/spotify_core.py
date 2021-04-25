@@ -4,7 +4,6 @@ from loguru import logger
 
 import my_request
 from settings.spotify import spotify
-
 from .core.exceptions import AccessTokenExpiredException
 from .core.exceptions import InvalidClientException
 from .core.exceptions import InvalidObjectIdException
@@ -33,7 +32,6 @@ def _check_json_spotify_response(json_response: dict):
     for exception in all_excepted_exceptions:
         if exception.message == current_exception_message:
             raise exception
-
 
     raise UndefinedErrorMessageException
 
@@ -216,3 +214,31 @@ class SpotifyCore:
         url = f'albums/{album_id}/tracks'
 
         return self._json_parser.parse_json_from_spotify(url)
+
+    def parse_albums_of_artist(self, artist_id: str, market: str = 'ES', limit: int = 1, offset: int = 0):
+        """
+        :param artist_id:
+        The Spotify ID for the artist.
+        :param market:
+        Synonym for country. An ISO 3166-1 alpha-2 country code or the string from_token.
+        Supply this parameter to limit the response to one particular geographical market.
+        For example, for albums available in Sweden: market=SE.
+        If not given, results will be returned for all markets and you are likely to get duplicate results per album,
+        one for each market in which the album is available!
+        :param limit:
+        The number of album objects to return.
+        * Default: 1
+        * Minimum: 1
+        * Maximum: 50.
+        :param offset:
+        The index of the first album to return.
+        Default: 0 (i.e., the first album)
+        """
+        return self._json_parser.parse_json_from_spotify(
+            second_part_of_links=f"artists/{artist_id}/albums",
+
+            id=artist_id,
+            market=market,
+            limit=limit,
+            offset=offset
+        )

@@ -2,6 +2,7 @@ from typing import List
 
 import pytest
 
+from dto import AlbumDto
 from dto import ArtistDto
 from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.implementations.rocknation_and_spotify.spotify import Spotify
@@ -69,3 +70,12 @@ def test_get_top(spotify: Spotify):
 
     assert len(top) == 10
     assert_is_valid_track_collection(top)
+
+def test_get_albums(spotify: Spotify):
+    actual = spotify.artists.get_albums(**artist_params)
+    first_album = actual[0]
+
+    assert isinstance(actual, list)
+    assert actual
+
+    assert isinstance(first_album, AlbumDto)
