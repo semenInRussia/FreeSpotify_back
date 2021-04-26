@@ -24,7 +24,7 @@ def get_public_fields_of(obj, ignore=None):
 class Cash:
     def __init__(self, default_values=None):
         if default_values is None:
-            default_values = []
+            default_values = {}
 
         self._values = default_values
 
