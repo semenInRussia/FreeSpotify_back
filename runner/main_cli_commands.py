@@ -5,7 +5,7 @@ import pytest
 
 from commands.simple_commands.cli_command import CLICommand
 from commands.simple_commands_collections.cli_commands_collection import CLICommandsCollection
-from server.main import app
+from server.handlers import app
 
 from settings.main import main
 from settings.server import server
