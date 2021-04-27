@@ -2,6 +2,7 @@ import base64
 
 from loguru import logger
 
+from _low_level_utils import cashed_function
 import my_request
 from settings.spotify import spotify
 from .core.exceptions import AccessTokenExpiredException
@@ -58,7 +59,8 @@ class SpotifyAuthenticator:
     def _update_token(self):
         self._token = self._create_token()
 
-    def _create_token(self) -> str:
+    @staticmethod
+    def _create_token() -> str:
         url = "https://accounts.spotify.com/api/token"
 
         message = f"{spotify.SPOTIFY_CLIENT_ID}:{spotify.SPOTIFY_CLIENT_SECRET}"
@@ -127,6 +129,7 @@ class SpotifyCore:
     def __init__(self):
         self._json_parser = SpotifyJsonParser()
 
+    @cashed_function
     def parse_search_json(self, q: str, type_: str, market: str = None, limit: int = 1, offset: int = 0) -> dict:
         """
         Search ANYTHING in Spotify.
@@ -179,6 +182,7 @@ class SpotifyCore:
         return self._json_parser.parse_json_from_spotify(second_part_of_links='search', q=q, type=type_, limit=limit,
                                                          offset=offset, market=market)
 
+    @cashed_function
     def parse_tracks_of_top(self, artist_id: str, market: str = 'US') -> dict:
         """
         Get Artist's top.
@@ -196,6 +200,7 @@ class SpotifyCore:
 
         return self._json_parser.parse_json_from_spotify(second_part_of_links=url, country=market)
 
+    @cashed_function
     def parse_albums(self, album_ids: str, market: str = 'ES'):
         """
         Get info about current albums by ids.
@@ -210,11 +215,13 @@ class SpotifyCore:
 
         return self._json_parser.parse_json_from_spotify(second_part_of_links='albums', market=market, ids=album_ids)
 
+    @cashed_function
     def parse_tracks_of_album(self, album_id: str):
         url = f'albums/{album_id}/tracks'
 
         return self._json_parser.parse_json_from_spotify(url)
 
+    @cashed_function
     def parse_albums_of_artist(self, artist_id: str, market: str = 'ES', limit: int = 1, offset: int = 0):
         """
         :param artist_id:

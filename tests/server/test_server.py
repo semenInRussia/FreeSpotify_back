@@ -38,7 +38,7 @@ def test_welcome_pages(client: FlaskClient):
 
 
 # This is very long test on my computer: 1m 917ms...
-# O no, now 32s 238ms
+# O no, now 19s 995ms
 
 def test_detail_pages(client: FlaskClient):
     detail_pages = [
@@ -62,5 +62,4 @@ def test_detail_pages(client: FlaskClient):
 
     for actual_json, excepted_detail_page in zip(details_pages_jsons, detail_pages):
         for required_field in excepted_detail_page.required_fields_names:
-            print(actual_json)
             assert required_field in actual_json, f"Json of {excepted_detail_page.url} must has {required_field}."
