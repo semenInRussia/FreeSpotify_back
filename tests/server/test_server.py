@@ -38,7 +38,7 @@ def test_welcome_pages(client: FlaskClient):
 
 
 # This is very long test on my computer: 1m 917ms...
-# todo: make it quick!
+# O no, now 32s 238ms
 
 def test_detail_pages(client: FlaskClient):
     detail_pages = [

@@ -20,6 +20,7 @@ class CashFunctionManager:
         if self._cashed_values.get(key):
             return self._cashed_values[key]
         else:
+            print(self._func, *args, kwargs)
             result = self._func(*args, **kwargs)
 
             self.set(key, result)
@@ -31,13 +32,13 @@ class CashFunctionManager:
 
 
 class CashManagerCollection:
-    def add_cash_function_manager(self, cash_function_manager: CashFunctionManager, func_name: str):
-        if not self.get_cash_function_manager(func_name):
-            _all_cash_function_manager[func_name] = cash_function_manager
+    def add_cash_function_manager(self, cash_function_manager: CashFunctionManager, func):
+        if not self.get_cash_function_manager(func):
+            _all_cash_function_manager[func] = cash_function_manager
 
     @staticmethod
-    def get_cash_function_manager(func_name: str) -> CashFunctionManager:
-        return _all_cash_function_manager.get(func_name)
+    def get_cash_function_manager(func) -> CashFunctionManager:
+        return _all_cash_function_manager.get(func)
 
 
 cash_manager_collection = CashManagerCollection()
@@ -45,13 +46,13 @@ cash_manager_collection = CashManagerCollection()
 
 def cashed_function(func):
     cash_manager_collection.add_cash_function_manager(
-        CashFunctionManager(func), func.__class__.__name__
+        CashFunctionManager(func), func
     )
 
     def new_func(*args, **kwargs):
-        cash_function_manager = cash_manager_collection.get_cash_function_manager(func.__class__.__name__)
+        cash_function_manager = cash_manager_collection.get_cash_function_manager(func)
 
-        return cash_function_manager.get((args, tuple(kwargs.items())))
+        return cash_function_manager.get(args, tuple(kwargs.items()))
 
     return new_func
 

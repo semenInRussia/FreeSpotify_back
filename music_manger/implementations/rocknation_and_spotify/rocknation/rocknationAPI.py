@@ -2,6 +2,7 @@ from typing import Optional
 
 from bs4 import BeautifulSoup
 
+from _low_level_utils import cashed_function
 from music_manger.core.exceptions import NotFoundAlbumException
 from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
@@ -29,6 +30,7 @@ def _raise_exception_if_should(link: str, exception):
 
 
 class RocknationArtists:
+    @cashed_function
     def get_link(self, artist_name: str) -> Optional[str]:
         soup = self._get_soup_of_search_response(artist_name)
         link = self._get_artist_link_by_soup(soup)
@@ -91,6 +93,7 @@ class RocknationArtists:
 
             return link
 
+    @cashed_function
     def get_link_on_img(self, artist_name: str):
         link_on_artist = self.get_link(artist_name)
 
@@ -109,6 +112,7 @@ class RocknationArtists:
 
 
 class RocknationAlbums:
+    @cashed_function
     def get_link_on_img(self, artist_name: str = None, album_name: str = None, link_on_album: str = None):
         """
         Get link on album image.
@@ -135,6 +139,7 @@ class RocknationAlbums:
         url = base_url + src
         return url
 
+    @cashed_function
     def get_link(self, artist_name: str, album_name: str) -> Optional[str]:
         album_name = delete_sound_quality(album_name)
         artist_name = delete_sound_quality(artist_name)
