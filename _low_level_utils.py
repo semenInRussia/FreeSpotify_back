@@ -1,4 +1,6 @@
+from typing import Any
 from typing import Callable
+from typing import Tuple
 
 _all_cash_function_manager = {}
 
@@ -10,11 +12,15 @@ class CashFunctionManager:
     def __init__(self, function: Callable):
         self._func = function
 
-    def get(self, key):
+    def get(self, args: tuple, kwargs: Tuple[Tuple[str, Any], ...] = tuple()):
+        key = (args, kwargs)
+
+        kwargs = dict(kwargs)
+
         if self._cashed_values.get(key):
             return self._cashed_values[key]
         else:
-            result = self._func(key)
+            result = self._func(*args, **kwargs)
 
             self.set(key, result)
 
@@ -30,7 +36,7 @@ class CashManagerCollection:
             _all_cash_function_manager[func_name] = cash_function_manager
 
     @staticmethod
-    def get_cash_function_manager(func_name: str):
+    def get_cash_function_manager(func_name: str) -> CashFunctionManager:
         return _all_cash_function_manager.get(func_name)
 
 
@@ -45,7 +51,7 @@ def cashed_function(func):
     def new_func(*args, **kwargs):
         cash_function_manager = cash_manager_collection.get_cash_function_manager(func.__class__.__name__)
 
-        return cash_function_manager.get(*args, **kwargs)
+        return cash_function_manager.get((args, tuple(kwargs.items())))
 
     return new_func
 

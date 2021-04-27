@@ -43,13 +43,18 @@ def test_get_public_fields_of():
     assert get_public_fields_of(TestClass, ignore=["protected_field"]) == ["public_field"]
 
 
-def test_cash_function_manager(handler: MagicMock):
-    cash_manager = CashFunctionManager(handler)
+def test_cash_function_manager(function: MagicMock):
+    cash_manager = CashFunctionManager(function)
 
-    assert cash_manager.get(1) == 5
-    assert cash_manager.get(1) == 5
+    assert cash_manager.get(
+        (1, (("name", "SEMEN"),))
+    ) == 5
 
-    handler.assert_called_once()
+    assert cash_manager.get(
+        (1, (("name", "SEMEN"),))
+    ) == 5
+
+    function.assert_called_once_with(1, name="SEMEN")
 
 
 def test_cashed_function(function):
