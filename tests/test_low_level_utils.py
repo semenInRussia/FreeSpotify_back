@@ -4,6 +4,7 @@ from unittest.mock import create_autospec
 import pytest
 
 from _low_level_utils import CashFunctionManager
+from _low_level_utils import cashed_function
 from _low_level_utils import get_public_fields_of
 from _low_level_utils import sum_of_lists
 
@@ -23,7 +24,7 @@ class TestClass:
 
 
 @pytest.fixture()
-def handler():
+def function():
     _handler = lambda *args, **kwargs: None
 
     return create_autospec(_handler, return_value=5)
@@ -49,3 +50,13 @@ def test_cash_function_manager(handler: MagicMock):
     assert cash_manager.get(1) == 5
 
     handler.assert_called_once()
+
+
+def test_cashed_function(function):
+    mock_cashed_function = cashed_function(function)
+
+    mock_cashed_function(1)
+    mock_cashed_function(1)
+    mock_cashed_function(1)
+
+    function.assert_called_once()
