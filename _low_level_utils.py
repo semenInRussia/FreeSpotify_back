@@ -1,3 +1,6 @@
+from typing import Callable
+
+
 def sum_of_lists(*lists):
     result = []
 
@@ -21,23 +24,22 @@ def get_public_fields_of(obj, ignore=None):
     ))
 
 
-class Cash:
-    def __init__(self, default_values=None):
-        if default_values is None:
-            default_values = {}
+class CashFunctionManager:
+    _cashed_values = {}
+    _func: Callable
 
-        self._values = default_values
+    def __init__(self, function: Callable):
+        self._func = function
+
+    def get(self, key):
+        if self._cashed_values.get(key):
+            return self._cashed_values[key]
+        else:
+            result = self._func(key)
+
+            self.set(key, result)
+
+            return result
 
     def set(self, key, value):
-        self._values[key] = value
-
-    def get(self, key, func_return_result_if_undefined=None):
-        if func_return_result_if_undefined is None:
-            func_return_result_if_undefined = lambda current_key: None
-
-        found_key = self._values.get(key)
-
-        if found_key:
-            return found_key
-        else:
-            return func_return_result_if_undefined(key)
+        self._cashed_values[key] = value
