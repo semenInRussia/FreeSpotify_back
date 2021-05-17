@@ -1,0 +1,12 @@
+beautifulsoup4==4.9.3
+bs4==0.0.1
+loguru==0.5.3
+pluggy==0.13.1
+requests==2.24.0
+settings-master==0.2.0
+win32-setctime==1.0.3
+Flask~=1.1.2
+flask_cors~=3.0.10
+pytest~=5.3.5
+python-dotenv~=0.15.0
+aiogram==2.12.1
