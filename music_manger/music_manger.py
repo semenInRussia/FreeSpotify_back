@@ -22,6 +22,7 @@ class _AbstractObjects:
         pass
 
 
+
 class AbstractArtists(_AbstractObjects, ABC):
     def get(self, artist_name: str) -> ArtistDto:
         try:
@@ -45,6 +46,7 @@ class AbstractArtists(_AbstractObjects, ABC):
         pass
 
 
+
 class AbstractAlbums(_AbstractObjects, ABC):
     def get(self, artist_name: str, album_name: str) -> AlbumDto:
         try:
@@ -65,6 +67,7 @@ class AbstractAlbums(_AbstractObjects, ABC):
         pass
 
 
+
 class AbstractTracks(_AbstractObjects, ABC):
     def get(self, artist_name: str, album_name:str, track_name: str) -> TrackDto:
         try:
@@ -80,6 +83,7 @@ class AbstractTracks(_AbstractObjects, ABC):
 
     def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
         pass
+
 
 
 class AbstractMusicManager:

@@ -92,3 +92,4 @@ class Album(AbstractEntity):
 
             additional_settings=additional_settings
         )
+

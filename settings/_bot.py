@@ -5,11 +5,13 @@ from dotenv import load_dotenv as _load_dotenv
 
 _load_dotenv()
 
-_BotCommand = _namedtuple("BotCommand", "name command description example")
+BOT_TOKEN = _os.getenv('BOT_TOKEN')
 
 BOT_NAME = "cool ROCK 'n ROLL music"
 
 BOT_BRIEF_DESCRIPTION = f"{BOT_NAME}\n Very cool bot for downloading only ROCK 'n ROLL music"
+
+_BotCommand = _namedtuple("BotCommand", "name command description example")
 
 BOT_COMMANDS = [
     _BotCommand("get top", "/top", "Get top by name of band", example="/top ac dc")
@@ -27,8 +29,6 @@ BOT_COMMANDS_TEXT = "\n".join(
         for bot_command in BOT_COMMANDS
     ]
 )
-
-BOT_TOKEN = _os.getenv('BOT_TOKEN')
 
 BOT_DESCRIPTION = f"""
 {BOT_BRIEF_DESCRIPTION}

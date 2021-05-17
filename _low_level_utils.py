@@ -33,8 +33,7 @@ class CashFunctionManager:
 
 class CashManagerCollection:
     def add_cash_function_manager(self, cash_function_manager: CashFunctionManager, func):
-        if not self.get_cash_function_manager(func):
-            _all_cash_function_manager[func] = cash_function_manager
+        _all_cash_function_manager[func] = cash_function_manager
 
     @staticmethod
     def get_cash_function_manager(func) -> CashFunctionManager:
