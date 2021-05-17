@@ -48,8 +48,9 @@ class RunBotCommand(CLICommand):
     aliases = ['bot', 'run-bot']
 
     def run(self, args: list, additional_settings=None, **kwargs):
-        ui = TelegramUI(additional_settings)
-        ui.run()
+        telegram_ui = TelegramUI(additional_settings)
+
+        telegram_ui.run()
 
 
 class RunTestsCommand(CLICommand):
