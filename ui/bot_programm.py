@@ -1,10 +1,12 @@
 import logging
 
-from aiogram import types, Bot, Dispatcher
+from aiogram import Bot
+from aiogram import Dispatcher
+from aiogram import types
 from aiogram.utils import executor
 
+from _low_level_utils import format_exception
 from settings.bot import bot
-
 from ui.abstract_ui import AbstractUI
 from ui.handler_collection import AsyncHandlersCollection
 
@@ -21,9 +23,15 @@ async def print_normal_message(message: str, aiogram_message: types.Message, *ar
 
 
 @handlers_telegram.new_handler("print error")
-async def print_error(message: str, aiogram_message: types.Message, settings):
+async def print_error(
+        error_name: str,
+        error_description: str,
+        error: Exception,
+        aiogram_message: types.Message,
+        settings
+):
     await aiogram_message.answer_sticker(settings.stickers.FAIL)
-    await aiogram_message.answer(message)
+    await aiogram_message.answer(format_exception(error_name, error_description))
 
 
 def _create_telegram_settings(additional_settings=None):

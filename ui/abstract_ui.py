@@ -1,6 +1,8 @@
 from typing import Callable
+from typing import Tuple
 
-from entities import Artist, Track
+from entities import Artist
+from entities import Track
 from ui.handler_collection import HandlersCollection
 
 
@@ -39,9 +41,14 @@ class AbstractUI:
         self.handlers.raise_event("print normal message", message)
 
     def print_artist(self, artist_name: str):
-        message = self.get_message_about_artist(artist_name)
+        try:
+            message = self.get_message_about_artist(artist_name)
 
-        self._print_normal_message(message)
+        except Exception as e:
+            self._print_error(e)
+
+        else:
+            self._print_normal_message(message)
 
     def get_message_about_artist(self, artist_name: str) -> str:
         artist = Artist(artist_name, additional_settings=self._additional_entities_settings)
@@ -82,23 +89,17 @@ class AbstractUI:
             "\n"
         )
 
-    def _display_error(self, exception: Exception):
+    def _print_error(self, exception: Exception):
         self.handlers.raise_event(
-            "print error", self._format_exception(exception)
+            "print error", *(self._format_exception(exception))
         )
 
     @staticmethod
-    def _format_exception(exception: Exception) -> str:
+    def _format_exception(exception: Exception) -> Tuple[str, str, Exception]:
         exception_name = exception.__class__.__name__
-        formatted_exception_name = f"Name: {exception_name}"
-
         exception_description = exception.__class__.__doc__
-        formatted_exception_description = f"Description: {exception_description}\n" if exception_description else ""
 
-        return (
-            f"{formatted_exception_name}\n"
-            f"{formatted_exception_description}"
-        )
+        return exception_name, exception_description, exception
 
     def _start(self):
         self._print_normal_message(
