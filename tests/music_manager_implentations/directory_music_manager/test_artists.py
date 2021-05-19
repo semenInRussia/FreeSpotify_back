@@ -6,7 +6,7 @@ from dto import AlbumDto
 from dto import ArtistDto
 from music_manger.implementations.directory_music_manager.directory_music_manager import DirectoryMusicManager
 from music_manger.music_manger import AbstractMusicManager
-from tests.testdata import path_to_music
+from tests.testing_data import path_to_music
 
 
 @pytest.fixture()

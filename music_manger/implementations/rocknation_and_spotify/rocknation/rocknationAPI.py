@@ -6,6 +6,7 @@ from _low_level_utils import cashed_function
 from music_manger.core.exceptions import NotFoundAlbumException
 from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
+
 import my_request
 
 base_url = 'https://rocknation.su'
@@ -96,11 +97,11 @@ class RocknationArtists:
     @cashed_function
     def get_link_on_img(self, artist_name: str):
         link_on_artist = self.get_link(artist_name)
-
         image = self._get_img_by_url(link_on_artist)
 
         return base_url + image.get('src')
 
+    @cashed_function
     def _get_img_by_url(self, url: str):
         soup = my_request.get_bs(url)
 
@@ -113,15 +114,8 @@ class RocknationArtists:
 
 class RocknationAlbums:
     @cashed_function
-    def get_link_on_img(self, artist_name: str = None, album_name: str = None, link_on_album: str = None):
-        """
-        Get link on album image.
-        You must take  (artist & album  name) or (link_on_album).
-        """
-        assert (album_name and artist_name) or link_on_album
-
-        if not link_on_album:
-            link_on_album = self.get_link(artist_name, album_name)
+    def get_link_on_img(self, artist_name: str, album_name: str):
+        link_on_album = self.get_link(artist_name, album_name)
 
         return self._get_link_on_img_by_album_link(link_on_album)
 
@@ -137,6 +131,7 @@ class RocknationAlbums:
         _raise_exception_if_should(src, NotFoundAlbumException)
 
         url = base_url + src
+
         return url
 
     @cashed_function
@@ -150,6 +145,7 @@ class RocknationAlbums:
 
         return self._get_link_by_link_on_artist(link_on_artist, album_name)
 
+    @cashed_function
     def _get_link_by_link_on_artist(self, link_on_artist: str, album_name: str):
         _raise_exception_if_should(link_on_artist, NotFoundArtistException)
 

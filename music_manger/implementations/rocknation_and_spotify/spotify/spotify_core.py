@@ -5,6 +5,7 @@ from loguru import logger
 from _low_level_utils import cashed_function
 import my_request
 from settings.spotify import spotify
+
 from .core.exceptions import AccessTokenExpiredException
 from .core.exceptions import InvalidClientException
 from .core.exceptions import InvalidObjectIdException
@@ -28,7 +29,7 @@ def _check_json_spotify_response(json_response: dict):
         InvalidClientException
     ]
 
-    current_exception_message = json_response["error"]["message"]
+    current_exception_message = _get_spotify_error_message(json_response)
 
     for exception in all_excepted_exceptions:
         if exception.message == current_exception_message:
@@ -39,6 +40,16 @@ def _check_json_spotify_response(json_response: dict):
 
 def _is_response_has_error(json_response: dict):
     return json_response.get('error')
+
+
+def _get_spotify_error_message(error_response: dict) -> str:
+    error_main_content = error_response.get("error")
+
+    if isinstance(error_main_content, dict):
+        return error_main_content["message"]
+
+    elif isinstance(error_main_content, str):
+        return error_response["error_description"]
 
 
 def _encode_as_base64(message: str) -> str:

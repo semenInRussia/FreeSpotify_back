@@ -8,7 +8,7 @@ from music_manger.music_manger import AbstractTracks
 EXTENSION_OF_TRACK_FILE = '.mp3'
 
 
-class DirectoryTracksMusicManager(AbstractTracks):
+class DirectoryTracksManager(AbstractTracks):
     def __init__(self, path: str = ''):
         self._path = path
 

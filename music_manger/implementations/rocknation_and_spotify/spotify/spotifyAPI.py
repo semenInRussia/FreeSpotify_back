@@ -1,5 +1,6 @@
 from typing import List
 
+from _low_level_utils import cashed_function
 from dto import AlbumDto
 from dto import ArtistDto
 
@@ -31,8 +32,11 @@ class _BaseSpotifyObject:
 
 
 class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
+    @cashed_function
     def search(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[ArtistDto]:
-        json_response = self._spotify_core.parse_search_json(artist_name, type_="artist", limit=limit, offset=offset)
+        json_response = self._spotify_core.parse_search_json(
+            artist_name, type_="artist", limit=limit, offset=offset
+        )
 
         return deserialize_artists_from_search_response(json_response)
 
@@ -43,6 +47,7 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
 
         return top
 
+    @cashed_function
     def _get_top_by_spotify_id(self, spotify_artist_id: str, market: str = 'US'):
         json_response = self._spotify_core.parse_tracks_of_top(spotify_artist_id, market=market)
 
@@ -55,6 +60,7 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
 
         return self._get_albums_by_spotify_id(artist_id, limit, offset)
 
+    @cashed_function
     def _get_albums_by_spotify_id(self, artist_id: str, limit: int, offset: int) -> List[AlbumDto]:
         json_response = self._spotify_core.parse_albums_of_artist(
             artist_id,
@@ -66,6 +72,7 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
 
 
 class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
+    @cashed_function
     def search(self, artist_name: str, album_name: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
         search_string = f"{artist_name} - {album_name}"
 
@@ -96,6 +103,7 @@ class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
 
 
 class SpotifyTracks(AbstractTracks, _BaseSpotifyObject):
+    @cashed_function
     def search(self, artist_name: str, album_name: str, track_name: str, limit: int = 1, offset: int = 0):
         search_text = f"{artist_name} - {track_name}"
 

@@ -42,15 +42,20 @@ def test_welcome_pages(client: FlaskClient):
 
 def test_detail_pages(client: FlaskClient):
     detail_pages = [
-        PageDetail('api/artists/detail/AC-DC', required_fields_names=["top", "albums", "name", "link", "link_on_img"]),
+        PageDetail(
+            'api/artists/detail/AC-DC',
+            required_fields_names=["top", "albums", "name", "link", "link_on_img"]
+        ),
 
-        PageDetail('api/albums/detail/AC-DC/Fly-on-The-Wall', required_fields_names=[
-            "tracks", "artist", "name", "release_date", "link", "link_on_img"
-        ]),
+        PageDetail(
+            'api/albums/detail/AC-DC/Fly-on-The-Wall',
+            required_fields_names=["tracks", "artist", "name", "release_date", "link", "link_on_img"]
+        ),
 
-        PageDetail('api/tracks/detail/AC-DC/Flick-of-The-Switch/Rising-Power', required_fields_names=[
-            "name", "artist", "album", "disc_number"
-        ])
+        PageDetail(
+            'api/tracks/detail/AC-DC/Flick-of-The-Switch/Rising-Power',
+            required_fields_names=["name", "artist", "album", "disc_number"]
+        )
     ]
 
     get_json = lambda detail_page: client.get(detail_page.url, follow_redirects=True).json
