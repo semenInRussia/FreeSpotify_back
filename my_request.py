@@ -5,6 +5,7 @@ from typing import Dict
 from typing import List
 
 from bs4 import BeautifulSoup
+from bs4 import Tag
 import requests
 
 from core.exceptions import NotJsonResponseFromUrl
@@ -17,19 +18,40 @@ dependencies_of_methods_on_name: Dict[str, Callable] = {
 }
 
 
-def select_one_element_on_page_by_selector(url: str, css_selector: str, method_name='get', **kwargs) -> BeautifulSoup:
+def select_one_element_on_page(url: str, css_selector: str, method_name='get', **kwargs) -> Tag:
     soup = get_bs(url, method_name, **kwargs)
 
     return soup.select_one(css_selector)
 
 
-def select_elements_on_page_by_selector(
-        url: str, css_selector: str, method_name='get', **kwargs
-) -> List[BeautifulSoup]:
-
+def select_elements_on_page(
+        url: str, css_selector: str,
+        method_name='get',
+        **kwargs
+) -> List[Tag]:
     soup = get_bs(url, method_name, **kwargs)
 
     return soup.select(css_selector)
+
+
+def get_first_link_by_elements_or_raise_exception(
+        elements: List[Tag],
+        exception,
+        base_url: str
+) -> str:
+    try:
+        element = elements[0]
+    except IndexError:
+        raise exception
+    else:
+        return get_absolute_url_by_element(element, base_url)
+
+
+def get_absolute_url_by_element(element: Tag, base_url: str) -> str:
+    relative_link = element.get('href')
+    absolute_link = base_url + relative_link
+
+    return absolute_link
 
 
 def get_bs(url: str, method_name: str = 'get', **kwargs) -> BeautifulSoup:
