@@ -31,10 +31,11 @@ def _create_telegram_settings(additional_settings=None):
 
 
 class TelegramUI(AbstractUI):
-    handlers: AsyncHandlersCollection = handlers_telegram
+    handlers: AsyncHandlersCollection
 
     def __init__(self, additional_telegram_settings=None, additional_entities_settings=None):
         self._telegram_settings = _create_telegram_settings(additional_telegram_settings)
+        self.handlers = handlers_telegram
 
         super().__init__(additional_entities_settings)
 

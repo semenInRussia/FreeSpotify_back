@@ -1,4 +1,7 @@
-from typing import Dict, Callable, List, NamedTuple
+from typing import Callable
+from typing import Dict
+from typing import List
+from typing import NamedTuple
 
 Handler = Callable
 
@@ -36,8 +39,9 @@ class AsyncCall(NamedTuple):
 class HandlersCollection:
     CurrentCallType = Call
 
-    _calls_queue: List[CurrentCallType] = []
-    _handlers_on_events: Dict[str, List[Handler]] = {}
+    def __init__(self):
+        self._calls_queue: List[Call] = []
+        self._handlers_on_events: Dict[str, List[Handler]] = {}
 
     @property
     def handlers_on_events(self) -> Dict[str, List[Handler]]:
@@ -79,8 +83,8 @@ class HandlersCollection:
 
         self._extend_calls_queue(new_calls)
 
-    def _extend_calls_queue(self, call: List[Call]):
-        self._calls_queue.extend(call)
+    def _extend_calls_queue(self, calls: list):
+        self._calls_queue.extend(calls)
 
     def execute_calls_queue(
             self,
@@ -101,7 +105,10 @@ class HandlersCollection:
 
 class AsyncHandlersCollection(HandlersCollection):
     CurrentCallType = AsyncCall
-    _calls_queue: List[CurrentCallType] = []
+
+    def __init__(self):
+        super().__init__()
+        self._calls_queue: List[AsyncCall] = []
 
     async def execute_calls_queue(
             self,
