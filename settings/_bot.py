@@ -13,9 +13,7 @@ BOT_BRIEF_DESCRIPTION = f"{BOT_NAME}\n Very cool bot for downloading only ROCK '
 
 _BotCommand = _namedtuple("BotCommand", "name command description example")
 
-BOT_COMMANDS = [
-    _BotCommand("get top", "/top", "Get top by name of band", example="/top ac dc")
-]
+BOT_COMMANDS = []
 
 _BOT_COMMAND_TEXT_TEMPLATE = """
 {bot_command.name} | {bot_command.command}
@@ -35,7 +33,7 @@ BOT_DESCRIPTION = f"""
 
 COMMANDS
 ============================================
-{BOT_COMMANDS_TEXT}
+{BOT_COMMANDS_TEXT if BOT_COMMANDS_TEXT else "Not commands..."}
 """
 
 
