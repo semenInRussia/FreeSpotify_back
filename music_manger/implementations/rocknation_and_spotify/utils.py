@@ -3,6 +3,10 @@ from collections import namedtuple
 Brackets = namedtuple("Brackets", ["open_char", "closed_char"])
 
 
+def delete_year_in_album_name(album_name: str) -> str:
+    return album_name[7:]
+
+
 def delete_sound_quality(name: str):
     brackets_types = [
         Brackets("(", ")"),

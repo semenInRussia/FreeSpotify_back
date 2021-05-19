@@ -6,10 +6,13 @@ from _low_level_utils import cashed_function
 from music_manger.core.exceptions import NotFoundAlbumException
 from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
-
+from music_manger.implementations.rocknation_and_spotify.utils import delete_year_in_album_name
+from music_manger.music_manger import AbstractAlbums
+from music_manger.music_manger import AbstractArtists
 import my_request
+from similarity_lib import is_similar_strings
 
-base_url = 'https://rocknation.su'
+ROCKNATION_BASE_URL = 'https://rocknation.su'
 
 
 def _is_not_valid_url(link: str):
@@ -30,11 +33,13 @@ def _raise_exception_if_should(link: str, exception):
         raise exception
 
 
-class RocknationArtists:
+class RocknationArtists(AbstractArtists):
     @cashed_function
     def get_link(self, artist_name: str) -> Optional[str]:
         soup = self._get_soup_of_search_response(artist_name)
         link = self._get_artist_link_by_soup(soup)
+
+        _raise_exception_if_should(link, NotFoundArtistException)
 
         return link
 
@@ -73,7 +78,12 @@ class RocknationArtists:
 
     def _get_artist_link_by_soup(self, soup: BeautifulSoup):
         elements = self._find_artist_elements(soup)
-        link = self._get_artist_link_by_elements(elements)
+
+        link = my_request.get_first_link_by_elements_or_raise_exception(
+            elements,
+            exception=NotFoundArtistException,
+            base_url=ROCKNATION_BASE_URL
+        )
 
         return link
 
@@ -81,38 +91,22 @@ class RocknationArtists:
     def _find_artist_elements(soup: BeautifulSoup):
         return soup.select(r"a[href^='/mp3/band']")
 
-    @staticmethod
-    def _get_artist_link_by_elements(elements: list) -> str:
-        try:
-            element = elements[0]
-        except IndexError:
-            raise NotFoundArtistException
-        else:
-            link_for_rocknation = element.get('href')
-
-            link = base_url + link_for_rocknation
-
-            return link
-
     @cashed_function
     def get_link_on_img(self, artist_name: str):
         link_on_artist = self.get_link(artist_name)
-        image = self._get_img_by_url(link_on_artist)
+        image = self._get_link_on_img_by_link_on_artist(link_on_artist)
 
-        return base_url + image.get('src')
+        return ROCKNATION_BASE_URL + image.get('src')
 
     @cashed_function
-    def _get_img_by_url(self, url: str):
-        soup = my_request.get_bs(url)
-
-        return self._get_img_by_soup(soup)
-
-    @staticmethod
-    def _get_img_by_soup(soup: BeautifulSoup):
-        return soup.select_one('img[src^="/upload/images/bands"]')
+    def _get_link_on_img_by_link_on_artist(self, link_on_artist: str):
+        return my_request.select_one_element_on_page(
+            link_on_artist,
+            'img[src^="/upload/images/bands"]'
+        )
 
 
-class RocknationAlbums:
+class RocknationAlbums(AbstractAlbums):
     @cashed_function
     def get_link_on_img(self, artist_name: str, album_name: str):
         link_on_album = self.get_link(artist_name, album_name)
@@ -123,14 +117,12 @@ class RocknationAlbums:
     def _get_link_on_img_by_album_link(album_link: str):
         _raise_exception_if_should(album_link, NotFoundAlbumException)
 
-        soup = my_request.get_bs(album_link)
-
-        img = soup.select_one(f"img[src^='/upload/images/albums/']")
+        img = my_request.select_one_element_on_page(album_link, f"img[src^='/upload/images/albums/']")
         src = img.get("src")
 
         _raise_exception_if_should(src, NotFoundAlbumException)
 
-        url = base_url + src
+        url = ROCKNATION_BASE_URL + src
 
         return url
 
@@ -140,43 +132,33 @@ class RocknationAlbums:
         artist_name = delete_sound_quality(artist_name)
 
         link_on_artist = self._artists.get_link(artist_name)
-
-        _raise_exception_if_should(link_on_artist, NotFoundArtistException)
-
-        return self._get_link_by_link_on_artist(link_on_artist, album_name)
-
-    @cashed_function
-    def _get_link_by_link_on_artist(self, link_on_artist: str, album_name: str):
-        _raise_exception_if_should(link_on_artist, NotFoundArtistException)
-
-        soup = my_request.get_bs(link_on_artist)
-        link_on_album = self._find_link_on_album_by_soup(soup, album_name)
-
-        _raise_exception_if_should(link_on_album, NotFoundAlbumException)
+        link_on_album = self._get_link_on_album_by_link_on_artist(link_on_artist, album_name)
 
         return link_on_album
 
-    def _find_link_on_album_by_soup(self, soup: BeautifulSoup, album_name: str) -> str:
-        albums_links = self._find_links_on_album(soup)
-        album_link = self._find_album_link_in_link(albums_links, album_name)
+    def _get_link_on_album_by_link_on_artist(self, link_on_artist: str, album_name: str):
+        links = self._find_links_on_albums_by_link_on_artist(link_on_artist)
+        link = self._find_looking_link_on_album(links, album_name)
 
-        _raise_exception_if_should(album_link, NotFoundAlbumException)
+        _raise_exception_if_should(link, NotFoundAlbumException)
 
-        url_for_rocknation = album_link.get('href')
-        url = base_url + url_for_rocknation
+        url = my_request.get_absolute_url_by_element(link, ROCKNATION_BASE_URL)
 
         return url
 
     @staticmethod
-    def _find_links_on_album(soup: BeautifulSoup) -> list:
-        albums_elements = soup.select('a[href^="/mp3/album"]')
-
-        return albums_elements
+    def _find_links_on_albums_by_link_on_artist(link_on_artist: str):
+        return my_request.select_elements_on_page(
+            link_on_artist,
+            'a[href^="/mp3/album"]'
+        )
 
     @staticmethod
-    def _find_album_link_in_link(albums_links: list, album_name: str):
-        for albums_link in albums_links:
-            if album_name.lower() in albums_link.text.lower():
+    def _find_looking_link_on_album(links: list, album_name: str):
+        for albums_link in links:
+            actual_album_name = delete_year_in_album_name(albums_link.text)
+
+            if is_similar_strings(album_name, actual_album_name):
                 return albums_link
 
     @property
