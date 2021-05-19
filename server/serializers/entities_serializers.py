@@ -40,7 +40,7 @@ class AlbumSerializer(Serializer):
     link_on_img = fields.StringFieldSerializer()
 
     artist = fields.CustomFieldSerializer(get_serialize_artist_function("name", "link_on_img"))
-    tracks = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number", "artist"))
+    tracks = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number"))
 
 
 class TrackSerializer(Serializer):
