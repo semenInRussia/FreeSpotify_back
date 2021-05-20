@@ -1,7 +1,8 @@
 import pytest
 
 from dto import AlbumDto
-from entities import Album, Artist
+from entities import Album
+from entities import Artist
 from entities.track import Track
 from tests.settigs_for_test import settings_with_mock
 

@@ -1,3 +1,4 @@
+from typing import List
 from typing import Optional
 
 from bs4 import BeautifulSoup
@@ -5,14 +6,21 @@ from bs4 import BeautifulSoup
 from _low_level_utils import cashed_function
 from music_manger.core.exceptions import NotFoundAlbumException
 from music_manger.core.exceptions import NotFoundArtistException
+from music_manger.core.exceptions import NotFoundTrackException
 from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
 from music_manger.implementations.rocknation_and_spotify.utils import delete_year_in_album_name
 from music_manger.music_manger import AbstractAlbums
 from music_manger.music_manger import AbstractArtists
+from music_manger.music_manger import AbstractMusicManager
+from music_manger.music_manger import AbstractTracks
 import my_request
 from similarity_lib import is_similar_strings
+from similarity_lib import search_string_similar_to
 
 ROCKNATION_BASE_URL = 'https://rocknation.su'
+ROCKNATION_BASE_UPLOAD_MP3_URL = ROCKNATION_BASE_URL + "/upload/mp3/"
+
+RATIO_OF_SIMILARITY_TRACK_NAME_AND_URL = 0.18
 
 
 def _is_not_valid_url(link: str):
@@ -166,6 +174,45 @@ class RocknationAlbums(AbstractAlbums):
         return RocknationArtists()
 
 
-class Rocknation:
+class RocknationTracks(AbstractTracks):
+    def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:
+        link_on_album = self._albums.get_link(artist_name, album_name)
+        link_on_track = self._find_link_on_track_on_album_page(link_on_album, track_name)
+
+        return link_on_track
+
+    def _find_link_on_track_on_album_page(self, link_on_album: str, track_name: str) -> str:
+        all_links_on_tracks = self._find_all_links_on_tracks_on_album_page(link_on_album)
+        link_on_track = self._find_looking_link_on_track(all_links_on_tracks, track_name)
+
+        return link_on_track
+
+    @staticmethod
+    def _find_all_links_on_tracks_on_album_page(album_link: str) -> List[str]:
+        pattern = 'http://rocknation.su/upload/mp3/[^"]+'
+
+        return my_request.search_on_page(album_link, pattern)
+
+    @staticmethod
+    def _find_looking_link_on_track(links: List[str], track_name: str) -> str:
+        # todo: Work for single tracks. For example: Back In Black (track) for Back In Black (album)
+        actual_link_on_track = search_string_similar_to(track_name, links)
+
+        if is_similar_strings(actual_link_on_track, track_name, RATIO_OF_SIMILARITY_TRACK_NAME_AND_URL):
+            return actual_link_on_track
+
+        else:
+            raise NotFoundTrackException
+
+    def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
+        return self._albums.get_link_on_img(artist_name, album_name)
+
+    @property
+    def _albums(self):
+        return RocknationAlbums()
+
+
+class Rocknation(AbstractMusicManager):
     artists = RocknationArtists()
     albums = RocknationAlbums()
+    tracks = RocknationTracks()
