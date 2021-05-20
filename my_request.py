@@ -19,6 +19,18 @@ dependencies_of_methods_on_name: Dict[str, Callable] = {
 }
 
 
+def humanized_link(link: str) -> str:
+    link = link.replace("%20", " ")
+
+    return link
+
+
+def normalize_link(link: str) -> str:
+    link = link.replace(" ", "%20")
+
+    return link
+
+
 def select_one_element_on_page(url: str, css_selector: str, method_name='get', **kwargs) -> Tag:
     soup = get_bs(url, method_name, **kwargs)
 
