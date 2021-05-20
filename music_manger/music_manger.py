@@ -1,8 +1,12 @@
 from abc import ABC
 from typing import List
 
-from dto import TrackDto, AlbumDto, ArtistDto
-from music_manger.core.exceptions import NotFoundArtistException, NotFoundAlbumException, NotFoundTrackException
+from dto import AlbumDto
+from dto import ArtistDto
+from dto import TrackDto
+from music_manger.core.exceptions import NotFoundAlbumException
+from music_manger.core.exceptions import NotFoundArtistException
+from music_manger.core.exceptions import NotFoundTrackException
 
 
 class _AbstractObjects:
@@ -20,7 +24,6 @@ class _AbstractObjects:
 
     def get_link_on_img(self, *args, **kwargs) -> str:
         pass
-
 
 
 class AbstractArtists(_AbstractObjects, ABC):
@@ -46,7 +49,6 @@ class AbstractArtists(_AbstractObjects, ABC):
         pass
 
 
-
 class AbstractAlbums(_AbstractObjects, ABC):
     def get(self, artist_name: str, album_name: str) -> AlbumDto:
         try:
@@ -67,9 +69,8 @@ class AbstractAlbums(_AbstractObjects, ABC):
         pass
 
 
-
 class AbstractTracks(_AbstractObjects, ABC):
-    def get(self, artist_name: str, album_name:str, track_name: str) -> TrackDto:
+    def get(self, artist_name: str, album_name: str, track_name: str) -> TrackDto:
         try:
             return self.search(artist_name, album_name, track_name)[0]
         except IndexError:
@@ -83,7 +84,6 @@ class AbstractTracks(_AbstractObjects, ABC):
 
     def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
         pass
-
 
 
 class AbstractMusicManager:

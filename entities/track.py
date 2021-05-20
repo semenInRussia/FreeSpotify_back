@@ -52,3 +52,11 @@ class Track(AbstractEntity):
     @property
     def album(self):
         return Album(self._instance.artist_name, self._instance.album_name, additional_settings=self.settings)
+
+    @property
+    def link(self):
+        return self._music_mgr.tracks.get_link(
+            self._instance.artist_name,
+            self._instance.album_name,
+            self._instance.name
+        )

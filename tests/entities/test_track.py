@@ -43,6 +43,9 @@ def track_dto():
 def test_track_artist(track):
     assert isinstance(track.artist, Artist)
 
+def test_track_link(track):
+    assert isinstance(track.link, str)
+
 
 def test_work_with_settings(track):
     assert track.settings.music_manager_impl == settings_with_mock.music_manager_impl
