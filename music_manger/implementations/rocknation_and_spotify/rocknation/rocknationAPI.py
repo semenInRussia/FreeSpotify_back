@@ -1,3 +1,4 @@
+import re
 from typing import List
 from typing import Optional
 
@@ -17,27 +18,14 @@ import my_request
 from similarity_lib import is_similar_strings
 from similarity_lib import search_string_similar_to
 
-ROCKNATION_BASE_URL = 'https://rocknation.su'
+ROCKNATION_BASE_URL = 'http://rocknation.su'
 ROCKNATION_BASE_UPLOAD_MP3_URL = ROCKNATION_BASE_URL + "/upload/mp3/"
 
 RATIO_OF_SIMILARITY_TRACK_NAME_AND_URL = 0.18
 
 
-def _is_not_valid_url(link: str):
-    return not link
-
-
-def _raise_exception_if_should(link: str, exception):
-    """
-    If link isn't corrent, raise exception.
-
-    :param link:
-    :type link str:
-
-    :param exception:
-    :type NotFoundArtistException | NotFoundAlbumException
-    """
-    if _is_not_valid_url(link):
+def _raise_exception_if_is_false(obj, exception):
+    if not obj:
         raise exception
 
 
@@ -47,7 +35,7 @@ class RocknationArtists(AbstractArtists):
         soup = self._get_soup_of_search_response(artist_name)
         link = self._get_artist_link_by_soup(soup)
 
-        _raise_exception_if_should(link, NotFoundArtistException)
+        _raise_exception_if_is_false(link, NotFoundArtistException)
 
         return link
 
@@ -123,12 +111,12 @@ class RocknationAlbums(AbstractAlbums):
 
     @staticmethod
     def _get_link_on_img_by_album_link(album_link: str):
-        _raise_exception_if_should(album_link, NotFoundAlbumException)
+        _raise_exception_if_is_false(album_link, NotFoundAlbumException)
 
         img = my_request.select_one_element_on_page(album_link, f"img[src^='/upload/images/albums/']")
         src = img.get("src")
 
-        _raise_exception_if_should(src, NotFoundAlbumException)
+        _raise_exception_if_is_false(src, NotFoundAlbumException)
 
         url = ROCKNATION_BASE_URL + src
 
@@ -148,7 +136,7 @@ class RocknationAlbums(AbstractAlbums):
         links = self._find_links_on_albums_by_link_on_artist(link_on_artist)
         link = self._find_looking_link_on_album(links, album_name)
 
-        _raise_exception_if_should(link, NotFoundAlbumException)
+        _raise_exception_if_is_false(link, NotFoundAlbumException)
 
         url = my_request.get_absolute_url_by_element(link, ROCKNATION_BASE_URL)
 
@@ -189,20 +177,29 @@ class RocknationTracks(AbstractTracks):
 
     @staticmethod
     def _find_all_links_on_tracks_on_album_page(album_link: str) -> List[str]:
-        pattern = 'http://rocknation.su/upload/mp3/[^"]+'
+        pattern = ROCKNATION_BASE_UPLOAD_MP3_URL + '[^"]+'
 
         return my_request.search_on_page(album_link, pattern)
 
+    def _find_looking_link_on_track(self, links: List[str], track_name: str) -> str:
+        tracks_names_and_links = dict(map(
+            lambda link: (self._track_name_from_link(link), my_request.normalize_link(link)),
+            links
+        ))
+
+        track_names = list(tracks_names_and_links.keys())
+
+        actual_track_name = search_string_similar_to(track_name, track_names)
+
+        _raise_exception_if_is_false(is_similar_strings(actual_track_name, track_name), NotFoundTrackException)
+
+        return tracks_names_and_links[actual_track_name]
+
     @staticmethod
-    def _find_looking_link_on_track(links: List[str], track_name: str) -> str:
-        # todo: Work for single tracks. For example: Back In Black (track) for Back In Black (album)
-        actual_link_on_track = search_string_similar_to(track_name, links)
+    def _track_name_from_link(link: str) -> str:
+        link = my_request.humanized_link(link)
 
-        if is_similar_strings(actual_link_on_track, track_name, RATIO_OF_SIMILARITY_TRACK_NAME_AND_URL):
-            return actual_link_on_track
-
-        else:
-            raise NotFoundTrackException
+        return re.search(r".*/upload/mp3/.*/.*/\d{2}. (.*)\.mp3", link).group(1)
 
     def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
         return self._albums.get_link_on_img(artist_name, album_name)

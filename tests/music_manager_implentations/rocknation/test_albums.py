@@ -24,7 +24,7 @@ def rocknation():
 
 
 def test_get_link(rocknation: Rocknation):
-    assert rocknation.albums.get_link(**album_params) == "https://rocknation.su/mp3/album-792"
+    assert rocknation.albums.get_link(**album_params) == "http://rocknation.su/mp3/album-792"
 
 
 def test_get_link_should_raise_not_found(rocknation: Rocknation):
@@ -40,4 +40,4 @@ def test_get_link_should_raise_not_found_album(rocknation: Rocknation):
 
 
 def test_get_link_on_img(rocknation: Rocknation):
-    assert rocknation.albums.get_link_on_img(**album_params) == "https://rocknation.su/upload/images/albums/792.jpg"
+    assert rocknation.albums.get_link_on_img(**album_params) == "http://rocknation.su/upload/images/albums/792.jpg"
