@@ -3,28 +3,33 @@ import similarity_lib
 test_strings = ["a", "ac dc", "b", "AC/DC", "AC/dc"]
 
 
+def test_search_string_similar_to():
+    actual = similarity_lib.search_string_similar_to("acdc", ["metallica", "Black Sabbath", "AC/DC"])
+
+    assert actual == "AC/DC"
+
 def test_filter_and_sort_strings_by_min_similarity_to():
-    expected = similarity_lib.filter_and_sort_strings_by_min_similarity_to(
+    actual = similarity_lib.filter_and_sort_strings_by_min_similarity_to(
         "AC/DC",
         ["a", "ac dc", "b", "AC/DC", "AC/dc"]
     )
 
-    assert ["AC/DC", "AC/dc", "ac dc"] == expected
+    assert actual == ["AC/DC", "AC/dc", "ac dc"]
 
 
 def test_filter_strings_by_min_similarity_to():
-    expected = similarity_lib.filter_strings_by_min_similarity_to(
+    actual = similarity_lib.filter_strings_by_min_similarity_to(
         "AC/DC",
         ["b", "jrfihguthrgtgitjht", "kdkoooo", "ac dc"]
     )
 
-    assert ["ac dc"] == expected
+    assert actual == ["ac dc"]
 
 
 def test_sort_strings_by_similarity_to():
-    excepted = similarity_lib.sort_strings_by_similarity_to("AC/DC", ["AC DC", "AC/DC", "ac dc", "a", "acdc"])
+    actual = similarity_lib.sort_strings_by_similarity_to("AC/DC", ["AC DC", "AC/DC", "ac dc", "a", "acdc"])
 
-    assert ['AC/DC', 'acdc', 'AC DC', 'ac dc', 'a'] == excepted
+    assert actual == ['AC/DC', 'acdc', 'AC DC', 'ac dc', 'a']
 
 
 def test_is_similar_strings():
