@@ -24,7 +24,7 @@ python3 . bot
 ### RUN SHELL
 Linux / Mac OS
 ```
-python3 . sehll
+python3 . shell
 ```
 
 WINDOWS
