@@ -1,5 +1,6 @@
 import json
 from json import JSONDecodeError
+import re
 from typing import Callable
 from typing import Dict
 from typing import List
@@ -37,21 +38,28 @@ def select_elements_on_page(
 def get_first_link_by_elements_or_raise_exception(
         elements: List[Tag],
         exception,
-        base_url: str
+        base_url: str,
+        url_attribute_of_tag: str = 'href'
 ) -> str:
     try:
         element = elements[0]
     except IndexError:
         raise exception
     else:
-        return get_absolute_url_by_element(element, base_url)
+        return get_absolute_url_by_element(element, base_url, url_attribute_of_tag)
 
 
-def get_absolute_url_by_element(element: Tag, base_url: str) -> str:
-    relative_link = element.get('href')
+def get_absolute_url_by_element(element: Tag, base_url: str, url_attribute_of_tag: str = 'href') -> str:
+    relative_link = element.get(url_attribute_of_tag)
     absolute_link = base_url + relative_link
 
     return absolute_link
+
+
+def search_on_page(url: str, pattern: str, method: str = 'get', **kwargs) -> List[str]:
+    string = get_content(url, method, **kwargs)
+
+    return re.findall(pattern, string)
 
 
 def get_bs(url: str, method_name: str = 'get', **kwargs) -> BeautifulSoup:
