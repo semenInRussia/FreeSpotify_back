@@ -27,8 +27,8 @@ class ArtistSerializer(Serializer):
     link = fields.StringFieldSerializer()
     link_on_img = fields.StringFieldSerializer()
 
-    top = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number", "album"))
-    albums = fields.CustomListFieldSerializer(get_serialize_album_function("name", "link_on_img"))
+    top = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number", "album", "link"))
+    albums = fields.CustomListFieldSerializer(get_serialize_album_function("name", "link_on_img", "release_date"))
 
 
 class AlbumSerializer(Serializer):
@@ -40,7 +40,7 @@ class AlbumSerializer(Serializer):
     link_on_img = fields.StringFieldSerializer()
 
     artist = fields.CustomFieldSerializer(get_serialize_artist_function("name", "link_on_img"))
-    tracks = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number"))
+    tracks = fields.CustomListFieldSerializer(get_serialize_track_function("name", "disc_number", "link"))
 
 
 class TrackSerializer(Serializer):
@@ -51,6 +51,8 @@ class TrackSerializer(Serializer):
 
     artist = fields.CustomFieldSerializer(get_serialize_artist_function("name", "link_on_img"))
     album = fields.CustomFieldSerializer(get_serialize_album_function("name", "link_on_img", "release_date"))
+
+    link = fields.StringFieldSerializer()
 
 
 class EntitiesSerializer(GeneralSerializer):

@@ -37,9 +37,6 @@ def test_welcome_pages(client: FlaskClient):
         assert status_code == 200, "Status code of url '{}' isn't equal 200".format(actual_url)
 
 
-# This is very long test on my computer: 1m 917ms...
-# O no, now 19s 995ms
-
 def test_detail_pages(client: FlaskClient):
     detail_pages = [
         PageDetail(
@@ -54,7 +51,7 @@ def test_detail_pages(client: FlaskClient):
 
         PageDetail(
             'api/tracks/detail/AC-DC/Flick-of-The-Switch/Rising-Power',
-            required_fields_names=["name", "artist", "album", "disc_number"]
+            required_fields_names=["name", "artist", "album", "disc_number", "link"]
         )
     ]
 
