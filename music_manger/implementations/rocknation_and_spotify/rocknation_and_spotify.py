@@ -1,5 +1,6 @@
 from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import RocknationAlbums
 from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import RocknationArtists
+from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import RocknationTracks
 
 from music_manger.implementations.rocknation_and_spotify.spotify.spotifyAPI import SpotifyAlbums
 from music_manger.implementations.rocknation_and_spotify.spotify.spotifyAPI import SpotifyArtists
@@ -16,7 +17,7 @@ class RocknationAndSpotifyAlbums(RocknationAlbums, SpotifyAlbums):
     pass
 
 
-class RocknationAndSpotifyTracks(SpotifyTracks):
+class RocknationAndSpotifyTracks(RocknationTracks, SpotifyTracks):
     pass
 
 
