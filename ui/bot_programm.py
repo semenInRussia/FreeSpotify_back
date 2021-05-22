@@ -4,6 +4,7 @@ from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram import types
 from aiogram.utils import executor
+from loguru import logger
 
 from _low_level_utils import format_exception
 from settings.bot import bot
@@ -19,6 +20,8 @@ handlers_telegram = AsyncHandlersCollection()
 
 @handlers_telegram.new_handler("print normal message")
 async def print_normal_message(message: str, aiogram_message: types.Message, *args):
+    logger.info("Print normal message")
+
     await aiogram_message.answer(message, parse_mode="markdown")
 
 
@@ -28,6 +31,8 @@ async def print_error(
         aiogram_message: types.Message,
         settings
 ):
+    logger.warning(f"Error: {error.__class__.__name__}")
+
     await aiogram_message.answer_sticker(settings.stickers.FAIL)
     await aiogram_message.answer(format_exception(error))
 
