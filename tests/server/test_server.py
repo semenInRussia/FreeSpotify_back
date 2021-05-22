@@ -1,4 +1,5 @@
 from collections import namedtuple
+from typing import List
 
 from flask.testing import FlaskClient
 import pytest
@@ -37,31 +38,16 @@ def test_welcome_pages(client: FlaskClient):
         assert status_code == 200, "Status code of url '{}' isn't equal 200".format(actual_url)
 
 
-def test_detail_pages(client: FlaskClient):
-    detail_pages = [
-        PageDetail(
-            'api/artists/detail/AC-DC',
-            required_fields_names=["top", "albums", "name", "link", "link_on_img"]
-        ),
-
-        PageDetail(
-            'api/albums/detail/AC-DC/Fly-on-The-Wall',
-            required_fields_names=["tracks", "artist", "name", "release_date", "link", "link_on_img"]
-        ),
-
-        PageDetail(
-            'api/tracks/detail/AC-DC/Flick-of-The-Switch/Rising-Power',
-            required_fields_names=["name", "artist", "album", "disc_number", "link"]
-        )
+@pytest.mark.parametrize(
+    "url,required_fields_names",
+    [
+        ("api/artists/detail/AC-DC", ["top", "albums", "name", "link", "link_on_img"]),
+        ("api/albums/detail/AC-DC/Fly-on-The-Wall", ["release_date", "tracks", "name", "link", "link_on_img"]),
+        ("api/tracks/detail/AC-DC/Flick-of-The-Switch/Rising-Power", ["name", "artist", "album", "disc_number", "link"])
     ]
+)
+def test_detail_pages(client: FlaskClient, url: str, required_fields_names: List[str]):
+    current_json = client.get(url, follow_redirects=True).json
 
-    get_json = lambda detail_page: client.get(detail_page.url, follow_redirects=True).json
-
-    details_pages_jsons = list(map(
-        get_json,
-        detail_pages
-    ))
-
-    for actual_json, excepted_detail_page in zip(details_pages_jsons, detail_pages):
-        for required_field in excepted_detail_page.required_fields_names:
-            assert required_field in actual_json, f"Json of {excepted_detail_page.url} must has {required_field}."
+    for required_field_name in required_fields_names:
+        assert required_field_name in current_json, f"Json of {url} must has {required_field_name}."
