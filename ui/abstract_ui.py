@@ -1,48 +1,59 @@
 from typing import Callable
-from typing import Tuple
 
 from entities import Artist
-from entities import Track
+from entities_formatter import AbstractParseMode
+from entities_formatter import format_artist
+from entities_formatter import get_parse_mode_by_name
 from ui.handler_collection import HandlersCollection
 
 
 class AbstractUI:
-    handlers: HandlersCollection = HandlersCollection()
+    handlers: HandlersCollection
+
+    _parse_mode_name: str = "text"
+    _parse_mode: AbstractParseMode = None
 
     def __init__(self, additional_entities_settings=None):
         self._additional_entities_settings = additional_entities_settings
 
     def run(self):
-        if self.handlers.is_has_handlers_on_events("start"):
-            self.handlers.raise_event("start")
-        else:
-            self._start()
+        self._raise_event_or_call_self_method("start")
 
         self.handlers.execute_calls_queue()
 
         try:
             while True:
                 user_message = self.get_user_message()
+
                 self.print_artist(user_message)
                 self.handlers.execute_calls_queue()
 
         except KeyboardInterrupt:
-            if self.handlers.is_has_handlers_on_events("finish"):
-                self.handlers.raise_event("finish")
-            else:
-                self._finish()
+            self._raise_event_or_call_self_method("finish")
 
         self.handlers.execute_calls_queue()
 
-    def get_user_message(self) -> str:
-        pass
+    def _raise_event_or_call_self_method(self, event_name: str):
+        """
+        If has handler on event -> raise event,
+        Else -> run method of current class with '_' + event_name
+        """
 
-    def _print_normal_message(self, message: str):
-        self.handlers.raise_event("print normal message", message)
+        if self.handlers.is_has_handlers_on_events(event_name):
+            self.handlers.raise_event(event_name)
+
+        else:
+            method_name = '_' + event_name
+            method = getattr(self, method_name)
+
+            method()
+
+    def get_user_message(self) -> str:
+        """Implement if you control getting user message."""
 
     def print_artist(self, artist_name: str):
         try:
-            message = self.get_message_about_artist(artist_name)
+            message = self._format_artist_by_name(artist_name)
 
         except Exception as e:
             self._print_error(e)
@@ -50,72 +61,36 @@ class AbstractUI:
         else:
             self._print_normal_message(message)
 
-    def get_message_about_artist(self, artist_name: str) -> str:
-        artist = Artist(artist_name, additional_settings=self._additional_entities_settings)
+    def _format_artist_by_name(self, artist_name: str) -> str:
+        artist = Artist(artist_name)
 
-        res = ""
+        return format_artist(artist, self.parse_mode)
 
-        res += self._get_string_artist_info_by_artist(artist)
-        res += self._get_string_artist_top(artist.top)
+    @property
+    def parse_mode(self):
+        if not self._parse_mode:
+            self._parse_mode = get_parse_mode_by_name(self._parse_mode_name)
 
-        return res
+        return self._parse_mode
 
-    def _get_string_artist_top(self, top) -> str:
-        result = ""
-
-        for i, track in enumerate(top):
-            result += self._get_string_top_item(i, track)
-
-        return result
-
-    @staticmethod
-    def _get_string_top_item(index, track: Track) -> str:
-        num_in_top = index + 1
-
-        return (
-            "\n"
-            f"    {num_in_top}. {track.name} \n"
-            f"        {track.album.name} ({track.album.release_date})\n"
-            f"        URL - {track.album.link}"
-            "\n"
-        )
-
-    @staticmethod
-    def _get_string_artist_info_by_artist(artist: Artist) -> str:
-        return (
-            f"{artist.name}\n"
-            f"    IMG URL - {artist.link_on_img}\n"
-            f"    URL - {artist.link}\n"
-            "\n"
-        )
+    def _print_normal_message(self, message: str):
+        self.handlers.raise_event("print normal message", message)
 
     def _print_error(self, exception: Exception):
-        self.handlers.raise_event(
-            "print error", *(self._format_exception(exception))
-        )
-
-    @staticmethod
-    def _format_exception(exception: Exception) -> Tuple[str, str, Exception]:
-        exception_name = exception.__class__.__name__
-        exception_description = exception.__class__.__doc__
-
-        return exception_name, exception_description, exception
+        self.handlers.raise_event("print error", exception)
 
     def _start(self):
-        self._print_normal_message(
-            "Hello, Good Luck!"
-        )
+        self._print_normal_message("Hello, Good Luck!")
 
     def _finish(self):
-        self._print_normal_message(
-            "I am leave this, GOOD BY!"
-        )
+        self._print_normal_message("I am leave this, GOOD BY!")
 
 
-def create_ui(handlers: HandlersCollection, get_user_message_func: Callable):
+def create_ui(handlers: HandlersCollection, get_user_message_func: Callable, parse_mode_name: str = 'text'):
     class UI(AbstractUI):
         def __init__(self, *args, **kwargs):
             self.handlers = handlers
+            self._parse_mode_name = parse_mode_name
 
             super().__init__(*args, **kwargs)
 

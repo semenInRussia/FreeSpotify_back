@@ -24,14 +24,12 @@ async def print_normal_message(message: str, aiogram_message: types.Message, *ar
 
 @handlers_telegram.new_handler("print error")
 async def print_error(
-        error_name: str,
-        error_description: str,
         error: Exception,
         aiogram_message: types.Message,
         settings
 ):
     await aiogram_message.answer_sticker(settings.stickers.FAIL)
-    await aiogram_message.answer(format_exception(error_name, error_description))
+    await aiogram_message.answer(format_exception(error))
 
 
 def _create_telegram_settings(additional_settings=None):
