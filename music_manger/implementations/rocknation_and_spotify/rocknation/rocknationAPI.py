@@ -1,4 +1,3 @@
-import re
 from typing import List
 from typing import Optional
 
@@ -16,6 +15,7 @@ from music_manger.music_manger import AbstractArtists
 from music_manger.music_manger import AbstractMusicManager
 from music_manger.music_manger import AbstractTracks
 import my_request
+import parsing_lib
 from similarity_lib import is_similar_strings
 from similarity_lib import search_string_similar_to
 
@@ -65,14 +65,14 @@ class RocknationArtists(AbstractArtists):
             'enter_mp3': 'Search'
         }
 
-        soup = my_request.get_bs('https://rocknation.su/mp3/searchresult/', 'post', headers=headers, data=data)
+        soup = parsing_lib.get_bs('https://rocknation.su/mp3/searchresult/', 'post', headers=headers, data=data)
 
         return soup
 
     def _get_artist_link_by_soup(self, soup: BeautifulSoup):
         elements = self._find_artist_elements(soup)
 
-        link = my_request.get_first_link_by_elements_or_raise_exception(
+        link = parsing_lib.get_first_link_by_elements_or_raise_exception(
             elements,
             exception=NotFoundArtistException,
             base_url=ROCKNATION_BASE_URL
@@ -93,12 +93,12 @@ class RocknationArtists(AbstractArtists):
 
     @cashed_function
     def _get_link_on_img_by_link_on_artist(self, link_on_artist: str) -> str:
-        element = my_request.select_one_element_on_page(
+        element = parsing_lib.cashed_select_one_element_on_page(
             link_on_artist,
             'img[src^="/upload/images/bands"]'
         )
 
-        return my_request.get_absolute_url_by_element(element, ROCKNATION_BASE_URL, url_attribute_of_tag="src")
+        return parsing_lib.get_absolute_url_by_element(element, ROCKNATION_BASE_URL, url_attribute_of_tag="src")
 
 
 class RocknationAlbums(AbstractAlbums):
@@ -111,11 +111,11 @@ class RocknationAlbums(AbstractAlbums):
 
     @staticmethod
     def _get_link_on_img_by_album_link(album_link: str):
-        element = my_request.select_one_element_on_page(album_link, f"img[src^='/upload/images/albums/']")
+        element = parsing_lib.cashed_select_one_element_on_page(album_link, f"img[src^='/upload/images/albums/']")
 
         _raise_exception_if_is_false(element, NotFoundAlbumException)
 
-        link_on_img = my_request.get_absolute_url_by_element(element, ROCKNATION_BASE_URL, url_attribute_of_tag="src")
+        link_on_img = parsing_lib.get_absolute_url_by_element(element, ROCKNATION_BASE_URL, url_attribute_of_tag="src")
 
         return link_on_img
 
@@ -135,13 +135,13 @@ class RocknationAlbums(AbstractAlbums):
 
         _raise_exception_if_is_false(link, NotFoundAlbumException)
 
-        url = my_request.get_absolute_url_by_element(link, ROCKNATION_BASE_URL)
+        url = parsing_lib.get_absolute_url_by_element(link, ROCKNATION_BASE_URL)
 
         return url
 
     @staticmethod
     def _find_links_on_albums_elements_by_link_on_artist(link_on_artist: str) -> List[Tag]:
-        return my_request.select_elements_on_page(
+        return parsing_lib.cashed_select_elements_on_page(
             link_on_artist,
             'a[href^="/mp3/album"]'
         )
@@ -160,6 +160,7 @@ class RocknationAlbums(AbstractAlbums):
 
 
 class RocknationTracks(AbstractTracks):
+    @cashed_function
     def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:
         link_on_album = self._albums.get_link(artist_name, album_name)
         link_on_track = self._find_link_on_track_on_album_page(link_on_album, track_name)
@@ -176,7 +177,7 @@ class RocknationTracks(AbstractTracks):
     def _find_all_links_on_tracks_on_album_page(album_link: str) -> List[str]:
         pattern = ROCKNATION_BASE_UPLOAD_MP3_URL + '[^"]+'
 
-        return my_request.search_on_page(album_link, pattern)
+        return parsing_lib.cashed_search_on_page(album_link, pattern)
 
     def _find_looking_link_on_track(self, links: List[str], track_name: str) -> str:
         tracks_names_and_normalized_links = dict(map(

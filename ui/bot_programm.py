@@ -4,10 +4,12 @@ from aiogram import Bot
 from aiogram import Dispatcher
 from aiogram import types
 from aiogram.utils import executor
+
 from loguru import logger
 
 from _low_level_utils import format_exception
 from settings.bot import bot
+
 from ui.abstract_ui import AbstractUI
 from ui.handler_collection import AsyncHandlersCollection
 
