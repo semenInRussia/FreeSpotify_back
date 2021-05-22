@@ -26,7 +26,7 @@ def track():
         album_name=album_name,
         track_name=approximate_track_name,
 
-        additional_settings=settings_with_mock
+        additional_settings=additional_settings
     )
 
 
@@ -42,6 +42,7 @@ def track_dto():
 
 def test_track_artist(track):
     assert isinstance(track.artist, Artist)
+
 
 def test_track_link(track):
     assert isinstance(track.link, str)

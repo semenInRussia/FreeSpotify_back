@@ -1,6 +1,7 @@
 from dto import TrackDto
 from entities import Album
 from entities._AbstractEntity import AbstractEntity
+from music_manger.core.exceptions import NotFoundTrackException
 
 
 class Track(AbstractEntity):
@@ -55,8 +56,11 @@ class Track(AbstractEntity):
 
     @property
     def link(self):
-        return self._music_mgr.tracks.get_link(
-            self._instance.artist_name,
-            self._instance.album_name,
-            self._instance.name
-        )
+        try:
+            return self._music_mgr.tracks.get_link(
+                self._instance.artist_name,
+                self._instance.album_name,
+                self._instance.name
+            )
+        except NotFoundTrackException:
+            return
