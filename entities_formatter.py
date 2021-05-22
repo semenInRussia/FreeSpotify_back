@@ -53,7 +53,7 @@ class TelegramMarkdownParseMode(AbstractParseMode):
 
     top_item_template = """
     {num_in_top}. [{track.name}]({track.link})
-        [{track.album.name}](track.album.link) - {track.album.release_date}
+        [{track.album.name}]({track.album.link}) - {track.album.release_date}
     """
 
 
