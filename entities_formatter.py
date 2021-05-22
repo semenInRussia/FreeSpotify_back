@@ -37,6 +37,26 @@ class TextParseMode(AbstractParseMode):
     """
 
 
+class TelegramMarkdownParseMode(AbstractParseMode):
+    name = "markdown"
+
+    artist_template = """
+    {artist_header}
+    {top_items}
+    """
+
+    artist_header_template = """
+    {artist.name}
+        [URL ON IMAGE]({artist.link_on_img})
+        [URL ON ARTIST]({artist.link})
+    """
+
+    top_item_template = """
+    {num_in_top}. [{track.name}]({track.link})
+        [{track.album.name}](track.album.link) - {track.album.release_date}
+    """
+
+
 def get_parse_mode_by_name(parse_mode_name: str) -> AbstractParseMode:
     for actual_parse_mode in all_parse_modes:
         if actual_parse_mode.name == parse_mode_name:
@@ -44,7 +64,8 @@ def get_parse_mode_by_name(parse_mode_name: str) -> AbstractParseMode:
 
 
 all_parse_modes: List[AbstractParseMode] = [
-    TextParseMode()
+    TextParseMode(),
+    TelegramMarkdownParseMode()
 ]
 
 

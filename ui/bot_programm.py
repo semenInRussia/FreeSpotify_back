@@ -19,7 +19,7 @@ handlers_telegram = AsyncHandlersCollection()
 
 @handlers_telegram.new_handler("print normal message")
 async def print_normal_message(message: str, aiogram_message: types.Message, *args):
-    await aiogram_message.answer(message)
+    await aiogram_message.answer(message, parse_mode="markdown")
 
 
 @handlers_telegram.new_handler("print error")
@@ -38,6 +38,7 @@ def _create_telegram_settings(additional_settings=None):
 
 class TelegramUI(AbstractUI):
     handlers: AsyncHandlersCollection
+    _parse_mode_name = "markdown"
 
     def __init__(self, additional_telegram_settings=None, additional_entities_settings=None):
         self._telegram_settings = _create_telegram_settings(additional_telegram_settings)
