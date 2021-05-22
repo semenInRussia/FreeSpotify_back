@@ -3,7 +3,10 @@ from functools import lru_cache
 cashed_function = lru_cache()
 
 
-def format_exception(error_name: str, error_description: str) -> str:
+def format_exception(error: Exception) -> str:
+    error_name = error.__class__.__name__
+    error_description = error.__doc__
+
     if error_description:
         error_description = f"Description - \"{error_description}\""
     else:
