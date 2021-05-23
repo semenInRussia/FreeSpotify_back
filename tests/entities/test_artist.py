@@ -61,6 +61,19 @@ def test_get_top(artist):
 
     _assert_is_track_top(top)
 
+def test_get_top_by_not_valid_track_names():
+    artist = Artist(artist_name)
+
+    top = artist.top
+
+    # Get all tracks' links
+    list(map(
+        lambda track: track.link,
+        top
+    ))
+
+    assert isinstance(top, list)
+
 
 def test_get_albums(artist: Artist):
     albums = artist.albums

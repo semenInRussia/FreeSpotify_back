@@ -1,6 +1,9 @@
 from dto import TrackDto
 from entities import Album
 from entities._AbstractEntity import AbstractEntity
+
+from music_manger.core.exceptions import NotFoundAlbumException
+from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.core.exceptions import NotFoundTrackException
 
 
@@ -36,6 +39,17 @@ class Track(AbstractEntity):
             additional_settings=additional_settings,
         )
 
+    @classmethod
+    def create_from_dto_or_none(cls, track_dto: TrackDto, additional_settings=None):
+        try:
+            actual_track = cls.create_from_dto(track_dto, additional_settings=additional_settings)
+
+        except (NotFoundTrackException, NotFoundAlbumException, NotFoundArtistException):
+            return None
+
+        else:
+            return actual_track
+
     @property
     def name(self) -> str:
         return self._instance.name
@@ -62,5 +76,5 @@ class Track(AbstractEntity):
                 self._instance.album_name,
                 self._instance.name
             )
-        except NotFoundTrackException:
-            return
+        except (NotFoundTrackException, NotFoundAlbumException):
+            return None

@@ -39,12 +39,11 @@ class Artist(AbstractEntity):
     def _get_top_from_dto_top(self, track_dto_top):
         from entities.track import Track
 
-        top = []
+        top = list(map(
+            lambda dto_track: Track.create_from_dto_or_none(dto_track, additional_settings=self.settings),
 
-        for dto_track in track_dto_top:
-            track = Track.create_from_dto(dto_track, additional_settings=self.settings)
-
-            top.append(track)
+            track_dto_top
+        ))
 
         return top
 

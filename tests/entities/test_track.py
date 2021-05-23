@@ -40,6 +40,16 @@ def track_dto():
     return track_dto
 
 
+@pytest.fixture()
+def not_valid_track_dto():
+    track_dto = TrackDto(
+        artist_name=artist_name,
+        album_name=album_name,
+        name="kdkdkdkkdkdkd"
+    )
+    return track_dto
+
+
 def test_track_artist(track):
     assert isinstance(track.artist, Artist)
 
@@ -106,6 +116,12 @@ def test_track_create_from_dto(track_dto: TrackDto):
     track = Track.create_from_dto(track_dto, additional_settings=additional_settings)
 
     assert isinstance(track, Track)
+
+
+def test_track_create_from_dto_or_none(not_valid_track_dto: TrackDto):
+    track = Track.create_from_dto_or_none(not_valid_track_dto)
+
+    assert track is None
 
 
 def test_work_with_settings_when_create_from_dto(track_dto: TrackDto):

@@ -1,3 +1,4 @@
+import traceback
 from typing import Callable
 
 from entities import Artist
@@ -77,6 +78,8 @@ class AbstractUI:
         self.handlers.raise_event("print normal message", message)
 
     def _print_error(self, exception: Exception):
+        traceback.print_exc()
+
         self.handlers.raise_event("print error", exception)
 
     def _start(self):
