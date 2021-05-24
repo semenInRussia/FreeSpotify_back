@@ -8,12 +8,13 @@ from _low_level_utils import cashed_function
 from music_manger.core.exceptions import NotFoundAlbumException
 from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.core.exceptions import NotFoundTrackException
-from music_manger.implementations.rocknation_and_spotify.utils import delete_sound_quality
-from music_manger.implementations.rocknation_and_spotify.utils import delete_year_in_album_name
+from brackets_lib import delete_all_values_with_all_brackets
+
 from music_manger.music_manger import AbstractAlbums
 from music_manger.music_manger import AbstractArtists
 from music_manger.music_manger import AbstractMusicManager
 from music_manger.music_manger import AbstractTracks
+from music_manger.utils import delete_year_in_album_name
 import my_request
 import parsing_lib
 from similarity_lib import is_similar_strings
@@ -121,8 +122,8 @@ class RocknationAlbums(AbstractAlbums):
 
     @cashed_function
     def get_link(self, artist_name: str, album_name: str) -> Optional[str]:
-        album_name = delete_sound_quality(album_name)
-        artist_name = delete_sound_quality(artist_name)
+        album_name = delete_all_values_with_all_brackets(album_name)
+        artist_name = delete_all_values_with_all_brackets(artist_name)
 
         link_on_artist = self._artists.get_link(artist_name)
         link_on_album = self._get_link_on_album_by_link_on_artist(link_on_artist, album_name)

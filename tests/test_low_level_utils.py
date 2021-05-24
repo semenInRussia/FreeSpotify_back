@@ -5,6 +5,7 @@ import pytest
 
 from _low_level_utils import cashed_function
 from _low_level_utils import get_public_fields_of
+from _low_level_utils import my_format_str
 from _low_level_utils import sum_of_lists
 
 
@@ -49,10 +50,35 @@ def test_get_public_fields_of():
     assert get_public_fields_of(TestClass, ignore=["protected_field"]) == ["public_field"]
 
 
-def test_cash_function_manager(function: MagicMock):
+def test_cashed_function(function: MagicMock):
     current_cashed_function = cashed_function(function)
 
     assert current_cashed_function(1, name="SEMEN") == 5
     assert current_cashed_function(1, name="SEMEN") == 5
 
     function.assert_called_once_with(1, name="SEMEN")
+
+
+def test_my_format_str():
+    assert my_format_str("{} {}", 1, 1) == "1 1"
+
+
+def test_my_format_str_by_kwargs():
+    assert my_format_str("{name}!", name="semen") == "semen!"
+
+
+def test_my_format_with_expression():
+    assert my_format_str("{1 + 2}") == "3"
+
+
+def test_my_format_with_expression_with_spaces():
+    assert my_format_str("{ 1 + 2 }") == "3"
+
+
+def test_my_format_with_expression_with_funcs_from_kwargs():
+    assert my_format_str("{f([1, 3])}", f=sum) == "4"
+
+
+def test_my_format_with_or():
+    assert my_format_str("my {last_name|first_name}", last_name="Bond", first_name="James") == "my Bond"
+    assert my_format_str("my {last_name|first_name}", last_name=None, first_name="James") == "my James"

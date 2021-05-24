@@ -1,3 +1,4 @@
+from functools import reduce
 import os
 import pathlib
 from typing import List
@@ -47,12 +48,10 @@ def parse_path(path: str) -> str:
     if path == '':
         return '.'
 
-    res = ""
-
-    for path_part in path.split("/"):
-        res = os.path.join(res, path_part)
-
-    return res
+    return reduce(
+        os.path.join,
+        path.split('/')
+    )
 
 
 def get_parts_of_path(path: str):
@@ -68,7 +67,7 @@ def search_dirs_by_pattern(pattern: str) -> List[str]:
     possible_search_expressions = [
         SimilarSearchExpression(),
         AllDirsSearchExpression(),
-        DefaultSearchExpression(),
+        DefaultSearchExpression()
     ]
 
     for expression in parts_of_patterns:
