@@ -9,6 +9,7 @@ from settings.spotify import spotify
 from .core.exceptions import AccessTokenExpiredException
 from .core.exceptions import InvalidClientException
 from .core.exceptions import InvalidObjectIdException
+from .core.exceptions import NoSearchQueryException
 from .core.exceptions import NotValidTokenException
 from .core.exceptions import UndefinedErrorMessageException
 
@@ -26,7 +27,8 @@ def _check_json_spotify_response(json_response: dict):
         NotValidTokenException,
         AccessTokenExpiredException,
         InvalidObjectIdException,
-        InvalidClientException
+        InvalidClientException,
+        NoSearchQueryException
     ]
 
     current_exception_message = _get_spotify_error_message(json_response)
@@ -38,15 +40,15 @@ def _check_json_spotify_response(json_response: dict):
     raise UndefinedErrorMessageException
 
 
-def _is_response_has_error(json_response: dict):
-    return json_response.get('error')
+def _is_response_has_error(json_response: dict) -> bool:
+    return bool(json_response.get('error'))
 
 
 def _get_spotify_error_message(error_response: dict) -> str:
     error_main_content = error_response.get("error")
 
     if isinstance(error_main_content, dict):
-        return error_main_content["message"]
+        return error_response["error"]["message"]
 
     elif isinstance(error_main_content, str):
         return error_response["error_description"]
