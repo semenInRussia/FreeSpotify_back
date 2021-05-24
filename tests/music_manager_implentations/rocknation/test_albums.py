@@ -1,7 +1,6 @@
 import pytest
 
 from music_manger.core.exceptions import NotFoundAlbumException
-from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import Rocknation
 
 artist_name = "queen"
@@ -13,7 +12,7 @@ album_params = {
 }
 
 not_valid_params = {
-    "artist_name": "jdsjifhrgurhegeia",
+    "artist_name": "AC/DC",
     "album_name": "oafihfaiertghuhrguhtguhtughtuhgusefjvnmvcmxpweqopqp[wqpewqpirrofqrfiju`"
 }
 
@@ -25,12 +24,6 @@ def rocknation():
 
 def test_get_link(rocknation: Rocknation):
     assert rocknation.albums.get_link(**album_params) == "http://rocknation.su/mp3/album-792"
-
-
-def test_get_link_should_raise_not_found(rocknation: Rocknation):
-    with pytest.raises(NotFoundArtistException):
-        album = rocknation.albums.get_link(**not_valid_params)
-        assert album is None
 
 
 def test_get_link_should_raise_not_found_album(rocknation: Rocknation):
