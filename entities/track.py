@@ -76,8 +76,6 @@ class Track(AbstractEntity):
                 self._instance.album_name,
                 self._instance.name
             )
-
-            print(link)
         except (NotFoundTrackException, NotFoundAlbumException):
             return None
 
