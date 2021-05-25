@@ -55,7 +55,7 @@ We are use:
 
 ### EXAMPLE OF USE ENTITIES
 ## Album
-```
+```python
 >>> from entities import Album
 >>> album = Album("AC DC", "Back in black")
 >>> album
@@ -91,7 +91,7 @@ AC/DC
 ```
 
 ## Artist
-```
+```python
 >>> from entities import Artist
 artist = Artist("queen")
 >>> artist
@@ -118,7 +118,7 @@ Queen
  Queen - 6.Somebody To Love]
  ```
  ## Track
- ```
+ ```python
 >>> from entities import Track
 >>> track = Track("Deep Purple", "Burn", "Burn")
 >>> track.link
