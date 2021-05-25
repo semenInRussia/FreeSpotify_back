@@ -31,6 +31,11 @@ def test_get_link_should_raise_not_found_album(rocknation: Rocknation):
         album = rocknation.albums.get_link(artist_name, "adhhrfeushfuehreururhgurheguirhegueg")
         assert album is None
 
+def test_get_link_on_album_on_page_with_nest(rocknation: Rocknation):
+    actual = rocknation.albums.get_link("AC/DC", "Power UP")
+
+    assert actual == "http://rocknation.su/mp3/album-5861"
+
 
 def test_get_link_on_img(rocknation: Rocknation):
     assert rocknation.albums.get_link_on_img(**album_params) == "http://rocknation.su/upload/images/albums/792.jpg"

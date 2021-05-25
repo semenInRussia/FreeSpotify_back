@@ -22,6 +22,8 @@ from similarity_lib import search_string_similar_to
 ROCKNATION_BASE_URL = 'http://rocknation.su'
 ROCKNATION_BASE_UPLOAD_MP3_URL = ROCKNATION_BASE_URL + "/upload/mp3/"
 
+max_albums_page_num = 100
+
 
 def _raise_exception_if_is_false(obj, exception):
     if not obj:
@@ -31,6 +33,8 @@ def _raise_exception_if_is_false(obj, exception):
 class RocknationArtists(AbstractArtists):
     @cashed_function
     def get_link(self, artist_name: str) -> Optional[str]:
+        artist_name = delete_sound_quality(artist_name)
+
         soup = self._get_soup_of_search_response(artist_name)
         link = self._get_artist_link_by_soup(soup)
 
@@ -111,7 +115,7 @@ class RocknationAlbums(AbstractAlbums):
 
     @staticmethod
     def _get_link_on_img_by_album_link(album_link: str):
-        element = parsing_lib.cashed_select_one_element_on_page(album_link, f"img[src^='/upload/images/albums/']")
+        element = parsing_lib.cashed_select_one_element_on_page(album_link, "img[src^='/upload/images/albums/']")
 
         _raise_exception_if_is_false(element, NotFoundAlbumException)
 
@@ -122,7 +126,6 @@ class RocknationAlbums(AbstractAlbums):
     @cashed_function
     def get_link(self, artist_name: str, album_name: str) -> Optional[str]:
         album_name = delete_sound_quality(album_name)
-        artist_name = delete_sound_quality(artist_name)
 
         link_on_artist = self._artists.get_link(artist_name)
         link_on_album = self._get_link_on_album_by_link_on_artist(link_on_artist, album_name)
@@ -139,20 +142,57 @@ class RocknationAlbums(AbstractAlbums):
 
         return url
 
+    def _find_links_on_albums_elements_by_link_on_artist(self, link_on_artist: str) -> List[Tag]:
+        links = []
+
+        for link_on_albums in self._get_all_albums_links(link_on_artist):
+            new_links = self._find_links_on_albums_elements_on_one_albums_link(link_on_albums)
+
+            links.extend(new_links)
+
+            if not new_links:
+                break
+
+        return links
+
     @staticmethod
-    def _find_links_on_albums_elements_by_link_on_artist(link_on_artist: str) -> List[Tag]:
+    def _get_all_albums_links(link_on_artist: str) -> iter:
+        current_page_albums_index = 0
+        current_albums_link = link_on_artist
+
+        while True:
+            yield current_albums_link
+
+            if my_request.is_not_valid_page(current_albums_link):
+                raise StopIteration
+
+            current_page_albums_index += 1
+
+            current_albums_link = f"{link_on_artist}/{current_page_albums_index}"
+
+    @staticmethod
+    def _find_links_on_albums_elements_on_one_albums_link(link_on_albums: str) -> List[Tag]:
         return parsing_lib.cashed_select_elements_on_page(
-            link_on_artist,
+            link_on_albums,
             'a[href^="/mp3/album"]'
         )
 
     @staticmethod
     def _find_looking_link_on_album_element(links_elements: list, album_name: str) -> Optional[Tag]:
-        for link_element in links_elements:
-            actual_album_name = delete_year_in_album_name(link_element.text)
+        album_names = list(map(
+            lambda el: delete_year_in_album_name(el.text),
+            links_elements
+        ))
 
-            if is_similar_strings(album_name, actual_album_name):
-                return link_element
+        album_names_and_links_elements = dict(zip(album_names, links_elements))
+
+        actual_album_name = search_string_similar_to(album_name, album_names)
+        actual_link_element = album_names_and_links_elements[actual_album_name]
+
+        if not is_similar_strings(actual_album_name, album_name):
+            raise NotFoundAlbumException
+
+        return actual_link_element
 
     @property
     def _artists(self):

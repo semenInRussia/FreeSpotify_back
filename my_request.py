@@ -66,6 +66,17 @@ def get_content(url: str, method_name: str = 'get', **kwargs):
 cashed_get_content = cashed_function(get_content)
 
 
+def is_not_valid_page(link_on_page: str, method: str = 'get', **kwargs) -> bool:
+    try:
+        create_request(link_on_page, method_name=method, **kwargs)
+
+    except requests.exceptions.ConnectionError:
+        return True
+
+    else:
+        return False
+
+
 def create_request(url: str, method_name: str = 'get', **kwargs):
     method = get_method_by_name(method_name)
 
