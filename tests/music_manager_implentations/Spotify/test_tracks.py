@@ -38,14 +38,25 @@ def test_get(spotify: Spotify):
 
     assert_is_valid_track(track)
 
+
+def test_get_should_delete_sound_quality(spotify: Spotify):
+    track = spotify.tracks.get(
+        " Deep Purple",
+        " Burn",
+        " Burn"
+    )
+
+    assert track.name == "Burn"  # If sound quality not deleted, track.name == "Burn - remastered 2011"
+
+
 def test_search(spotify: Spotify):
     tracks = spotify.tracks.search(**track_params)
 
     assert_is_valid_track_collection(tracks)
+
 
 def test_search_limit(spotify: Spotify):
     tracks = spotify.tracks.search(limit=4, **track_params)
 
     assert len(tracks) == 4
     assert_is_valid_track_collection(tracks)
-
