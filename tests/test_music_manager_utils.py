@@ -7,10 +7,14 @@ def test_delete_year_in_album_name():
 
 
 def test_delete_sound_quality():
-    expected = delete_sound_quality("Black Sabbath (Remastered 2008)")
+    actual = delete_sound_quality("Black Sabbath (Remastered 2008)")
 
-    assert "Black Sabbath" == expected
+    assert actual == "Black Sabbath"
 
-    expected = delete_sound_quality("Black Sabbath [Premium Disk]")
+    actual = delete_sound_quality("Black Sabbath [Premium Disk]")
 
-    assert "Black Sabbath" == expected
+    assert actual == "Black Sabbath"
+
+    actual = delete_sound_quality("Burn - remastered 2012")
+
+    assert actual == "Burn"
