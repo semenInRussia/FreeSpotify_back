@@ -18,3 +18,7 @@ def test_delete_sound_quality():
     actual = delete_sound_quality("Burn - remastered 2012")
 
     assert actual == "Burn"
+
+    actual = delete_sound_quality("In Utero - 20th Anniversary - Deluxe Edition")
+
+    assert actual == "In Utero"

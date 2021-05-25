@@ -134,11 +134,11 @@ class RocknationAlbums(AbstractAlbums):
 
     def _get_link_on_album_by_link_on_artist(self, link_on_artist: str, album_name: str) -> str:
         links = self._find_links_on_albums_elements_by_link_on_artist(link_on_artist)
-        link = self._find_looking_link_on_album_element(links, album_name)
+        link_element = self._find_looking_link_on_album_element(links, album_name)
 
-        _raise_exception_if_is_false(link, NotFoundAlbumException)
+        _raise_exception_if_is_false(link_element, NotFoundAlbumException)
 
-        url = parsing_lib.get_absolute_url_by_element(link, ROCKNATION_BASE_URL)
+        url = parsing_lib.get_absolute_url_by_element(link_element, ROCKNATION_BASE_URL)
 
         return url
 
@@ -236,10 +236,6 @@ class RocknationTracks(AbstractTracks):
 
     @staticmethod
     def _track_name_from_link(link: str) -> str:
-        """Return track name from current link.
-        For example:
-        >> _track_name_from_link(http://rocknation.su/upload/mp3/Nirvana/1993 -In Utero/11. Tourette's.mp3) == Tourette's
-        """
         parts_of_link = link.split(".")
         track_name_with_start_space = parts_of_link[-2]
         track_name = track_name_with_start_space[1:]
