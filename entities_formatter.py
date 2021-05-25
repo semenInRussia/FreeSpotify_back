@@ -49,12 +49,12 @@ class TelegramMarkdownParseMode(AbstractParseMode):
     artist_header_template = """
     {artist.name}
         [URL ON IMAGE]({artist.link_on_img|"https://i.ytimg.com/vi/96iDGkuOb3M/maxresdefault.jpg"})
-        [URL ON ARTIST]({artist.link|Not found})
+        [URL ON ARTIST]({artist.link|"Not found..."})
     """
 
     top_item_template = """
-    {num_in_top}. [{track.name}]({track.link | "Not found..."})
-        [{track.album.name|""}]({track.album.link | "Not found..."}) - {track.album.release_date | "Not found..."}
+    {num_in_top}. [{track.name}]({track.link|"Not found..."})
+        [{track.album.name|"Not found..."}]({track.album.link|"Not found..."}) - {track.album.release_date|"Not found..."}
     """
 
 
