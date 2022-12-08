@@ -20,4 +20,5 @@ def test_normalized_link():
 
 def test_is_not_valid_page():
     assert not is_not_valid_page("https://google.com")
-    assert is_not_valid_page("https://kdkdjdeihfurhfebnvbrffbv.djedijefi.semIsCool")
+    assert is_not_valid_page(
+        "https://kdkdjdeihfurhfebnvbrffbv.djedijefi.semIsCool")

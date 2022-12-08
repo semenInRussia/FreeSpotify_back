@@ -19,12 +19,17 @@ class DirectoryAlbumsManager(AbstractAlbums):
 
         return albums
 
-    def _search_paths_to_albums(self, artist_name: str, album_name: str) -> List[str]:
+    def _search_paths_to_albums(
+            self,
+            artist_name: str,
+            album_name: str
+    ) -> List[str]:
         return my_os.search_dirs_by_pattern(
             f"{self._path}/~{artist_name}/~{album_name}"
         )
 
-    def _get_albums_by_paths(self, paths_to_albums: List[str]) -> List[AlbumDto]:
+    def _get_albums_by_paths(
+            self, paths_to_albums: List[str]) -> List[AlbumDto]:
         return list(map(
             self._get_album_by_path,
 
@@ -57,12 +62,20 @@ class DirectoryAlbumsManager(AbstractAlbums):
         path_to_album = self._path_from_album(album)
 
         return list(map(
-            lambda track_filename: self._track_from_filename(artist_name, album_name, track_filename),
+            lambda track_filename: self._track_from_filename(
+                artist_name,
+                album_name,
+                track_filename
+            ),
             my_os.dirs_names(path_to_album)
         ))
 
     @staticmethod
-    def _track_from_filename(artist_name: str, album_name: str, track_filename: str) -> TrackDto:
+    def _track_from_filename(
+            artist_name: str,
+            album_name: str,
+            track_filename: str
+    ) -> TrackDto:
         track_name = my_os.file_without_file_extension(track_filename)
 
         return TrackDto(artist_name, album_name, track_name)

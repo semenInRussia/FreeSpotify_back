@@ -3,7 +3,7 @@ This package has functions for deserializing JSON response from spotify API,
 To DTO objects (ArtistDto, AlbumDto, TrackDto).
 """
 
-from brackets_lib import delete_all_values_with_all_brackets
+from brackets_lib import delete_all_values_with_all_brackets_types
 from dto import AlbumDto
 from dto import ArtistDto
 from dto import TrackDto

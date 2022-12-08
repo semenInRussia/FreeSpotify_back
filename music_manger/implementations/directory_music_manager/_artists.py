@@ -18,7 +18,10 @@ class DirectoryArtistsManager(AbstractArtists):
         return self.path
 
     def search(self, artist_name: str) -> List[ArtistDto]:
-        artists_paths = my_os.dirs_similar_to(artist_name, self._path_to_all_artists)
+        artists_paths = my_os.dirs_similar_to(
+            artist_name,
+            self._path_to_all_artists
+        )
         artists = self._get_artists_from_paths(artists_paths)
 
         return artists

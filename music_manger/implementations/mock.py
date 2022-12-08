@@ -24,7 +24,7 @@ def _create_random_name():
 
 
 def _create_random_disc_number():
-    return random.randint(1, 77)  # Search "Ella Fitzgerald - Sings The George And Ira Gershwin Song Book" on Google!
+    return random.randint(1, 77)
 
 
 class MockArtists(AbstractArtists):
@@ -75,7 +75,12 @@ class MockArtists(AbstractArtists):
 
 
 class MockAlbums(AbstractAlbums):
-    def search(self, artist_name: str, album_name: str, limit: int = 4) -> List[AlbumDto]:
+    def search(
+            self,
+            artist_name: str,
+            album_name: str,
+            limit: int = 4
+    ) -> List[AlbumDto]:
         random.seed(SEED)
 
         return [
@@ -109,7 +114,12 @@ class MockAlbums(AbstractAlbums):
 
 
 class MockTracks(AbstractTracks):
-    def search(self, artist_name: str, album_name: str, track_name: str) -> List[TrackDto]:
+    def search(
+            self,
+            artist_name: str,
+            album_name: str,
+            track_name: str
+    ) -> List[TrackDto]:
         random.seed(SEED)
 
         return [
@@ -121,10 +131,20 @@ class MockTracks(AbstractTracks):
             ) for _ in range(3)
         ]
 
-    def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:
+    def get_link(
+            self,
+            artist_name: str,
+            album_name: str,
+            track_name: str
+    ) -> str:
         return ""
 
-    def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
+    def get_link_on_img(
+            self,
+            artist_name: str,
+            album_name: str,
+            track_name: str
+    ) -> str:
         random.seed(SEED)
 
         return f"https://rocknation.su/upload/images/albums/{random.randint(1, 1500)}.jpg"

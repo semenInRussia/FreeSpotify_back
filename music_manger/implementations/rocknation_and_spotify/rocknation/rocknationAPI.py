@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from bs4 import Tag
 
 from _low_level_utils import cashed_function
+
 from music_manger.core.exceptions import NotFoundAlbumException
 from music_manger.core.exceptions import NotFoundArtistException
 from music_manger.core.exceptions import NotFoundTrackException
@@ -14,8 +15,10 @@ from music_manger.music_manger import AbstractMusicManager
 from music_manger.music_manger import AbstractTracks
 from music_manger.utils import delete_sound_quality
 from music_manger.utils import delete_year_in_album_name
+
 import my_request
 import parsing_lib
+
 from similarity_lib import is_similar_strings
 from similarity_lib import search_string_similar_to
 
@@ -69,7 +72,12 @@ class RocknationArtists(AbstractArtists):
             'enter_mp3': 'Search'
         }
 
-        soup = parsing_lib.get_bs('https://rocknation.su/mp3/searchresult/', 'post', headers=headers, data=data)
+        soup = parsing_lib.get_bs(
+            'https://rocknation.su/mp3/searchresult/',
+            'post',
+            headers=headers,
+            data=data
+        )
 
         return soup
 
@@ -242,7 +250,12 @@ class RocknationTracks(AbstractTracks):
 
         return track_name
 
-    def get_link_on_img(self, artist_name: str, album_name: str, track_name: str) -> str:
+    def get_link_on_img(
+            self,
+            artist_name: str,
+            album_name: str,
+            track_name: str
+    ) -> str:
         return self._albums.get_link_on_img(artist_name, album_name)
 
     @property

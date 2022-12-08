@@ -4,67 +4,64 @@ from typing import List
 
 Brackets = namedtuple("Brackets", ["open_char", "closed_char"])
 
-
-def delete_all_values_with_all_brackets(string: str):
-    brackets_types = [
-        Brackets("(", ")"),
-        Brackets("[", "]")
-    ]
-
-    return delete_all_values_with_many_brackets(string, brackets_types)
+ALL_BRACKETS_TYPES = [
+    Brackets("(", ")"),
+    Brackets("[", "]")
+]
 
 
-def delete_all_values_with_many_brackets(string: str, brackets_types: List[Brackets]) -> str:
+def delete_all_values_with_all_brackets_types(string: str):
+    return delete_all_values_with_given_brackets(string, ALL_BRACKETS_TYPES)
+
+
+def delete_all_values_with_given_brackets(string: str, brackets_types: List[Brackets]) -> str:
     for brackets in brackets_types:
-        string = delete_value_in_brackets(string, brackets)
-
+        string = delete_value_with_brackets_pair(string, brackets)
     return string
 
 
-def delete_value_in_brackets(string: str, brackets: Brackets) -> str:
-    values_with_brackets = get_values_with_brackets(string, brackets)
-    old_string_and_values_with_brackets = [string, *values_with_brackets]
-
+def delete_value_with_brackets_pair(string: str, brackets: Brackets) -> str:
+    inside_brackets = get_values_with_brackets(string, brackets)
     return reduce(
-        lambda old_string, value_with_brackets: old_string.replace(value_with_brackets, ""),
-        old_string_and_values_with_brackets
+        lambda old, inside_brackets: old.replace(inside_brackets, ""),
+        inside_brackets,
+        string
     )
 
 
-def get_insides_of_brackets(string: str, brackets: Brackets) -> List[str]:
-    return list(map(
-        get_one_inside_of_brackets,
-        get_values_with_brackets(string, brackets)
-    ))
-
-
-def get_one_inside_of_brackets(string: str) -> str:
+def ignore_brackets_around(string: str) -> str:
+    """
+    Return the modified string without brackets around.
+    String should has 2 brackets: first at the string start, second at the
+    string end
+    """
     return string[1:-1]
 
 
 def get_values_with_brackets(string: str, brackets: Brackets) -> List[str]:
-    values_with_brackets = []
-
     while _is_string_has_brackets(string, brackets):
-        value_with_brackets = _get_one_value_with_brackets_from_string(string, brackets)
-        values_with_brackets.append(value_with_brackets)
-        string = string.replace(value_with_brackets, "")
+        inside_brackets = _find_one_value_inside_brackets(string, brackets)
+        yield inside_brackets
+        string = string.replace(inside_brackets, "")
 
-    return values_with_brackets
+def get_values_inside_of_brackets(string: str, brackets: Brackets) -> List[str]:
+    return list(map(
+        ignore_brackets_around,
+        get_values_with_brackets(string, brackets)
+    ))
 
 
-def _get_one_value_with_brackets_from_string(string: str, brackets: Brackets) -> str:
+def _find_one_value_inside_brackets(string: str, brackets: Brackets) -> str:
     open_branch_index = string.find(brackets.open_char)
     closed_branch_index = string.find(brackets.closed_char) + 1
+    inside_brackets = string[open_branch_index: closed_branch_index]
 
-    value_with_brackets = string[open_branch_index: closed_branch_index]
-
-    return value_with_brackets
+    return inside_brackets
 
 
 def _is_string_has_brackets(string: str, brackets: Brackets) -> bool:
-    return brackets.open_char in string and brackets.closed_char
+    return (brackets.open_char in string) and (brackets.closed_char in string)
 
 
-def add_brackets(string: str, brackets: Brackets) -> str:
+def add_brackets_around(string: str, brackets: Brackets) -> str:
     return brackets.open_char + string + brackets.closed_char

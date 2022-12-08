@@ -2,8 +2,8 @@ from functools import lru_cache
 from typing import List
 
 from brackets_lib import Brackets
-from brackets_lib import add_brackets
-from brackets_lib import get_insides_of_brackets
+from brackets_lib import add_brackets_around
+from brackets_lib import get_values_inside_of_brackets
 
 cashed_function = lru_cache()
 
@@ -28,15 +28,6 @@ def format_exception(error: Exception) -> str:
     )
 
 
-def sum_of_lists(*lists):
-    result = []
-
-    for current_list in lists:
-        result.extend(current_list)
-
-    return result
-
-
 def get_public_fields_of(obj, ignore=None):
     if ignore is None:
         ignore = []
@@ -44,20 +35,16 @@ def get_public_fields_of(obj, ignore=None):
     all_fields = dir(obj)
     is_public_field_name = lambda field_name: not (field_name.startswith("_") or field_name in ignore)
 
-    return list(filter(
-        is_public_field_name,
-
-        all_fields
-    ))
+    return list(filter(is_public_field_name, all_fields))
 
 
 def my_format_str(string: str, *args, **kwargs) -> str:
-    insides_of_brackets = get_insides_of_brackets(string, format_brackets)
+    insides_of_brackets = get_values_inside_of_brackets(string, format_brackets)
 
     for inside_of_brackets in insides_of_brackets:
         current_expression = _get_format_expression(inside_of_brackets, args, kwargs)
 
-        old_string = add_brackets(inside_of_brackets, format_brackets)
+        old_string = add_brackets_around(inside_of_brackets, format_brackets)
         new_string = str(current_expression.execute())
 
         string = string.replace(

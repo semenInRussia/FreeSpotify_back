@@ -6,7 +6,6 @@ import pytest
 from _low_level_utils import cashed_function
 from _low_level_utils import get_public_fields_of
 from _low_level_utils import my_format_str
-from _low_level_utils import sum_of_lists
 
 
 class TestClass:
@@ -26,24 +25,13 @@ class TestClass:
 @pytest.fixture()
 def function():
     _func = lambda *args, **kwargs: None
-
     return create_autospec(_func, return_value=5)
 
 
 @pytest.fixture()
 def function2():
     _func = lambda *args, **kwargs: None
-
     return create_autospec(_func, return_value=5)
-
-
-def test_sum_of_lists():
-    assert sum_of_lists([1, 2]) == [1, 2]
-    assert sum_of_lists([1, 2], [3, 4]) == [1, 2, 3, 4]
-
-    assert sum_of_lists(["str1", "str2"]) == ["str1", "str2"]
-
-    assert sum_of_lists(*[['dir\\subdir1', 'dir\\subdir2']]) == ['dir\\subdir1', 'dir\\subdir2']
 
 
 def test_get_public_fields_of():

@@ -5,11 +5,14 @@ from dotenv import load_dotenv as _load_dotenv
 
 _load_dotenv()
 
+
 BOT_TOKEN = _os.getenv('BOT_TOKEN')
 
 BOT_NAME = "cool ROCK 'n ROLL music"
 
-BOT_BRIEF_DESCRIPTION = f"{BOT_NAME}\n Very cool bot for downloading only ROCK 'n ROLL music"
+BOT_BRIEF_DESCRIPTION = (
+    f"{BOT_NAME}\n Very cool bot for downloading only ROCK 'n ROLL music"
+)
 
 _BotCommand = _namedtuple("BotCommand", "name command description example")
 
@@ -38,5 +41,9 @@ COMMANDS
 
 
 class stickers:
-    FAIL = "CAACAgIAAxkBAAEBuVlf6MEBtd8e94ObW5LSmP1_FrWZHAACgQMAAs-71A6WvjEQeKbJyh4E"
-    WELCOME = "CAACAgIAAxkBAAEBuVtf6MZ8_6rAiFA6uBh9uxtluKhr7wACSgEAApafjA6Mfk73uDljvh4E"
+    FAIL = (
+        "CAACAgIAAxkBAAEBuVlf6MEBtd8e94ObW5LSmP1_FrWZHAACgQMAAs-71A6WvjEQeKbJyh4E"
+    )
+    WELCOME = (
+        "CAACAgIAAxkBAAEBuVtf6MZ8_6rAiFA6uBh9uxtluKhr7wACSgEAApafjA6Mfk73uDljvh4E"
+    )

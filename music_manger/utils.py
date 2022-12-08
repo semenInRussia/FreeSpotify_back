@@ -1,11 +1,13 @@
-from brackets_lib import delete_all_values_with_all_brackets
+from brackets_lib import delete_all_values_with_all_brackets_types
 
 name_and_year_splitter = " - "
-len_of_year_with_splitter = 4 + len(name_and_year_splitter)  # len of for example "1984 - "
+
+# len of "1984 - ", for example
+len_of_year_with_splitter = 4 + len(name_and_year_splitter)
 
 
 def delete_sound_quality(string: str) -> str:
-    string = delete_all_values_with_all_brackets(string).strip()
+    string = delete_all_values_with_all_brackets_types(string).strip()
 
     name_and_year_with_sound_quality = string.split(name_and_year_splitter)
 
