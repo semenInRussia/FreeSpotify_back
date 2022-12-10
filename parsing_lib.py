@@ -52,13 +52,14 @@ def get_first_link_by_elements_or_raise_exception(
 ) -> str:
     try:
         element = elements[0]
-    except IndexError:
-        raise exception
+    except IndexError as exc:
+        raise exception from exc
     else:
         return get_absolute_url_by_element(element, base_url, url_attribute_of_tag)
 
 
-def get_absolute_url_by_element(element: Tag, base_url: str, url_attribute_of_tag: str = 'href') -> str:
+def get_absolute_url_by_element(element: Tag, base_url: str,
+                                url_attribute_of_tag: str = 'href') -> str:
     relative_link = element.get(url_attribute_of_tag)
 
     return get_absolute_url(relative_link, base_url)
