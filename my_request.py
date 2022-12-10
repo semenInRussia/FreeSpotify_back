@@ -39,10 +39,7 @@ def get_bs(url: str, method_name: str = 'get', **kwargs) -> BeautifulSoup:
     return BeautifulSoup(html, "html.parser")
 
 
-def cashed_get_bs(url: str, method_name: str = 'get', **kwargs) -> BeautifulSoup:
-    html = cashed_get_content(url, method_name, **kwargs)
-
-    return BeautifulSoup(html, "html.parser")
+cashed_get_bs = cashed_function(get_bs)
 
 
 def get_json(url: str, method_name: str = 'get', **kwargs):
@@ -55,8 +52,8 @@ def get_json(url: str, method_name: str = 'get', **kwargs):
 def _try_load_content_to_json(content_of_page: str, url: str):
     try:
         return json.loads(content_of_page)
-    except JSONDecodeError:
-        raise NotJsonResponseFromUrl(url)
+    except JSONDecodeError as exc:
+        raise NotJsonResponseFromUrl(url) from exc
 
 
 def get_content(url: str, method_name: str = 'get', **kwargs):
@@ -69,17 +66,14 @@ cashed_get_content = cashed_function(get_content)
 def is_not_valid_page(link_on_page: str, method: str = 'get', **kwargs) -> bool:
     try:
         create_request(link_on_page, method_name=method, **kwargs)
-
     except requests.exceptions.ConnectionError:
         return True
-
     else:
         return False
 
 
 def create_request(url: str, method_name: str = 'get', **kwargs):
     method = get_method_by_name(method_name)
-
     return method(url, **kwargs)
 
 
