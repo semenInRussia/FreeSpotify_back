@@ -1,10 +1,10 @@
-from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import RocknationAlbums
-from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import RocknationArtists
-from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import RocknationTracks
+from music_manger.implementations.rocknation_and_spotify.rocknation.rocknation import RocknationAlbums
+from music_manger.implementations.rocknation_and_spotify.rocknation.rocknation import RocknationArtists
+from music_manger.implementations.rocknation_and_spotify.rocknation.rocknation import RocknationTracks
 
-from music_manger.implementations.rocknation_and_spotify.spotify.spotifyAPI import SpotifyAlbums
-from music_manger.implementations.rocknation_and_spotify.spotify.spotifyAPI import SpotifyArtists
-from music_manger.implementations.rocknation_and_spotify.spotify.spotifyAPI import SpotifyTracks
+from music_manger.implementations.rocknation_and_spotify.spotify.spotify import SpotifyAlbums
+from music_manger.implementations.rocknation_and_spotify.spotify.spotify import SpotifyArtists
+from music_manger.implementations.rocknation_and_spotify.spotify.spotify import SpotifyTracks
 
 from music_manger.music_manger import AbstractMusicManager
 

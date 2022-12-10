@@ -15,7 +15,8 @@ additional_settings = settings_with_mock
 
 @pytest.fixture
 def artist():
-    return Artist(artist_name=approximate_artist_name, additional_settings=settings_with_mock)
+    return Artist(artist_name=approximate_artist_name,
+                  additional_settings=settings_with_mock)
 
 
 @pytest.fixture()

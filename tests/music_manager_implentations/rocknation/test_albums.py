@@ -1,7 +1,7 @@
 import pytest
 
 from music_manger.core.exceptions import NotFoundAlbumException
-from music_manger.implementations.rocknation_and_spotify.rocknation.rocknationAPI import Rocknation
+from music_manger.implementations.rocknation_and_spotify.rocknation.rocknation import Rocknation
 
 artist_name = "queen"
 album_name = "Jazz"

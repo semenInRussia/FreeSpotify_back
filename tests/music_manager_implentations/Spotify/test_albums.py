@@ -7,16 +7,14 @@ from .fixtures import *
 artist_name = "Queen"
 album_name = "Jazz"
 
-not_valid_name = "jediafuhfuerhguehg#@!-"
-
 albums_params = {
     "artist_name": artist_name,
     "album_name": album_name
 }
 
 not_valid_params = {
-    "artist_name": artist_name,
-    "album_name": not_valid_name
+    "artist_name": "*!@",
+    "album_name": "#"
 }
 
 

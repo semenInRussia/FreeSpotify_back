@@ -78,7 +78,6 @@ class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
 
         albums = self._search_by_text(
             search_string,
-
             limit=limit,
             offset=offset
         )
