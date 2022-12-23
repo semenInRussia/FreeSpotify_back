@@ -1,8 +1,11 @@
 import sys
 
-from runner.main_cli_commands import MainCLICommandsCollection
+from .main_cli_commands import MainCLICommandsCollection
 
 commands = MainCLICommandsCollection()
 
-if __name__ == '__main__':
+def run():
     commands.run(sys.argv[1:])
+
+if __name__ == '__main__':
+    run()

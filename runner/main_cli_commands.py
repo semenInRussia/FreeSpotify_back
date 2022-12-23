@@ -1,17 +1,19 @@
 import sys
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser
+from argparse import Namespace
+
 
 import pytest
 
-from commands.simple_commands.cli_command import CLICommand
-from commands.simple_commands_collections.cli_commands_collection import CLICommandsCollection
-from server.handlers import app
+from ..settings.main import main
+from ..settings.server import server
 
-from settings.main import main
-from settings.server import server
+from ..ui.bot_programm import TelegramUI
+from ..ui.console_ui import ConsoleUI
 
-from ui.bot_programm import TelegramUI
-from ui.console_ui import ConsoleUI
+from ..commands import CLICommand
+from ..commands import CLICommandsCollection
+from ..server.handlers import app
 
 
 class RunServerCommand(CLICommand):
@@ -37,9 +39,10 @@ class RunServerCommand(CLICommand):
 
 
 class RunConsoleUICommand(CLICommand):
+
     aliases = ['console', 'cli-api', 'shell']
 
-    def run(self, args: list):
+    def run(self, _):
         console_ui = ConsoleUI()
         console_ui.run()
 
@@ -47,23 +50,22 @@ class RunConsoleUICommand(CLICommand):
 class RunBotCommand(CLICommand):
     aliases = ['bot', 'run-bot']
 
-    def run(self, args: list, additional_settings=None, **kwargs):
+    def run(self, _, additional_settings=None, **kwargs):
         telegram_ui = TelegramUI(additional_settings)
-
         telegram_ui.run()
 
 
 class RunTestsCommand(CLICommand):
     aliases = ['tests', 'run-tests', 'runtests', 'pytest', 'test']
 
-    def run(self, args: list):
+    def run(self, _):
         sys.exit(pytest.main(['..']))
 
 
 class MainCLICommandsCollection(CLICommandsCollection):
     all_commands = [
-        RunServerCommand(),
-        RunConsoleUICommand(),
-        RunTestsCommand(),
-        RunBotCommand(),
+        RunServerCommand,
+        RunConsoleUICommand,
+        RunTestsCommand,
+        RunBotCommand,
     ]
