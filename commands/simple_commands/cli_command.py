@@ -1,4 +1,4 @@
-from commands.abstract_command import Command
+from .. import Command
 
 
 class CLICommand(Command):
