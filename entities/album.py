@@ -1,14 +1,19 @@
 from typing import List
 
-from dto import AlbumDto, TrackDto
-from entities._AbstractEntity import AbstractEntity
-from music_manger.core.exceptions import NotFoundAlbumException
+from ..dto import AlbumDto
+from ..dto import TrackDto
+
+from ._AbstractEntity import AbstractEntity
+from ..music_manger.core.exceptions import NotFoundAlbumException
 
 
 class Album(AbstractEntity):
     _instance: AlbumDto
 
-    def __init__(self, artist_name: str, album_name: str, additional_settings=None):
+    def __init__(self,
+                 artist_name: str,
+                 album_name: str,
+                 additional_settings=None):
         self._init_settings(additional_settings)
         self._init_instance(artist_name, album_name)
 
@@ -24,11 +29,12 @@ class Album(AbstractEntity):
         return repr(self._instance)
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.artist == other.artist and self.name == other.name
+        return isinstance(other, self.__class__) \
+             and self.artist == other.artist and self.name == other.name
 
     @property
     def artist(self):
-        from entities import Artist
+        from . import Artist
 
         return Artist(self._instance.artist_name, additional_settings=self.settings)
 
@@ -49,7 +55,7 @@ class Album(AbstractEntity):
         return list(map(self._create_track_from_dto, tracks))
 
     def _create_track_from_dto(self, dto_track: TrackDto):
-        from entities import Track
+        from . import Track
 
         return Track.create_from_dto(
             dto_track,
@@ -89,7 +95,6 @@ class Album(AbstractEntity):
         return cls(
             dto.artist_name,
             dto.name,
-
             additional_settings=additional_settings
         )
 

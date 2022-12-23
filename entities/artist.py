@@ -1,9 +1,9 @@
 from typing import List
 
-from dto import AlbumDto
-from dto import ArtistDto
-from entities._AbstractEntity import AbstractEntity
-from music_manger.core.exceptions import NotFoundArtistException
+from ..dto import AlbumDto
+from ..dto import ArtistDto
+from ._AbstractEntity import AbstractEntity
+from ..music_manger.core.exceptions import NotFoundArtistException
 
 
 class Artist(AbstractEntity):
@@ -37,15 +37,12 @@ class Artist(AbstractEntity):
         return tracks_top
 
     def _get_top_from_dto_top(self, track_dto_top):
-        from entities.track import Track
+        from . import Track
 
-        top = list(map(
-            lambda dto_track: Track.create_from_dto_or_none(dto_track, additional_settings=self.settings),
-
-            track_dto_top
-        ))
-
-        return top
+        for dto_track in track_dto_top:
+            yield Track.create_from_dto_or_none(
+                dto_track,
+                additional_settings=self.settings)
 
     @property
     def albums(self):
