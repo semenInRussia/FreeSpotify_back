@@ -1,11 +1,15 @@
 import difflib
+from typing import Callable
 from typing import List
+from typing import Optional
+from typing import Iterable
+from typing import TypeVar
 
 DEFAULT_MIN_RATIO_OF_SIMILARITY = 0.6
 
 
-def search_string_similar_to(string: str, strings: List[str]) -> str:
-    return sort_strings_by_similarity_to(string, strings)[0]
+def search_string_similar_to(string: str, strings: List[str], key=None) -> str:
+    return sort_objects_by_similarity_to(string, strings, key=key)[0]
 
 
 def filter_and_sort_strings_by_min_similarity_to(
@@ -18,7 +22,7 @@ def filter_and_sort_strings_by_min_similarity_to(
         strings,
         min_ratio_of_similarity
     )
-    sorted_strings = sort_strings_by_similarity_to(string, filtered_strings)
+    sorted_strings = sort_objects_by_similarity_to(string, filtered_strings)
 
     return sorted_strings
 
@@ -26,7 +30,7 @@ def filter_and_sort_strings_by_min_similarity_to(
 def filter_strings_by_min_similarity_to(
         string: str,
         strings: List[str],
-        min_ratio_of_similarity: float = None) -> List[str]:
+        min_ratio_of_similarity: Optional[float]=None) -> List[str]:
     return list(filter(
         lambda actual_string: is_similar_strings(
             actual_string,
@@ -38,7 +42,7 @@ def filter_strings_by_min_similarity_to(
 
 
 def is_similar_strings(actual: str,
-                       expected: str, min_ratio: float = None) -> bool:
+                       expected: str, min_ratio: Optional[float]=None) -> bool:
     """Is similar actual string to excepted string?"""
     if min_ratio is None:
         min_ratio = DEFAULT_MIN_RATIO_OF_SIMILARITY
@@ -70,10 +74,12 @@ def _normalize_string(string: str) -> str:
     return string.lower()
 
 
-def sort_strings_by_similarity_to(string: str, strings: List[str]) -> List[str]:
-    return sorted(
-        strings,
-        key=lambda excepted_string: -(get_ratio_of_similarity(
-            string,
-            excepted_string
-        )))
+O = TypeVar("O")
+
+def sort_objects_by_similarity_to(string: str,
+                                  objects: Iterable[O],
+                                  key: Callable[[O], str]=str
+                                  ) -> List[str]:
+    strings = map(key, objects)
+    return sorted(strings,
+                  key=lambda s: -get_ratio_of_similarity(s, string))

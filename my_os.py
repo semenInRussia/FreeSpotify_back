@@ -4,7 +4,7 @@ import os
 import pathlib
 from typing import List
 
-from similarity_lib import filter_and_sort_strings_by_min_similarity_to
+from .similarity_lib import filter_and_sort_strings_by_min_similarity_to
 
 SIMILARITY_TARGET = '~'
 SIMILARITY_TARGET_LENGTH = 1

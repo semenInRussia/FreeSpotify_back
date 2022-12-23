@@ -1,11 +1,11 @@
 from functools import lru_cache
 from typing import List
 
-from brackets_lib import Brackets
-from brackets_lib import add_brackets_around
-from brackets_lib import get_values_inside_of_brackets
+from .brackets_lib import Brackets
+from .brackets_lib import add_brackets_around
+from .brackets_lib import get_values_inside_of_brackets
 
-cashed_function = lru_cache()
+cached_function = lru_cache()
 
 format_brackets = Brackets("{", "}")
 or_char = "|"
@@ -87,9 +87,7 @@ class EmptyFormatExpression(FormatExpression):
 
     def execute(self):
         res = self._args[0]
-
         self._args = self._args[1:]
-
         return res
 
 
@@ -100,20 +98,16 @@ class OrFormatExpression(FormatExpression):
 
     def execute(self):
         parts_of_expression = self._str_expression.split(or_char)
-
         if self._is_valid_expression(parts_of_expression[0]):
             return eval(parts_of_expression[0], self.kwargs)
-
         else:
             return eval(parts_of_expression[1], self.kwargs)
 
     def _is_valid_expression(self, expression) -> bool:
         try:
             result = eval(expression, self.kwargs)
-
         except:
             return False
-
         else:
             return bool(result)
 
@@ -133,8 +127,22 @@ def _get_format_expression(expression: str, args: tuple, kwargs: dict):
             return format_expression(expression, args, kwargs)
 
 
-all_format_expression: List[type(FormatExpression)] = [
+all_format_expression: List[type[FormatExpression]] = [
     EmptyFormatExpression,
     OrFormatExpression,
     DefaultFormatExpression
 ]
+
+
+# code taked from the itertools recipes
+def first_true(iterable, default=False, pred=None):
+    """Returns the first true value in the iterable.
+
+    If no true value is found, returns *default*
+
+    If *pred* is not None, returns the first item
+    for which pred(item) is true.
+    """
+    # first_true([a,b,c], x) --> a or b or c or x
+    # first_true([a,b], x, f) --> a if f(a) else b if f(b) else x
+    return next(filter(pred, iterable), default)

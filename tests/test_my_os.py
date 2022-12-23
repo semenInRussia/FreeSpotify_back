@@ -1,9 +1,11 @@
 import os
 
-from my_os import dirs, join_all_paths_with, file_without_file_extension
-from my_os import dirs_similar_to
-from my_os import parse_path
-from my_os import search_dirs_by_pattern
+from ..my_os import dirs
+from ..my_os import join_all_paths_with
+from ..my_os import file_without_file_extension
+from ..my_os import dirs_similar_to
+from ..my_os import parse_path
+from ..my_os import search_dirs_by_pattern
 
 
 PATH_TO_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),

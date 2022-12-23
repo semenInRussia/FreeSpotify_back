@@ -1,6 +1,6 @@
-from brackets_lib import Brackets
-from brackets_lib import add_brackets_around
-from brackets_lib import delete_all_values_with_all_brackets_types
+from ..brackets_lib import Brackets
+from ..brackets_lib import add_brackets_around
+from ..brackets_lib import delete_all_values_with_all_brackets_types
 
 
 def test_delete_all_values_with_all_brackets_types():

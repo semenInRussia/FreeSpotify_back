@@ -3,9 +3,10 @@ from unittest.mock import create_autospec
 
 import pytest
 
-from _low_level_utils import cashed_function
-from _low_level_utils import get_public_fields_of
-from _low_level_utils import my_format_str
+from .._low_level_utils import cached_function
+from .._low_level_utils import first_true
+from .._low_level_utils import get_public_fields_of
+from .._low_level_utils import my_format_str
 
 
 class TestClass:
@@ -38,11 +39,11 @@ def test_get_public_fields_of():
     assert get_public_fields_of(TestClass, ignore=["protected_field"]) == ["public_field"]
 
 
-def test_cashed_function(function: MagicMock):
-    current_cashed_function = cashed_function(function)
+def test_cached_function(function: MagicMock):
+    current_cached_function = cached_function(function)
 
-    assert current_cashed_function(1, name="SEMEN") == 5
-    assert current_cashed_function(1, name="SEMEN") == 5
+    assert current_cached_function(1, name="SEMEN") == 5
+    assert current_cached_function(1, name="SEMEN") == 5
 
     function.assert_called_once_with(1, name="SEMEN")
 
@@ -70,3 +71,12 @@ def test_my_format_with_expression_with_funcs_from_kwargs():
 def test_my_format_with_or():
     assert my_format_str("my {last_name|first_name}", last_name="Bond", first_name="James") == "my Bond"
     assert my_format_str("my {last_name|first_name}", last_name=None, first_name="James") == "my James"
+
+def test_first_true():
+    assert first_true(["", False, "Value", "Anotther Value"]) == "Value"
+    assert first_true(["Moscow", "St. Petersburg", "Ekaterinburg"],
+                      pred=lambda c: len(c.split()) > 1,
+                      default="Veliky Luki") == "St. Petersburg"
+    assert first_true(["Moscow", "Volgograd", "Ekaterinburg"],
+                      pred=lambda c: len(c.split()) > 1,
+                      default="Veliky Luki") == "Veliky Luki"
