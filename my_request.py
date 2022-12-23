@@ -6,7 +6,7 @@ from typing import Dict
 from bs4 import BeautifulSoup
 import requests
 
-from _low_level_utils import cashed_function
+from _low_level_utils import cached_function
 from core.exceptions import NotJsonResponseFromUrl
 
 dependencies_of_methods_on_name: Dict[str, Callable] = {
@@ -39,7 +39,7 @@ def get_bs(url: str, method_name: str = 'get', **kwargs) -> BeautifulSoup:
     return BeautifulSoup(html, "html.parser")
 
 
-cashed_get_bs = cashed_function(get_bs)
+cached_get_bs = cached_function(get_bs)
 
 
 def get_json(url: str, method_name: str = 'get', **kwargs):
@@ -60,7 +60,7 @@ def get_content(url: str, method_name: str = 'get', **kwargs):
     return create_request(url, method_name, **kwargs).text
 
 
-cashed_get_content = cashed_function(get_content)
+cached_get_content = cached_function(get_content)
 
 
 def is_not_valid_page(link_on_page: str, method: str = 'get', **kwargs) -> bool:

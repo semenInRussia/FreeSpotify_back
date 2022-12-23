@@ -3,11 +3,13 @@ from typing import List
 
 from bs4 import Tag
 
-from my_request import cashed_get_bs
-from my_request import cashed_get_content
+from my_request import cached_get_bs
+from my_request import cached_get_content
 from my_request import get_absolute_url
 from my_request import get_bs
 from my_request import get_content
+
+from _low_level_utils import cached_function
 
 
 def select_one_element_on_page(url: str, css_selector: str, method_name='get', **kwargs) -> Tag:
@@ -27,19 +29,19 @@ def select_elements_on_page(
     return soup.select(css_selector)
 
 
-def cashed_select_elements_on_page(
+def cached_select_elements_on_page(
         url: str,
         css_selector: str,
         method_name='get',
         **kwargs
 ) -> List[Tag]:
-    soup = cashed_get_bs(url, method_name, **kwargs)
+    soup = cached_get_bs(url, method_name, **kwargs)
 
     return soup.select(css_selector)
 
 
-def cashed_select_one_element_on_page(url: str, css_selector: str, method_name='get', **kwargs):
-    soup = cashed_get_bs(url, method_name, **kwargs)
+def cached_select_one_element_on_page(url: str, css_selector: str, method_name='get', **kwargs):
+    soup = cached_get_bs(url, method_name, **kwargs)
 
     return soup.select_one(css_selector)
 
@@ -71,7 +73,8 @@ def search_on_page(url: str, pattern: str, method: str = 'get', **kwargs) -> Lis
     return re.findall(pattern, string)
 
 
-def cashed_search_on_page(url: str, pattern: str, method: str = 'get', **kwargs) -> List[str]:
-    string = cashed_get_content(url, method, **kwargs)
+@cached_function
+def cached_search_on_page(url: str, pattern: str, method: str = 'get', **kwargs) -> List[str]:
+    string = cached_get_content(url, method, **kwargs)
 
     return re.findall(pattern, string)

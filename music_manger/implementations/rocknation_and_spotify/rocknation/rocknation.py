@@ -4,7 +4,8 @@ from typing import Optional
 from bs4 import BeautifulSoup
 from bs4 import Tag
 
-from _low_level_utils import cashed_function
+from _low_level_utils import first_true
+from _low_level_utils import cached_function
 
 from music_manger.core.exceptions import NotFoundAlbumException
 from music_manger.core.exceptions import NotFoundArtistException
@@ -34,7 +35,7 @@ def _raise_exception_if_is_false(obj, exception):
 
 
 class RocknationArtists(AbstractArtists):
-    @cashed_function
+    @cached_function
     def get_link(self, artist_name: str) -> Optional[str]:
         artist_name = delete_sound_quality(artist_name)
 
@@ -44,6 +45,7 @@ class RocknationArtists(AbstractArtists):
         return link
 
     @staticmethod
+    @cached_function
     def _get_soup_of_search_response(name: str) -> BeautifulSoup:
         # code from https://curl.trillworks.com
 
@@ -96,16 +98,16 @@ class RocknationArtists(AbstractArtists):
     def _find_artist_elements(soup: BeautifulSoup):
         return soup.select(r"a[href^='/mp3/band']")
 
-    @cashed_function
+    @cached_function
     def get_link_on_img(self, artist_name: str) -> str:
         link_on_artist = self.get_link(artist_name)
         link_on_image = self._get_link_on_img_by_link_on_artist(link_on_artist)
 
         return link_on_image
 
-    @cashed_function
+    @cached_function
     def _get_link_on_img_by_link_on_artist(self, link_on_artist: str) -> str:
-        element = parsing_lib.cashed_select_one_element_on_page(
+        element = parsing_lib.cached_select_one_element_on_page(
             link_on_artist,
             'img[src^="/upload/images/bands"]'
         )
@@ -114,7 +116,7 @@ class RocknationArtists(AbstractArtists):
 
 
 class RocknationAlbums(AbstractAlbums):
-    @cashed_function
+    @cached_function
     def get_link_on_img(self, artist_name: str, album_name: str):
         link_on_album = self.get_link(artist_name, album_name)
         link_on_img = self._get_link_on_img_by_album_link(link_on_album)
@@ -123,7 +125,7 @@ class RocknationAlbums(AbstractAlbums):
 
     @staticmethod
     def _get_link_on_img_by_album_link(album_link: str):
-        element = parsing_lib.cashed_select_one_element_on_page(album_link, "img[src^='/upload/images/albums/']")
+        element = parsing_lib.cached_select_one_element_on_page(album_link, "img[src^='/upload/images/albums/']")
 
         _raise_exception_if_is_false(element, NotFoundAlbumException)
 
@@ -131,7 +133,7 @@ class RocknationAlbums(AbstractAlbums):
 
         return link_on_img
 
-    @cashed_function
+    @cached_function
     def get_link(self, artist_name: str, album_name: str) -> Optional[str]:
         album_name = delete_sound_quality(album_name)
 
@@ -151,17 +153,13 @@ class RocknationAlbums(AbstractAlbums):
         return url
 
     def _find_links_on_albums_elements_by_link_on_artist(self, link_on_artist: str) -> List[Tag]:
-        links = []
-
         for link_on_albums in self._get_all_albums_links(link_on_artist):
             new_links = self._find_links_on_albums_elements_on_one_albums_link(link_on_albums)
 
-            links.extend(new_links)
+            yield from new_links
 
             if not new_links:
                 break
-
-        return links
 
     @staticmethod
     def _get_all_albums_links(link_on_artist: str) -> iter:
@@ -172,30 +170,26 @@ class RocknationAlbums(AbstractAlbums):
             yield current_albums_link
 
             if my_request.is_not_valid_page(current_albums_link):
-                raise StopIteration
+                return
 
             current_page_albums_index += 1
-
             current_albums_link = f"{link_on_artist}/{current_page_albums_index}"
 
     @staticmethod
     def _find_links_on_albums_elements_on_one_albums_link(link_on_albums: str) -> List[Tag]:
-        return parsing_lib.cashed_select_elements_on_page(
+        return parsing_lib.cached_select_elements_on_page(
             link_on_albums,
             'a[href^="/mp3/album"]'
         )
 
     @staticmethod
     def _find_looking_link_on_album_element(links_elements: list, album_name: str) -> Optional[Tag]:
-        album_names = list(map(
+        album_names = map(
             lambda el: delete_year_in_album_name(el.text),
             links_elements
-        ))
-
-        album_names_and_links_elements = dict(zip(album_names, links_elements))
+        )
 
         actual_album_name = search_string_similar_to(album_name, album_names)
-        actual_link_element = album_names_and_links_elements[actual_album_name]
 
         if not is_similar_strings(actual_album_name, album_name):
             raise NotFoundAlbumException
@@ -208,13 +202,15 @@ class RocknationAlbums(AbstractAlbums):
 
 
 class RocknationTracks(AbstractTracks):
-    @cashed_function
+    @cached_function
+    @cached_function
     def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:
         link_on_album = self._albums.get_link(artist_name, album_name)
         link_on_track = self._find_link_on_track_on_album_page(link_on_album, track_name)
 
         return link_on_track
 
+    @cached_function
     def _find_link_on_track_on_album_page(self, link_on_album: str, track_name: str) -> str:
         all_links_on_tracks = self._find_all_links_on_tracks_on_album_page(link_on_album)
         link_on_track = self._find_looking_link_on_track(all_links_on_tracks, track_name)
@@ -225,7 +221,7 @@ class RocknationTracks(AbstractTracks):
     def _find_all_links_on_tracks_on_album_page(album_link: str) -> List[str]:
         pattern = ROCKNATION_BASE_UPLOAD_MP3_URL + '[^"]+'
 
-        return parsing_lib.cashed_search_on_page(album_link, pattern)
+        return parsing_lib.cached_search_on_page(album_link, pattern)
 
     def _find_looking_link_on_track(self, links: List[str], track_name: str) -> str:
         tracks_names_and_normalized_links = dict(map(
@@ -254,7 +250,7 @@ class RocknationTracks(AbstractTracks):
             self,
             artist_name: str,
             album_name: str,
-            track_name: str
+            _: str                        # track_name
     ) -> str:
         return self._albums.get_link_on_img(artist_name, album_name)
 
