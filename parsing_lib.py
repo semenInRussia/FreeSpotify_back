@@ -33,6 +33,7 @@ def select_elements_on_page(
     return soup.select(css_selector)
 
 
+@cached_function
 def cached_select_elements_on_page(
         url: str,
         css_selector: str,
@@ -64,9 +65,13 @@ def get_first_link_by_elements_or_raise_exception(
         return get_absolute_url_by_element(element, base_url, url_attribute_of_tag)
 
 
-def get_absolute_url_by_element(element: Tag, base_url: str,
+def get_absolute_url_by_element(element: Tag,
+                                base_url: str,
                                 url_attribute_of_tag: str = 'href') -> str:
     relative_link = element.get(url_attribute_of_tag)
+
+    if isinstance(relative_link, list) or relative_link is None:
+        raise TypeError("Attribute of tag should be plain string (link)")
 
     return get_absolute_url(relative_link, base_url)
 
