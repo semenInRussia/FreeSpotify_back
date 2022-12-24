@@ -1,10 +1,10 @@
-from dto import TrackDto
-from entities import Album
-from entities._AbstractEntity import AbstractEntity
+from ..dto import TrackDto
+from .album import Album
+from ._AbstractEntity import AbstractEntity
 
-from music_manger.core.exceptions import NotFoundAlbumException
-from music_manger.core.exceptions import NotFoundArtistException
-from music_manger.core.exceptions import NotFoundTrackException
+from ..music_manager.core.exceptions import NotFoundAlbumException
+from ..music_manager.core.exceptions import NotFoundArtistException
+from ..music_manager.core.exceptions import NotFoundTrackException
 
 
 class Track(AbstractEntity):

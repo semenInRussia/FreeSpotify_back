@@ -1,10 +1,11 @@
 import pytest
 
-from dto import TrackDto
-from entities import Album
-from entities import Artist
-from entities.track import Track
-from tests.settigs_for_test import settings_with_mock
+from ..settigs_for_test import settings_with_mock
+
+from FreeSpotify_back.dto import TrackDto
+from FreeSpotify_back.entities import Album
+from FreeSpotify_back.entities import Artist
+from FreeSpotify_back.entities.track import Track
 
 artist_name = "Metallica"
 album_name = "Master of Puppets"

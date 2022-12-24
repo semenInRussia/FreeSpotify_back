@@ -1,4 +1,4 @@
-from music_manger.implementations import MockMusicManager
+from ..music_manager.implementations import MockMusicManager
 
 
 class settings_with_mock:

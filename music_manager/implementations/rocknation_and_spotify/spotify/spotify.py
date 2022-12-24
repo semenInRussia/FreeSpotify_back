@@ -1,12 +1,12 @@
 from typing import List
 
-from _low_level_utils import cached_function
-from dto import AlbumDto
-from dto import ArtistDto
+from FreeSpotify_back._low_level_utils import cached_function
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import ArtistDto
 
-from music_manger.music_manger import AbstractAlbums
-from music_manger.music_manger import AbstractArtists
-from music_manger.music_manger import AbstractTracks
+from FreeSpotify_back.music_manager import AbstractAlbums
+from FreeSpotify_back.music_manager import AbstractArtists
+from FreeSpotify_back.music_manager import AbstractTracks
 
 from ._deserializers import deserialize_albums_from_search_response
 from ._deserializers import deserialize_albums_of_artist_response
@@ -33,29 +33,32 @@ class _BaseSpotifyObject:
 
 class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     @cached_function
-    def search(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[ArtistDto]:
+    def search(self,
+               artist_name: str,
+               limit: int = 1,
+               offset: int = 0) -> List[ArtistDto]:
         json_response = self._spotify_core.parse_search_json(
-            artist_name, type_="artist", limit=limit, offset=offset
-        )
-
+            artist_name, type_="artist", limit=limit, offset=offset)
         return deserialize_artists_from_search_response(json_response)
 
     def get_top(self, artist_name: str) -> list:
         artist_id = self.get(artist_name).spotify_id
-
         top = self._get_top_by_spotify_id(artist_id)
-
         return top
 
     @cached_function
-    def _get_top_by_spotify_id(self, spotify_artist_id: str, market: str = 'US'):
-        json_response = self._spotify_core.parse_tracks_of_top(spotify_artist_id, market=market)
-
+    def _get_top_by_spotify_id(self,
+                               spotify_artist_id: str,
+                               market: str = 'US'):
+        json_response = self._spotify_core.parse_tracks_of_top(
+            spotify_artist_id, market=market)
         top = deserialize_tracks_from_artist_top_response(json_response)
-
         return top
 
-    def get_albums(self, artist_name: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
+    def get_albums(self,
+                   artist_name: str,
+                   limit: int = 1,
+                   offset: int = 0) -> List[AlbumDto]:
         artist_id = self.get(artist_name).spotify_id
 
         return self._get_albums_by_spotify_id(artist_id, limit, offset)

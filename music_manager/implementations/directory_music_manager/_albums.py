@@ -1,10 +1,12 @@
 import os
 from typing import List
 
-from dto import AlbumDto
-from dto import TrackDto
-from music_manger.music_manger import AbstractAlbums
-import my_os
+from FreeSpotify_back import my_os
+
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import TrackDto
+
+from ... import AbstractAlbums
 
 RATIO_OF_SIMILARITY_OF_ALBUMS = 0.5
 

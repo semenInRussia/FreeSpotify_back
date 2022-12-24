@@ -1,7 +1,7 @@
 import pytest
 
-from music_manger.core.exceptions import NotFoundTrackException
-from music_manger.implementations.rocknation_and_spotify.rocknation.rocknation import Rocknation
+from FreeSpotify_back.music_manager.core.exceptions import NotFoundTrackException
+from FreeSpotify_back.music_manager.implementations import Rocknation
 
 artist_name = "nirvana"
 album_name = "In Ultero"
@@ -16,7 +16,7 @@ def rocknation():
 def test_get_link(rocknation):
     actual = rocknation.tracks.get_link(artist_name, album_name, track_name)
 
-    assert actual == "http://rocknation.su/upload/mp3/Nirvana/1993%20-%20In%20Utero/11.%20Tourette%27s.mp3"
+    assert actual == "http:./rocknation.su/upload/mp3/Nirvana/1993%20-%20In%20Utero/11.%20Tourette%27s.mp3"
 
 
 def test_get_link_on_single(rocknation):
@@ -33,7 +33,7 @@ def test_get_link_on_single(rocknation):
 
 def test_get_link_should_raise_exception(rocknation):
     with pytest.raises(NotFoundTrackException):
-        link = rocknation.tracks.get_link(
+        rocknation.tracks.get_link(
             artist_name,
             album_name,
             "jiferihguthughtughtughtughtughtugkdfrkrjfirmc,nvtjugtugn"

@@ -1,4 +1,5 @@
 import difflib
+
 from typing import Callable
 from typing import List
 from typing import Optional
@@ -15,13 +16,9 @@ def search_string_similar_to(string: str, strings: List[str], key=None) -> str:
 def filter_and_sort_strings_by_min_similarity_to(
         string: str,
         strings: List[str],
-        min_ratio_of_similarity=DEFAULT_MIN_RATIO_OF_SIMILARITY
-) -> List[str]:
-    filtered_strings = filter_strings_by_min_similarity_to(
-        string,
-        strings,
-        min_ratio_of_similarity
-    )
+        min_ratio_of_similarity=DEFAULT_MIN_RATIO_OF_SIMILARITY) -> List[str]:
+    filtered_strings = filter_strings_by_min_similarity_to(string,
+        strings, min_ratio_of_similarity)
     sorted_strings = sort_objects_by_similarity_to(string, filtered_strings)
 
     return sorted_strings

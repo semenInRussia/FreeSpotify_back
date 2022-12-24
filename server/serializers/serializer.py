@@ -1,11 +1,13 @@
-from _low_level_utils import get_public_fields_of
-from server.serializers.fields import FieldSerializer
+from typing import Type
+
+from FreeSpotify_back._low_level_utils import get_public_fields_of
+from .fields import FieldSerializer
 
 
 class Serializer:
     public_fields = ["all_fields", "object_type", "get_data", "public_fields"]
 
-    all_fields = []
+    all_fields: list[str] = []
     object_type = None
 
     def __init__(self, obj):
@@ -48,7 +50,7 @@ class Serializer:
 
 
 class GeneralSerializer(Serializer):
-    all_serializers = []
+    all_serializers: list[Type[Serializer]] = []
 
     def get_data(self, *fields):
         serializer = self._get_current_serializer()

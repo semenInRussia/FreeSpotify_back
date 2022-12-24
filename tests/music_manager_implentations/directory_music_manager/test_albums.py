@@ -2,11 +2,13 @@ import os
 
 import pytest
 
-from dto import AlbumDto
-from dto import TrackDto
-from music_manger.implementations.directory_music_manager.directory_music_manager import DirectoryMusicManager
-from music_manger.music_manger import AbstractMusicManager
-from tests.testing_data import path_to_music
+from FreeSpotify_back.music_manager.implementations import DirectoryMusicManager
+from FreeSpotify_back.music_manager import AbstractMusicManager
+
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import TrackDto
+
+from ...testing_data import path_to_music
 
 
 @pytest.fixture()

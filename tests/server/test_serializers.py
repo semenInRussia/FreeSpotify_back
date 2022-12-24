@@ -1,6 +1,10 @@
-from entities import Artist, Album, Track
-from server.serializers.entities_serializers import EntitiesSerializer
-from tests.settigs_for_test import settings_with_mock
+from FreeSpotify_back.entities import Artist
+from FreeSpotify_back.entities import Album
+from FreeSpotify_back.entities import Track
+
+from FreeSpotify_back.server.serializers.entities_serializers import \
+     EntitiesSerializer
+from ..settigs_for_test import settings_with_mock
 
 artist_name = "Deep Purple"
 album_name = "Burn"

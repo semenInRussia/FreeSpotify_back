@@ -1,7 +1,10 @@
 from typing import List
 
-from dto import TrackDto, AlbumDto
-from music_manger.core.exceptions import NotFoundAlbumException
+from FreeSpotify_back.dto import TrackDto
+from FreeSpotify_back.dto import AlbumDto
+
+from FreeSpotify_back.music_manager.core.exceptions import \
+     NotFoundAlbumException
 from .fixtures import *
 
 artist_name = "Queen"

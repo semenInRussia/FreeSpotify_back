@@ -1,32 +1,16 @@
-from abc import ABC
 from typing import List
+from typing import Type
 
-from dto import AlbumDto
-from dto import ArtistDto
-from dto import TrackDto
-from music_manger.core.exceptions import NotFoundAlbumException
-from music_manger.core.exceptions import NotFoundArtistException
-from music_manger.core.exceptions import NotFoundTrackException
+from ..dto import AlbumDto
+from ..dto import ArtistDto
+from ..dto import TrackDto
 
-
-class _AbstractObjects:
-    def get(self, *args, **kwargs) -> AlbumDto:
-        return self.search(*args, **kwargs)[0]
-
-    def search(self, *args, **kwargs) -> list:
-        pass
-
-    def get_tracks(self, *args, **kwargs) -> list:
-        pass
-
-    def get_link(self, *args, **kwargs) -> str:
-        pass
-
-    def get_link_on_img(self, *args, **kwargs) -> str:
-        pass
+from .core.exceptions import NotFoundAlbumException
+from .core.exceptions import NotFoundArtistException
+from .core.exceptions import NotFoundTrackException
 
 
-class AbstractArtists(_AbstractObjects, ABC):
+class AbstractArtists:
     def get(self, artist_name: str) -> ArtistDto:
         try:
             return self.search(artist_name)[0]
@@ -49,7 +33,7 @@ class AbstractArtists(_AbstractObjects, ABC):
         pass
 
 
-class AbstractAlbums(_AbstractObjects, ABC):
+class AbstractAlbums:
     def get(self, artist_name: str, album_name: str) -> AlbumDto:
         try:
             return self.search(artist_name, album_name)[0]
@@ -69,7 +53,7 @@ class AbstractAlbums(_AbstractObjects, ABC):
         pass
 
 
-class AbstractTracks(_AbstractObjects, ABC):
+class AbstractTracks:
     def get(
             self,
             artist_name: str,
@@ -89,24 +73,20 @@ class AbstractTracks(_AbstractObjects, ABC):
     ) -> List[TrackDto]:
         pass
 
-    def get_link(
-            self,
-            artist_name: str,
-            album_name: str,
-            track_name: str
-    ) -> str:
+    def get_link(self,
+                 artist_name: str,
+                 album_name: str,
+                 track_name: str) -> str:
         pass
 
-    def get_link_on_img(
-            self,
-            artist_name: str,
-            album_name: str,
-            track_name: str
-    ) -> str:
+    def get_link_on_img(self,
+                        artist_name: str,
+                        album_name: str,
+                        track_name: str) -> str:
         pass
 
 
 class AbstractMusicManager:
-    artists = AbstractArtists()
-    albums = AbstractAlbums()
-    tracks = AbstractTracks()
+    artists: AbstractArtists
+    albums: AbstractAlbums
+    tracks: AbstractTracks

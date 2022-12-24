@@ -1,13 +1,13 @@
 import random
 from typing import List
 
-from dto import AlbumDto
-from dto import ArtistDto
-from dto import TrackDto
-from music_manger.music_manger import AbstractAlbums
-from music_manger.music_manger import AbstractArtists
-from music_manger.music_manger import AbstractMusicManager
-from music_manger.music_manger import AbstractTracks
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import ArtistDto
+from FreeSpotify_back.dto import TrackDto
+from .. import AbstractAlbums
+from .. import AbstractArtists
+from .. import AbstractMusicManager
+from .. import AbstractTracks
 
 SEED = 1000
 

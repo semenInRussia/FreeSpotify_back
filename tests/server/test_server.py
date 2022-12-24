@@ -4,7 +4,7 @@ from typing import List
 from flask.testing import FlaskClient
 import pytest
 
-from server import handlers
+from FreeSpotify_back.server import handlers
 
 PageDetail = namedtuple("PageDetail", ["url", "required_fields_names"])
 
@@ -13,8 +13,8 @@ PageDetail = namedtuple("PageDetail", ["url", "required_fields_names"])
 def client():
     handlers.app.config['TESTING'] = True
 
-    with handlers.app.test_client() as client:
-        yield client
+    with handlers.app.test_client() as cl:
+        yield cl
 
 
 def test_main_page(client: FlaskClient):

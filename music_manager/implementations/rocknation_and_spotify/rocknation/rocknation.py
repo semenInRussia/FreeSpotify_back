@@ -4,24 +4,23 @@ from typing import Optional
 from bs4 import BeautifulSoup
 from bs4 import Tag
 
-from _low_level_utils import first_true
-from _low_level_utils import cached_function
+from FreeSpotify_back._low_level_utils import cached_function
 
-from music_manger.core.exceptions import NotFoundAlbumException
-from music_manger.core.exceptions import NotFoundArtistException
-from music_manger.core.exceptions import NotFoundTrackException
-from music_manger.music_manger import AbstractAlbums
-from music_manger.music_manger import AbstractArtists
-from music_manger.music_manger import AbstractMusicManager
-from music_manger.music_manger import AbstractTracks
-from music_manger.utils import delete_sound_quality
-from music_manger.utils import delete_year_in_album_name
+from FreeSpotify_back.similarity_lib import is_similar_strings
+from FreeSpotify_back.similarity_lib import search_string_similar_to
 
-import my_request
-import parsing_lib
+from FreeSpotify_back import my_request
+from FreeSpotify_back import parsing_lib
 
-from similarity_lib import is_similar_strings
-from similarity_lib import search_string_similar_to
+from ....core.exceptions import NotFoundAlbumException
+from ....core.exceptions import NotFoundArtistException
+from ....core.exceptions import NotFoundTrackException
+from .... import AbstractAlbums
+from .... import AbstractArtists
+from .... import AbstractMusicManager
+from .... import AbstractTracks
+from ....utils import delete_sound_quality
+from ....utils import delete_year_in_album_name
 
 ROCKNATION_BASE_URL = 'http://rocknation.su'
 ROCKNATION_BASE_UPLOAD_MP3_URL = ROCKNATION_BASE_URL + "/upload/mp3/"
@@ -260,6 +259,6 @@ class RocknationTracks(AbstractTracks):
 
 
 class Rocknation(AbstractMusicManager):
-    artists = RocknationArtists()
-    albums = RocknationAlbums()
-    tracks = RocknationTracks()
+    artists = RocknationArtists
+    albums = RocknationAlbums
+    tracks = RocknationTracks

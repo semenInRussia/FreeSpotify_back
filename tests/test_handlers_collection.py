@@ -2,7 +2,9 @@ from unittest.mock import create_autospec
 
 import pytest
 
-from ui.handler_collection import HandlersCollection, Call
+from FreeSpotify_back.ui.handler_collection import Call
+from FreeSpotify_back.ui.handler_collection import HandlersCollection
+
 
 
 @pytest.fixture()

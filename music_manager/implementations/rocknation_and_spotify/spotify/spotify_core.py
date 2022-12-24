@@ -2,9 +2,9 @@ import base64
 
 from loguru import logger
 
-from _low_level_utils import cached_function
-import my_request
-from settings.spotify import spotify
+from FreeSpotify_back._low_level_utils import cached_function
+from FreeSpotify_back import my_request
+from FreeSpotify_back.settings.spotify import spotify
 
 from .core.exceptions import AccessTokenExpiredException
 from .core.exceptions import InvalidClientException

@@ -3,7 +3,7 @@ from typing import List
 from ..dto import AlbumDto
 from ..dto import ArtistDto
 from ._AbstractEntity import AbstractEntity
-from ..music_manger.core.exceptions import NotFoundArtistException
+from ..music_manager.core.exceptions import NotFoundArtistException
 
 
 class Artist(AbstractEntity):

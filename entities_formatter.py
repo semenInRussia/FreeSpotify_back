@@ -1,13 +1,12 @@
 from typing import List
 
-from _low_level_utils import my_format_str
-from entities import Artist
-from entities import Track
+from ._low_level_utils import my_format_str
+from .entities import Artist
+from .entities import Track
 
 
 class AbstractParseMode:
     name: str = None
-
     artist_template: str = None
     top_item_template: str = None
     artist_header_template: str = None

@@ -3,11 +3,10 @@ This package has functions for deserializing JSON response from spotify API,
 To DTO objects (ArtistDto, AlbumDto, TrackDto).
 """
 
-from brackets_lib import delete_all_values_with_all_brackets_types
-from dto import AlbumDto
-from dto import ArtistDto
-from dto import TrackDto
-from music_manger.utils import delete_sound_quality
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import ArtistDto
+from FreeSpotify_back.dto import TrackDto
+from FreeSpotify_back.music_manager.utils import delete_sound_quality
 
 
 def deserialize_artists_from_response(json_response: list) -> list:

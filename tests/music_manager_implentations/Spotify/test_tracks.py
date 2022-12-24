@@ -1,6 +1,6 @@
 from typing import List
 
-from dto import TrackDto
+from FreeSpotify_back.dto import TrackDto
 from .fixtures import *
 
 artist_name = "Queen"

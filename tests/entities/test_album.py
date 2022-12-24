@@ -1,10 +1,10 @@
 import pytest
 
-from dto import AlbumDto
-from entities import Album
-from entities import Artist
-from entities.track import Track
-from tests.settigs_for_test import settings_with_mock
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.entities import Album
+from FreeSpotify_back.entities import Artist
+from FreeSpotify_back.entities import Track
+from ..settigs_for_test import settings_with_mock
 
 album_name = "Paranoid"
 artist_name = "Black sabbath"

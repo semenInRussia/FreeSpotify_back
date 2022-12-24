@@ -1,9 +1,11 @@
 import os
-from typing import List
 
-import my_os
-from dto import TrackDto
-from music_manger.music_manger import AbstractTracks
+from typing import List
+from typing import Iterable
+
+from FreeSpotify_back import my_os
+from FreeSpotify_back.dto import TrackDto
+from ... import AbstractTracks
 
 EXTENSION_OF_TRACK_FILE = '.mp3'
 
@@ -12,20 +14,19 @@ class DirectoryTracksManager(AbstractTracks):
     def __init__(self, path: str = ''):
         self._path = path
 
-    def search(self, artist_name: str, album_name: str, track_name: str) -> List[TrackDto]:
+    def search(self,
+               artist_name: str,
+               album_name: str,
+               track_name: str) -> List[TrackDto]:
         paths_to_tracks = my_os.search_dirs_by_pattern(
-            f"{self._path}/~{artist_name}/~{album_name}/~{track_name}"
-        )
+            f"{self._path}/~{artist_name}/~{album_name}/~{track_name}")
 
         tracks = self._tracks_from_paths(paths_to_tracks)
 
         return tracks
 
-    def _tracks_from_paths(self, paths_to_tracks: List[str]) -> List[TrackDto]:
-        return list(map(
-            lambda path: self._track_from_path(path),
-            paths_to_tracks
-        ))
+    def _tracks_from_paths(self, paths_to_tracks: List[str]) -> Iterable[TrackDto]:
+        return map(self._track_from_path, paths_to_tracks)
 
     @staticmethod
     def _track_from_path(path_to_track: str) -> TrackDto:

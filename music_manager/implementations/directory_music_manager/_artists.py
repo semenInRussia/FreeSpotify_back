@@ -1,10 +1,12 @@
 import os
 from typing import List
 
-from dto import AlbumDto
-import my_os
-from dto import ArtistDto
-from music_manger.music_manger import AbstractArtists
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import ArtistDto
+
+from FreeSpotify_back import my_os
+
+from ... import AbstractArtists
 
 
 class DirectoryArtistsManager(AbstractArtists):

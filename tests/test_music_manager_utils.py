@@ -1,5 +1,5 @@
-from music_manger.utils import delete_sound_quality
-from music_manger.utils import delete_year_in_album_name
+from FreeSpotify_back.music_manager.utils import delete_sound_quality
+from FreeSpotify_back.music_manager.utils import delete_year_in_album_name
 
 
 def test_delete_year_in_album_name():

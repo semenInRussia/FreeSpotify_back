@@ -4,7 +4,7 @@ from ..dto import AlbumDto
 from ..dto import TrackDto
 
 from ._AbstractEntity import AbstractEntity
-from ..music_manger.core.exceptions import NotFoundAlbumException
+from ..music_manager.core.exceptions import NotFoundAlbumException
 
 
 class Album(AbstractEntity):

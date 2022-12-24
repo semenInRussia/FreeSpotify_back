@@ -1,20 +1,24 @@
 import re
+
 from typing import List
+from typing import Optional
 
 from bs4 import Tag
 
-from my_request import cached_get_bs
-from my_request import cached_get_content
-from my_request import get_absolute_url
-from my_request import get_bs
-from my_request import get_content
+from ._low_level_utils import cached_function
 
-from _low_level_utils import cached_function
+from .my_request import cached_get_bs
+from .my_request import cached_get_content
+from .my_request import get_absolute_url
+from .my_request import get_bs
+from .my_request import get_content
 
 
-def select_one_element_on_page(url: str, css_selector: str, method_name='get', **kwargs) -> Tag:
+def select_one_element_on_page(url: str,
+                               css_selector: str,
+                               method_name='get',
+                               **kwargs) -> Optional[Tag]:
     soup = get_bs(url, method_name, **kwargs)
-
     return soup.select_one(css_selector)
 
 

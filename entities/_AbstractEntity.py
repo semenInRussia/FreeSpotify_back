@@ -1,5 +1,5 @@
-from music_manger.music_manger import AbstractMusicManager
-from settings.entities import entities
+from ..settings.entities import entities
+from ..music_manager import AbstractMusicManager
 
 
 class AbstractEntity:

@@ -6,8 +6,8 @@ from typing import Dict
 from bs4 import BeautifulSoup
 import requests
 
-from _low_level_utils import cached_function
-from core.exceptions import NotJsonResponseFromUrl
+from ._low_level_utils import cached_function
+from .core.exceptions import NotJsonResponseFromUrl
 
 dependencies_of_methods_on_name: Dict[str, Callable] = {
     "get": requests.get,

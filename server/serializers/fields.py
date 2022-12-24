@@ -1,7 +1,10 @@
-class FieldSerializer:
-    serialize = None
+from typing import Callable
+from typing import Optional
 
-    def __init__(self, field_name_for_serialize: str = None):
+class FieldSerializer:
+    serialize: Callable
+
+    def __init__(self, field_name_for_serialize: Optional[str]=None):
         self._field_name_for_serialize = field_name_for_serialize
 
     @property
@@ -25,9 +28,9 @@ class FieldSerializer:
 
 
 class CustomFieldSerializer(FieldSerializer):
-    def __init__(self, serialize_function, field_name_for_serializing: str = None):
+    def __init__(self, serialize_function,
+                 field_name_for_serializing: Optional[str] = None):
         super().__init__(field_name_for_serializing)
-
         self.serialize = serialize_function
 
 
@@ -57,7 +60,9 @@ class ListFieldSerializer(FieldSerializer):
 
 
 class CustomListFieldSerializer(ListFieldSerializer):
-    def __init__(self, serialize_elements_of_list, field_name_for_serializing: str = None):
+    def __init__(self,
+                 serialize_elements_of_list,
+                 field_name_for_serializing: Optional[str]=None):
         self.serialize_elements_of_list = serialize_elements_of_list
 
         super().__init__(field_name_for_serializing)

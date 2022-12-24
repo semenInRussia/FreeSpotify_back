@@ -1,4 +1,4 @@
-import similarity_lib
+from FreeSpotify_back import similarity_lib
 
 test_strings = ["a", "ac dc", "b", "AC/DC", "AC/dc"]
 

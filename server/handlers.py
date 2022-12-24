@@ -2,19 +2,19 @@ from flask import Flask
 from flask_cors import CORS
 from flask_cors import cross_origin
 
-from entities import Album
-from entities import Artist
-from entities import Track
+from .urls import ALBUMS_WELCOME_PAGE_URL
+from .urls import ALBUM_DETAIL_PAGE_URL
+from .urls import ARTISTS_WELCOME_PAGE_URL
+from .urls import ARTIST_DETAIL_PAGE_URL
+from .urls import MAIN_PAGE_URL
+from .urls import TRACKS_WELCOME_PAGE_URL
+from .urls import TRACK_DETAIL_PAGE_URL
 
-from server.serializers.entities_serializers import EntitiesSerializer
+from .serializers.entities_serializers import EntitiesSerializer
 
-from server.urls import ALBUMS_WELCOME_PAGE_URL
-from server.urls import ALBUM_DETAIL_PAGE_URL
-from server.urls import ARTISTS_WELCOME_PAGE_URL
-from server.urls import ARTIST_DETAIL_PAGE_URL
-from server.urls import MAIN_PAGE_URL
-from server.urls import TRACKS_WELCOME_PAGE_URL
-from server.urls import TRACK_DETAIL_PAGE_URL
+from ..entities import Album
+from ..entities import Artist
+from ..entities import Track
 
 app = Flask(__name__)
 

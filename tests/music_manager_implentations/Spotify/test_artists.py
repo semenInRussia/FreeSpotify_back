@@ -2,11 +2,11 @@ from typing import List
 
 import pytest
 
-from dto import AlbumDto
-from dto import ArtistDto
-from music_manger.core.exceptions import NotFoundArtistException
-from music_manger.implementations.rocknation_and_spotify.spotify import Spotify
-from tests.music_manager_implentations.Spotify.test_tracks import assert_is_valid_track_collection
+from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import ArtistDto
+from FreeSpotify_back.music_manager.core.exceptions import NotFoundArtistException
+from FreeSpotify_back.music_manager.implementations import Spotify
+from .test_tracks import assert_is_valid_track_collection
 
 artist_name = "Queen"
 not_valid_name = "$#@!-"

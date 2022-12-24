@@ -1,6 +1,6 @@
 import pytest
 
-from music_manger.implementations.rocknation_and_spotify.spotify import Spotify
+from FreeSpotify_back.music_manager.implementations import Spotify
 
 
 @pytest.fixture()
