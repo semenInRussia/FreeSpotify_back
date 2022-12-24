@@ -26,7 +26,6 @@ def track():
         artist_name=artist_name,
         album_name=album_name,
         track_name=approximate_track_name,
-
         additional_settings=additional_settings
     )
 
