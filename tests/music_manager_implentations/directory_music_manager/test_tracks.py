@@ -22,7 +22,7 @@ def track():
 
 
 def test_search(tracks_manager, track: TrackDto):
-    actual = tracks_manager.search("artist1", "album1", "track1")
+    actual = list(tracks_manager.search("artist1", "album1", "track1"))
 
     assert actual[0] == track
 

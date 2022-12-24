@@ -41,37 +41,38 @@ def test_equal_artists():
 
 def test_notequal_artists():
     first_artist = Artist(artist_name, additional_settings=additional_settings)
-    second_artist = Artist(difference_name, additional_settings=additional_settings)
+    second_artist = Artist(difference_name,
+        additional_settings=additional_settings)
 
     assert first_artist != second_artist
 
 
 def test_notequal_artist_with_other_types():
     assert Artist(artist_name, additional_settings=additional_settings) != 0
-    assert Artist(artist_name, additional_settings=additional_settings) != "STRING"
+    assert Artist(artist_name,
+                  additional_settings=additional_settings) != "STRING"
 
 
 def _assert_is_track_top(top):
+    top = list(top)
     assert len(top) == 10
 
     assert isinstance(top[0], Track)
 
 
 def test_get_top(artist):
-    top = artist.top
+    top = list(artist.top)
 
     _assert_is_track_top(top)
 
 def test_get_top_by_not_valid_track_names():
     artist = Artist(artist_name)
 
-    top = artist.top
+    top = list(artist.top)
 
     # Get all tracks' links
-    list(map(
-        lambda track: track.link,
-        top
-    ))
+    for track in top:
+        track.link
 
     assert isinstance(top, list)
 
