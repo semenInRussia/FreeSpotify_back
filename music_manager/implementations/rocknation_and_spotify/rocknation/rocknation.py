@@ -15,17 +15,17 @@ from FreeSpotify_back import parsing_lib
 from ....core.exceptions import NotFoundAlbumException
 from ....core.exceptions import NotFoundArtistException
 from ....core.exceptions import NotFoundTrackException
+
 from .... import AbstractAlbums
 from .... import AbstractArtists
 from .... import AbstractMusicManager
 from .... import AbstractTracks
+
 from ....utils import delete_sound_quality
 from ....utils import delete_year_in_album_name
 
 ROCKNATION_BASE_URL = 'http://rocknation.su'
 ROCKNATION_BASE_UPLOAD_MP3_URL = ROCKNATION_BASE_URL + "/upload/mp3/"
-
-max_albums_page_num = 100
 
 
 def _raise_exception_if_is_false(obj, exception):
