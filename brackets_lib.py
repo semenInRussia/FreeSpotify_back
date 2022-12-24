@@ -1,6 +1,8 @@
 from collections import namedtuple
 from functools import reduce
+
 from typing import List
+from typing import Iterable
 
 Brackets = namedtuple("Brackets", ["open_char", "closed_char"])
 
@@ -38,7 +40,7 @@ def ignore_brackets_around(string: str) -> str:
     return string[1:-1]
 
 
-def get_values_with_brackets(string: str, brackets: Brackets) -> List[str]:
+def get_values_with_brackets(string: str, brackets: Brackets) -> Iterable[str]:
     while _is_string_has_brackets(string, brackets):
         inside_brackets = _find_one_value_inside_brackets(string, brackets)
         yield inside_brackets
