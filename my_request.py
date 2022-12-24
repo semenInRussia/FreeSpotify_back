@@ -78,4 +78,4 @@ def create_request(url: str, method_name: str = 'get', **kwargs):
 
 
 def get_method_by_name(method_name: str = 'get') -> Callable:
-    return dependencies_of_methods_on_name.get(method_name)
+    return dependencies_of_methods_on_name[method_name]
