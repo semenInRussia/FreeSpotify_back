@@ -17,8 +17,8 @@ def test_filter_and_sort_strings_by_min_similarity_to():
     assert actual == ["AC/DC", "AC/dc", "ac dc"]
 
 
-def test_filter_strings_by_min_similarity_to():
-    actual = similarity_lib.filter_strings_by_min_similarity_to(
+def test_filter_objects_by_min_similarity_to():
+    actual = similarity_lib.filter_objects_by_min_similarity_to(
         "AC/DC",
         ["b", "jrfihguthrgtgitjht", "kdkoooo", "ac dc"]
     )
