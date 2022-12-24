@@ -1,4 +1,5 @@
 from typing import List
+from typing import Optional
 from typing import Type
 
 from ..dto import AlbumDto
@@ -26,7 +27,7 @@ class AbstractArtists:
     def get_albums(self, artist_name: str) -> List[AlbumDto]:
         pass
 
-    def get_link(self, artist_name: str) -> str:
+    def get_link(self, artist_name: str) -> Optional[str]:
         pass
 
     def get_link_on_img(self, artist_name: str) -> str:
@@ -46,10 +47,12 @@ class AbstractAlbums:
     def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
         pass
 
-    def get_link(self, artist_name, album_name: str) -> str:
+    def get_link(self, artist_name, album_name: str) -> Optional[str]:
         pass
 
-    def get_link_on_img(self, artist_name: str, album_name: str) -> str:
+    def get_link_on_img(self,
+                        artist_name: str,
+                        album_name: str) -> Optional[str]:
         pass
 
 
