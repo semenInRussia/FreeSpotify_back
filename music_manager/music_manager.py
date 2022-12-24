@@ -14,8 +14,8 @@ from .core.exceptions import NotFoundTrackException
 class AbstractArtists:
     def get(self, artist_name: str) -> ArtistDto:
         try:
-            return self.search(artist_name)[0]
-        except IndexError:
+            return next(iter(self.search(artist_name)))
+        except StopIteration:
             raise NotFoundArtistException
 
     def search(self, artist_name: str) -> List[ArtistDto]:
@@ -37,8 +37,8 @@ class AbstractArtists:
 class AbstractAlbums:
     def get(self, artist_name: str, album_name: str) -> AlbumDto:
         try:
-            return self.search(artist_name, album_name)[0]
-        except IndexError:
+            return next(iter(self.search(artist_name, album_name)))
+        except StopIteration:
             raise NotFoundAlbumException
 
     def search(self, artist_name: str, album_name: str) -> List[AlbumDto]:
@@ -64,8 +64,8 @@ class AbstractTracks:
             track_name: str
     ) -> TrackDto:
         try:
-            return self.search(artist_name, album_name, track_name)[0]
-        except IndexError:
+            return next(iter(self.search(artist_name, album_name, track_name)))
+        except StopIteration:
             raise NotFoundTrackException
 
     def search(
