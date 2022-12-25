@@ -1,4 +1,5 @@
 from typing import List
+from typing import Optional
 
 from ..dto import AlbumDto
 from ..dto import ArtistDto
@@ -61,11 +62,11 @@ class Artist(AbstractEntity):
         ))
 
     @property
-    def link(self):
+    def link(self) -> Optional[str]:
         try:
             return self._music_mgr.artists.get_link(self._instance.name)
         except NotFoundArtistException:
-            return
+            return None
 
     @property
     def link_on_img(self):
