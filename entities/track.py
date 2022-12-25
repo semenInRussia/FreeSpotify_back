@@ -1,4 +1,8 @@
+from typing import Iterable
 from typing import Optional
+
+from FreeSpotify_back.settings.entities import entities
+from FreeSpotify_back.music_manager import AbstractMusicManager
 
 from ..dto import TrackDto
 
@@ -97,3 +101,29 @@ class Track(AbstractEntity):
             return None
         else:
             return link
+
+
+    @staticmethod
+    def search(artist_name: str,
+               album_name: str,
+               track_name: str,
+               additional_settings=None) -> Iterable["Track"]:
+        settings = entities + additional_settings
+        music_mgr: AbstractMusicManager = settings.music_manager_impl()
+        dtos = music_mgr.tracks.search(artist_name, album_name, track_name)
+        return map(Track.create_from_dto, dtos)
+
+    @staticmethod
+    def query(query: str, additional_settings=None) -> Iterable["Track"]:
+        settings = entities + additional_settings
+        music_mgr: AbstractMusicManager = settings.music_manager_impl()
+        dtos = music_mgr.tracks.query(query)
+        return map(Track.create_from_dto, dtos)
+
+    @classmethod
+    def from_query(cls, query: str, additional_settings=None):
+        try:
+            return next(iter(
+                cls.query(query, additional_settings=additional_settings)))
+        except StopIteration:
+            raise NotFoundTrackException

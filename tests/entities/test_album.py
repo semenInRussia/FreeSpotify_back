@@ -95,3 +95,17 @@ def test_notequal_with_other_type():
 
 def test_get_artist(album):
     assert isinstance(album.artist, Artist)
+
+
+def test_album_query_and_search():
+    query_res = Album.query("Kanye West - Mr Fantasy")
+    search_res = Album.search("Kanye West", "Mr Fantasy")
+
+    assert all(map(lambda obj: isinstance(obj, Album), query_res))
+    assert all(map(lambda obj: isinstance(obj, Album), search_res))
+
+
+def test_album_from_query():
+    album = Album.from_query("Kanye West - power")
+
+    assert isinstance(album, Album)

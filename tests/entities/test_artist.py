@@ -104,3 +104,17 @@ def test_get_link(artist):
 
 def test_get_link_on_img(artist):
     assert isinstance(artist.link_on_img, str)
+
+def test_artist_query_and_search():
+    query_res = Artist.query("Kanye West")
+    search_res = Artist.search("Kanye West")
+
+    assert all(map(lambda obj: isinstance(obj, Artist), query_res))
+    assert all(map(lambda obj: isinstance(obj, Artist), search_res))
+
+
+def test_artist_from_query():
+    track = Artist.from_query("Kanye West - power")
+    print(type(Artist._music_mgr))
+
+    assert isinstance(track, Artist)

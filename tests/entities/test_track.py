@@ -119,6 +119,21 @@ def test_track_create_from_dto(track_dto: TrackDto):
 
 
 def test_work_with_settings_when_create_from_dto(track_dto: TrackDto):
-    track = Track.create_from_dto(track_dto, additional_settings=settings_with_mock)
+    track = Track.create_from_dto(track_dto,
+        additional_settings=settings_with_mock)
 
     assert settings_with_mock.music_manager_impl == track.settings.music_manager_impl
+
+
+def test_track_query_and_search():
+    query_res = Track.query("Kanye West - power")
+    search_res = Track.search("Kanye West", "Mr Fantasy", "Power")
+
+    assert all(map(lambda obj: isinstance(obj, Track), query_res))
+    assert all(map(lambda obj: isinstance(obj, Track), search_res))
+
+
+def test_track_from_query():
+    track = Track.from_query("Kanye West - power")
+
+    assert isinstance(track, Track)

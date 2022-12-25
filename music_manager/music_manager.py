@@ -18,9 +18,11 @@ class AbstractArtists:
             raise NotFoundArtistException
 
     def query(self, query: str) -> Iterable[ArtistDto]:
-        return NotImplemented
+        # you should implemet method `query` or `search` or both
+        return self.search(query)
 
     def search(self, artist_name: str) -> Iterable[ArtistDto]:
+        # you should implemet method `query` or `search` or both
         return self.query(artist_name)
 
     def get_top(self, artist_name: str) -> Iterable[TrackDto]:
@@ -44,10 +46,12 @@ class AbstractAlbums:
             raise NotFoundAlbumException
 
     def query(self, query: str) -> Iterable[AlbumDto]:
+        # you should implemet method `query` or `search` or both
         artist_name, album_name = query.split(" - ")
         return self.search(artist_name, album_name)
 
     def search(self, artist_name: str, album_name: str) -> Iterable[AlbumDto]:
+        # you should implemet method `query` or `search` or both
         query = artist_name + " - " + album_name
         return self.query(query)
 
@@ -76,6 +80,7 @@ class AbstractTracks:
             raise NotFoundTrackException
 
     def query(self, query: str) -> Iterable[TrackDto]:
+        # you should implemet method `query` or `search` or both
         artist_name, track_name = query.split(" - ")
         return self.search(artist_name, "", track_name)
 
@@ -83,6 +88,7 @@ class AbstractTracks:
                artist_name: str,
                _album_name: str,
                track_name: str) -> Iterable[TrackDto]:
+        # you should implemet method `query` or `search` or both
         query = artist_name + " - " + track_name
         return self.query(query)
 

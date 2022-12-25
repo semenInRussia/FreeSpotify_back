@@ -1,11 +1,15 @@
 from typing import List
 from typing import Optional
+from typing import Iterable
 
 from ..dto import AlbumDto
 from ..dto import TrackDto
 
 from ._AbstractEntity import AbstractEntity
 from ..music_manager.core.exceptions import NotFoundAlbumException
+
+from FreeSpotify_back.settings.entities import entities
+from ..music_manager import AbstractMusicManager
 
 
 class Album(AbstractEntity):
@@ -21,10 +25,8 @@ class Album(AbstractEntity):
         super().__init__(additional_settings=additional_settings)
 
     def _init_instance(self, artist_name, album_name):
-        self._instance = self._music_mgr.albums.get(
-            artist_name,
-            album_name
-        )
+        self._instance = self._music_mgr.albums.get(artist_name,
+                                                    album_name)
 
     def __repr__(self):
         return repr(self._instance)
@@ -37,7 +39,8 @@ class Album(AbstractEntity):
     def artist(self):
         from . import Artist
 
-        return Artist(self._instance.artist_name, additional_settings=self.settings)
+        return Artist(self._instance.artist_name,
+                      additional_settings=self.settings)
 
     @property
     def tracks(self) -> list:
@@ -98,4 +101,28 @@ class Album(AbstractEntity):
             dto.name,
             additional_settings=additional_settings
         )
+
+    @staticmethod
+    def search(artist_name: str,
+               album_name: str,
+               additional_settings=None) -> Iterable["Album"]:
+        settings = entities + additional_settings
+        music_mgr: AbstractMusicManager = settings.music_manager_impl()
+        dtos = music_mgr.albums.search(artist_name, album_name)
+        return map(Album.create_from_dto, dtos)
+
+    @staticmethod
+    def query(query: str, additional_settings=None) -> Iterable["Album"]:
+        settings = entities + additional_settings
+        music_mgr: AbstractMusicManager = settings.music_manager_impl()
+        dtos = music_mgr.albums.query(query)
+        return map(Album.create_from_dto, dtos)
+
+    @classmethod
+    def from_query(cls, query: str, additional_settings=None):
+        try:
+            return next(iter(
+                cls.query(query, additional_settings=additional_settings)))
+        except StopIteration:
+            raise NotFoundAlbumException
 

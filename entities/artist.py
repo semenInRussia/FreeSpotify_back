@@ -1,10 +1,15 @@
-from typing import List
 from typing import Optional
+from typing import List
+from typing import Iterable
 
 from ..dto import AlbumDto
 from ..dto import ArtistDto
+
 from ._AbstractEntity import AbstractEntity
 from ..music_manager.core.exceptions import NotFoundArtistException
+
+from FreeSpotify_back.settings.entities import entities
+from ..music_manager import AbstractMusicManager
 
 
 class Artist(AbstractEntity):
@@ -84,3 +89,24 @@ class Artist(AbstractEntity):
 
             additional_settings=additional_settings
         )
+
+    @staticmethod
+    def search(artist_name: str,
+               additional_settings=None) -> Iterable["Artist"]:
+        return Artist.query(artist_name,
+                            additional_settings=additional_settings)
+
+    @staticmethod
+    def query(query: str, additional_settings=None) -> Iterable["Artist"]:
+        settings = entities + additional_settings
+        music_mgr: AbstractMusicManager = settings.music_manager_impl()
+        dtos = music_mgr.artists.query(query)
+        return map(Artist.create_from_dto, dtos)
+
+    @classmethod
+    def from_query(cls, query: str, additional_settings=None):
+        try:
+            return next(iter(
+                cls.query(query, additional_settings=additional_settings)))
+        except StopIteration:
+            raise NotFoundArtistException
