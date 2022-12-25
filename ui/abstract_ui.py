@@ -20,6 +20,8 @@ class AbstractUI:
         self._additional_entities_settings = additional_entities_settings
 
     def run(self):
+        # if your UI gets messages from user no using function, then you can
+        # write your own run method (suggest visit tg_bot)
         self._raise_event_or_call_self_method("start")
         self.handlers.execute_calls_queue()
 
