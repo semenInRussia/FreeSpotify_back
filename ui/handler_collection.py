@@ -9,29 +9,24 @@ Handler = Callable
 class Call(NamedTuple):
     callback: Callable
     args: tuple = tuple()
-    kwargs: dict = dict()
+    kwargs: dict = {}
 
     def execute(self, *additional_args, **additional_kwargs):
         args = self.args + additional_args
-        kwargs = dict(
-            **additional_kwargs,
-            **self.kwargs
-        )
-
+        kwargs = dict(**additional_kwargs,
+                      **self.kwargs)
         self.callback(*args, **kwargs)
 
 
 class AsyncCall(NamedTuple):
     callback: Callable
     args: tuple = tuple()
-    kwargs: dict = dict()
+    kwargs: dict = {}
 
     async def execute(self, *additional_args, **additional_kwargs):
         args = self.args + additional_args
-        kwargs = dict(
-            **additional_kwargs,
-            **self.kwargs
-        )
+        kwargs = dict(**additional_kwargs,
+                      **self.kwargs)
 
         await self.callback(*args, **kwargs)
 
@@ -97,7 +92,9 @@ class HandlersCollection:
                 **additional_kwargs
             )
 
-    def execute_last_call_from_queue(self, *additional_args, **additional_kwargs):
+    def execute_last_call_from_queue(self,
+                                     *additional_args,
+                                     **additional_kwargs):
         last_call = self._calls_queue.pop()
 
         last_call.execute(*additional_args, **additional_kwargs)
@@ -110,14 +107,13 @@ class AsyncHandlersCollection(HandlersCollection):
         super().__init__()
         self._calls_queue: List[AsyncCall] = []
 
-    async def execute_calls_queue(
-            self,
-            *additional_args,
-            **additional_kwargs
-    ):
-        await self.execute_last_call_from_queue(*additional_args, **additional_kwargs)
+    async def execute_calls_queue(self, *additional_args, **additional_kwargs):
+        await self.execute_last_call_from_queue(*additional_args,
+                                                **additional_kwargs)
 
-    async def execute_last_call_from_queue(self, *additional_args, **additional_kwargs):
+    async def execute_last_call_from_queue(self,
+                                           *additional_args,
+                                           **additional_kwargs):
         last_call = self._calls_queue.pop()
 
         await last_call.execute(*additional_args, **additional_kwargs)
