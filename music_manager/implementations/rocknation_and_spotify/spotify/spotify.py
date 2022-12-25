@@ -1,4 +1,5 @@
 from typing import List
+from typing import Iterable
 from typing import Optional
 
 from FreeSpotify_back._low_level_utils import cached_function
@@ -37,7 +38,7 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     def search(self,
                artist_name: str,
                limit: int = 1,
-               offset: int = 0) -> Optional[ArtistDto]:
+               offset: int = 0) -> Iterable[ArtistDto]:
         json_response = self._spotify_core.parse_search_json(
             artist_name, type_="artist", limit=limit, offset=offset)
         return deserialize_artists_from_search_response(json_response)
@@ -65,7 +66,10 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
         return self._get_albums_by_spotify_id(artist_id, limit, offset)
 
     @cached_function
-    def _get_albums_by_spotify_id(self, artist_id: str, limit: int, offset: int) -> List[AlbumDto]:
+    def _get_albums_by_spotify_id(self,
+                                  artist_id: str,
+                                  limit: int,
+                                  offset: int) -> List[AlbumDto]:
         json_response = self._spotify_core.parse_albums_of_artist(
             artist_id,
             limit=limit,
@@ -77,22 +81,28 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
 
 class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
     @cached_function
-    def search(self, artist_name: str, album_name: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
+    def search(self,
+               artist_name: str,
+               album_name: str,
+               limit: int = 1,
+               offset: int = 0) -> List[AlbumDto]:
         search_string = f"{artist_name} - {album_name}"
 
-        albums = self._search_by_text(
-            search_string,
-            limit=limit,
-            offset=offset
-        )
+        albums = self.query(search_string,
+                            limit=limit,
+                            offset=offset)
 
         return albums
 
-    def _search_by_text(self, search_string: str, limit: int = 1, offset: int = 0) -> List[AlbumDto]:
-        json_response = self._spotify_core.parse_search_json(q=search_string, type_="album", limit=limit, offset=offset)
-
+    def query(self,
+              search_string: str,
+              limit: int=1,
+              offset: int=0) -> List[AlbumDto]:
+        json_response = self._spotify_core.parse_search_json(q=search_string,
+            type_="album",
+            limit=limit,
+            offset=offset)
         albums = deserialize_albums_from_search_response(json_response)
-
         return albums
 
     def get_tracks(self, artist_name: str, album_name: str):
@@ -107,10 +117,15 @@ class SpotifyAlbums(AbstractAlbums, _BaseSpotifyObject):
 
 class SpotifyTracks(AbstractTracks, _BaseSpotifyObject):
     @cached_function
-    def search(self, artist_name: str, album_name: str, track_name: str, limit: int = 1, offset: int = 0):
+    def search(self,
+               artist_name: str,
+               album_name: str,
+               track_name: str,
+               limit: int = 1,
+               offset: int = 0):
         search_text = f"{artist_name} - {track_name}"
 
-        tracks = self._search_by_text(
+        tracks = self.query(
             search_text,
             limit=limit,
             offset=offset
@@ -118,14 +133,16 @@ class SpotifyTracks(AbstractTracks, _BaseSpotifyObject):
 
         return tracks
 
-    def _search_by_text(self, search_text: str, limit: int = 1, offset: int = 0):
+    def query(self,
+              search_text: str,
+              limit: int = 1,
+              offset: int = 0):
         json_response = self._spotify_core.parse_search_json(
             q=search_text,
             type_='track',
             limit=limit,
             offset=offset
         )
-
         tracks = deserialize_tracks_from_search_response(json_response)
 
         return tracks

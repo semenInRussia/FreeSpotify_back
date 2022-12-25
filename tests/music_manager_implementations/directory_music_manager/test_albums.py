@@ -24,7 +24,7 @@ def test_get_album(directory_music_manager: AbstractMusicManager):
 
 
 def test_search_albums(directory_music_manager: AbstractMusicManager):
-    actual = directory_music_manager.albums.search("artist2", "album1")
+    actual = list(directory_music_manager.albums.search("artist2", "album1"))
 
     assert actual[0] == AlbumDto(artist_name="artist2", name="album1")
 

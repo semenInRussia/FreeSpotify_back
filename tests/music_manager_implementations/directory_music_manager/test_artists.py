@@ -29,10 +29,9 @@ def test_get_artist(directory_music_manager: AbstractMusicManager):
 
 
 def test_search(directory_music_manager: AbstractMusicManager):
-    artists = directory_music_manager.artists.search("artist1")
+    artists = list(directory_music_manager.artists.search("artist1"))
 
     assert isinstance(artists, list)
-
     assert artists[0] == ArtistDto(name="artist1")
 
 
@@ -41,6 +40,6 @@ def test_get_link(directory_music_manager: DirectoryMusicManager):
 
 
 def test_get_albums(directory_music_manager: DirectoryMusicManager):
-    actual = directory_music_manager.artists.get_albums("artist 1")
+    actual = list(directory_music_manager.artists.get_albums("artist 1"))
 
     assert actual == [AlbumDto("artist1", "album1")]

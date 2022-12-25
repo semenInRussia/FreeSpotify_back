@@ -46,7 +46,8 @@ def test_get_should_delete_sound_quality(spotify: Spotify):
         " Burn"
     )
 
-    assert track.name == "Burn"  # If sound quality not deleted, track.name == "Burn - remastered 2011"
+    # If sound quality not deleted, track.name == "Burn - remastered 2011"
+    assert track.name == "Burn"
 
 
 def test_search(spotify: Spotify):
@@ -54,6 +55,10 @@ def test_search(spotify: Spotify):
 
     assert_is_valid_track_collection(tracks)
 
+def test_query(spotify: Spotify):
+    tracks = spotify.tracks.query("Queen - We are the Champions")
+
+    assert_is_valid_track_collection(tracks)
 
 def test_search_limit(spotify: Spotify):
     tracks = spotify.tracks.search(limit=4, **track_params)

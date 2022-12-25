@@ -78,6 +78,11 @@ def test_search(spotify: Spotify):
 
     assert_is_valid_album_collection(albums)
 
+def test_query(spotify: Spotify):
+    albums = spotify.albums.query("Queen - Jazz")
+
+    assert_is_valid_album_collection(albums)
+
 
 def test_search_limit(spotify: Spotify):
     albums = spotify.albums.search(limit=4, **albums_params)

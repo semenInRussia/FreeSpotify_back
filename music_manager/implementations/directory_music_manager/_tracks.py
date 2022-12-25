@@ -7,6 +7,9 @@ from typing import Iterable
 from FreeSpotify_back import my_os
 from FreeSpotify_back.dto import TrackDto
 
+from FreeSpotify_back.similarity_lib import \
+     filter_and_sort_strings_by_min_similarity_to
+
 from ... import AbstractTracks
 
 EXTENSION_OF_TRACK_FILE = '.mp3'
@@ -16,19 +19,28 @@ class DirectoryTracksManager(AbstractTracks):
     def __init__(self, path: str = ''):
         self._path = path
 
+    def query(self, query: str) -> Iterable[TrackDto]:
+        all_tracks_paths = map(
+            lambda p: p.removeprefix(self._path),
+            my_os.search_dirs_by_pattern(f"{self._path}/*/*/*"))
+        sute_tracks_paths = filter_and_sort_strings_by_min_similarity_to(query,
+            all_tracks_paths)
+        tracks = self._tracks_from_paths(sute_tracks_paths)
+        return tracks
+
     def search(self,
                artist_name: str,
                album_name: str,
                track_name: str) -> Iterable[TrackDto]:
         paths_to_tracks = my_os.search_dirs_by_pattern(
             f"{self._path}/~{artist_name}/~{album_name}/~{track_name}")
-
         tracks = self._tracks_from_paths(paths_to_tracks)
 
         return tracks
 
     def _tracks_from_paths(self,
-                           paths_to_tracks: List[str]) -> Iterable[TrackDto]:
+                           paths_to_tracks: Iterable[str]
+                           ) -> Iterable[TrackDto]:
         return map(self._track_from_path, paths_to_tracks)
 
     @staticmethod

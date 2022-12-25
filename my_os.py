@@ -2,7 +2,9 @@ from functools import reduce
 from itertools import chain
 import os
 import pathlib
+
 from typing import List
+from typing import Iterable
 
 from .similarity_lib import filter_and_sort_strings_by_min_similarity_to
 
@@ -19,12 +21,11 @@ def dirs_similar_to(string_for_compare: str, path: str) -> List[str]:
     ))
 
 
-def dirs_names_similar_to(string_for_compare: str, path: str) -> List[str]:
+def dirs_names_similar_to(string_for_compare: str, path: str) -> Iterable[str]:
     return filter_and_sort_strings_by_min_similarity_to(
         string_for_compare,
         dirs_names(path),
-        DEFAULT_MIN_RATIO_OF_SIMILARITY_FILENAMES
-    )
+        DEFAULT_MIN_RATIO_OF_SIMILARITY_FILENAMES)
 
 
 def dirs_names(path: str) -> List[str]:
