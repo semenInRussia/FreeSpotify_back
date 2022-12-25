@@ -1,4 +1,5 @@
 from typing import List
+from typing import Optional
 
 from ..dto import AlbumDto
 from ..dto import TrackDto
@@ -67,7 +68,7 @@ class Album(AbstractEntity):
         return self._instance.name
 
     @property
-    def release_date(self) -> str:
+    def release_date(self) -> Optional[str]:
         return self._instance.release_date
 
     @property
