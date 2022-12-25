@@ -18,19 +18,19 @@ class AbstractArtists:
             raise NotFoundArtistException
 
     def search(self, artist_name: str) -> Iterable[ArtistDto]:
-        pass
+        return NotImplemented
 
     def get_top(self, artist_name: str) -> Iterable[TrackDto]:
-        pass
+        return NotImplemented
 
     def get_albums(self, artist_name: str) -> Iterable[AlbumDto]:
-        pass
+        return NotImplemented
 
     def get_link(self, artist_name: str) -> Optional[str]:
-        pass
+        return NotImplemented
 
     def get_link_on_img(self, artist_name: str) -> Optional[str]:
-        pass
+        return NotImplemented
 
 
 class AbstractAlbums:
@@ -41,20 +41,20 @@ class AbstractAlbums:
             raise NotFoundAlbumException
 
     def search(self, artist_name: str, album_name: str) -> Iterable[AlbumDto]:
-        pass
+        return NotImplemented
 
     def get_tracks(self,
                    artist_name: str,
                    album_name: str) -> Iterable[TrackDto]:
-        pass
+        return NotImplemented
 
     def get_link(self, artist_name, album_name: str) -> Optional[str]:
-        pass
+        return NotImplemented
 
     def get_link_on_img(self,
                         artist_name: str,
                         album_name: str) -> Optional[str]:
-        pass
+        return NotImplemented
 
 
 class AbstractTracks:
@@ -71,19 +71,19 @@ class AbstractTracks:
                artist_name: str,
                album_name: str,
                track_name: str) -> Iterable[TrackDto]:
-        pass
+        return NotImplemented
 
     def get_link(self,
                  artist_name: str,
                  album_name: str,
                  track_name: str) -> Optional[str]:
-        pass
+        return NotImplemented
 
     def get_link_on_img(self,
                         artist_name: str,
                         album_name: str,
                         track_name: str) -> Optional[str]:
-        pass
+        return NotImplemented
 
 
 class AbstractMusicManager:
