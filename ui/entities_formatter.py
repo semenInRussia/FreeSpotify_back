@@ -1,15 +1,15 @@
 from typing import List
 
-from ._low_level_utils import my_format_str
-from .entities import Artist
-from .entities import Track
+from FreeSpotify_back._low_level_utils import my_format_str
+from FreeSpotify_back.entities import Artist
+from FreeSpotify_back.entities import Track
 
 
 class AbstractParseMode:
-    name: str = None
-    artist_template: str = None
-    top_item_template: str = None
-    artist_header_template: str = None
+    name: str
+    artist_template: str
+    top_item_template: str
+    artist_header_template: str
 
 
 class TextParseMode(AbstractParseMode):
@@ -61,6 +61,7 @@ def get_parse_mode_by_name(parse_mode_name: str) -> AbstractParseMode:
     for actual_parse_mode in all_parse_modes:
         if actual_parse_mode.name == parse_mode_name:
             return actual_parse_mode
+    raise KeyError(f"Not found parse mode with name: {parse_mode_name}")
 
 
 all_parse_modes: List[AbstractParseMode] = [
