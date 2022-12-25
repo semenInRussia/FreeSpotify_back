@@ -1,10 +1,14 @@
 import traceback
+
 from typing import Callable
+from typing import Optional
 
 from ..entities import Artist
+from ..entities import Album
 
 from .entities_formatter import AbstractParseMode
 from .entities_formatter import format_artist
+from .entities_formatter import format_album
 from .entities_formatter import get_parse_mode_by_name
 
 from .handler_collection import HandlersCollection
@@ -14,7 +18,7 @@ class AbstractUI:
     handlers: HandlersCollection
 
     _parse_mode_name: str = "text"
-    _parse_mode: AbstractParseMode
+    _parse_mode: Optional[AbstractParseMode] = None
 
     def __init__(self, additional_entities_settings=None):
         self._additional_entities_settings = additional_entities_settings
@@ -129,4 +133,14 @@ class _SearchArtistCommand(_Command):
         return format_artist(artist, ui.parse_mode)
 
 
-_commands: list[_Command] = [_SearchArtistCommand()]
+class _SearchAlbumCommand(_Command):
+    command_name = "album"
+    _ui: AbstractUI
+
+    def execute(self, msg: str, ui: AbstractUI):
+        query = msg.removeprefix(self._command_prefix)
+        album = Album.from_query(query)
+        ui.print_normal_message(format_album(album, ui.parse_mode))
+
+
+_commands: list[_Command] = [_SearchArtistCommand(), _SearchAlbumCommand()]

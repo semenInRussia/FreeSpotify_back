@@ -8,21 +8,21 @@ from FreeSpotify_back.entities import Track
 
 class AbstractParseMode:
     name: str
-    artist_template: str
-    top_item_template: str
-    artist_header_template: str
-    album_header_template: str
+    artist: str
+    top_item: str
+    artist_header: str
+    album_header: str
     album_track: str
     track: str
 
 
 class TextParseMode(AbstractParseMode):
     name = "text"
-    artist_template = """
+    artist = """
     {artist_header}
     {top_items}
     """
-    top_item_template = """
+    top_item = """
     {num_in_top}. {track.name}
         {track.album.name|'"Album not found..."'} ({track.album.release_date|'"Album not found..."'})
         URL (ON ALBUM):
@@ -31,12 +31,12 @@ class TextParseMode(AbstractParseMode):
         URL (ON TRACK):
          {track.link|"'Link not found...'"}
     """
-    artist_header_template = """
+    artist_header = """
     {artist.name}
         IMG URL - {artist.link_on_img|Not found picture...}
         URL - {artist.link|Not found link...}
     """
-    album_header_template = """
+    album_header = """
     {album.name} [{album.release_date}|3000]
         IMG URL - {album.link_on_img|Not found picture...}
         URL - {album.link|Not found link...}
@@ -56,23 +56,23 @@ class TextParseMode(AbstractParseMode):
 class TelegramMarkdownParseMode(AbstractParseMode):
     name = "markdown"
 
-    artist_template = """
+    artist = """
     {artist_header}
     {top_items}
     """
 
-    artist_header_template = """
+    artist_header = """
     {artist.name}
         [URL ON IMAGE]({artist.link_on_img|"https://i.ytimg.com/vi/96iDGkuOb3M/maxresdefault.jpg"})
         [URL ON ARTIST]({artist.link|"Not found..."})
     """
 
-    top_item_template = """
+    top_item = """
     {num_in_top}. [{track.name}]({track.link|"Not found..."})
         [{track.album.name|"Not found..."}]({track.album.link|"Not found..."}) - {track.album.release_date|"Not found..."}
     """
 
-    album_header_template = """
+    album_header = """
     {album.name} ({album.release_date}|3000)
         [[IMG URL]({album.link_on_img|Not found picture...})]
         [[URL]({album.link|Not found link...})]
@@ -105,7 +105,7 @@ def format_artist(artist: Artist, parse_mode: AbstractParseMode) -> str:
     top_items = format_top_items(artist.top, parse_mode)
 
     return my_format_str(
-        parse_mode.artist_template,
+        parse_mode.artist,
 
         top_items=top_items,
         artist_header=artist_header
@@ -126,7 +126,7 @@ def format_top_item(track: Track,
                     num_in_top: int,
                     parse_mode: AbstractParseMode) -> str:
     return my_format_str(
-        parse_mode.top_item_template,
+        parse_mode.top_item,
 
         num_in_top=num_in_top,
         track=track
@@ -136,7 +136,7 @@ def format_top_item(track: Track,
 def format_artist_to_header(artist: Artist,
                             parse_mode: AbstractParseMode) -> str:
     return my_format_str(
-        parse_mode.artist_header_template,
+        parse_mode.artist_header,
         artist=artist
     )
 
@@ -149,7 +149,7 @@ def format_album(album: Album, parse_mode: AbstractParseMode) -> str:
 
 def format_album_to_header(album: Album,
                            parse_mode: AbstractParseMode) -> str:
-    return my_format_str(parse_mode.album_header_template, album=album)
+    return my_format_str(parse_mode.album_header, album=album)
 
 
 def format_album_tracks(tracks: Iterable[Track],
