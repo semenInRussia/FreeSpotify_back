@@ -102,6 +102,9 @@ class Track(AbstractEntity):
         else:
             return link
 
+    @property
+    def link_on_img(self) -> Optional[str]:
+        return self.album.link_on_img
 
     @staticmethod
     def search(artist_name: str,
