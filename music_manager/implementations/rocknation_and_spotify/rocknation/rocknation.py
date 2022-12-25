@@ -272,7 +272,7 @@ class RocknationTracks(AbstractTracks):
             artist_name: str,
             album_name: str,
             _: str                        # track_name
-    ) -> str:
+    ) -> Optional[str]:
         return self._albums.get_link_on_img(artist_name, album_name)
 
     @property

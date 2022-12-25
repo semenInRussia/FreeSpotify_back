@@ -1,4 +1,5 @@
 from typing import List
+from typing import Optional
 
 from FreeSpotify_back._low_level_utils import cached_function
 from FreeSpotify_back.dto import AlbumDto
@@ -19,7 +20,7 @@ from .spotify_core import SpotifyCore
 
 
 class _BaseSpotifyObject:
-    def __init__(self, spotify_core: SpotifyCore = None):
+    def __init__(self, spotify_core: Optional[SpotifyCore]=None):
         super().__init__()
 
         self._init_spotify_core(spotify_core)
@@ -36,7 +37,7 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     def search(self,
                artist_name: str,
                limit: int = 1,
-               offset: int = 0) -> List[ArtistDto]:
+               offset: int = 0) -> Optional[ArtistDto]:
         json_response = self._spotify_core.parse_search_json(
             artist_name, type_="artist", limit=limit, offset=offset)
         return deserialize_artists_from_search_response(json_response)
@@ -49,7 +50,7 @@ class SpotifyArtists(AbstractArtists, _BaseSpotifyObject):
     @cached_function
     def _get_top_by_spotify_id(self,
                                spotify_artist_id: str,
-                               market: str = 'US'):
+                               market: str='US'):
         json_response = self._spotify_core.parse_tracks_of_top(
             spotify_artist_id, market=market)
         top = deserialize_tracks_from_artist_top_response(json_response)

@@ -1,10 +1,12 @@
 import os
 
+from typing import Optional
 from typing import List
 from typing import Iterable
 
 from FreeSpotify_back import my_os
 from FreeSpotify_back.dto import TrackDto
+
 from ... import AbstractTracks
 
 EXTENSION_OF_TRACK_FILE = '.mp3'
@@ -17,7 +19,7 @@ class DirectoryTracksManager(AbstractTracks):
     def search(self,
                artist_name: str,
                album_name: str,
-               track_name: str) -> List[TrackDto]:
+               track_name: str) -> Iterable[TrackDto]:
         paths_to_tracks = my_os.search_dirs_by_pattern(
             f"{self._path}/~{artist_name}/~{album_name}/~{track_name}")
 
@@ -25,7 +27,8 @@ class DirectoryTracksManager(AbstractTracks):
 
         return tracks
 
-    def _tracks_from_paths(self, paths_to_tracks: List[str]) -> Iterable[TrackDto]:
+    def _tracks_from_paths(self,
+                           paths_to_tracks: List[str]) -> Iterable[TrackDto]:
         return map(self._track_from_path, paths_to_tracks)
 
     @staticmethod
@@ -44,7 +47,10 @@ class DirectoryTracksManager(AbstractTracks):
             name=track_name
         )
 
-    def get_link(self, artist_name: str, album_name: str, track_name: str) -> str:
+    def get_link(self,
+                 artist_name: str,
+                 album_name: str,
+                 track_name: str) -> Optional[str]:
         track = self.get(artist_name, album_name, track_name)
         path = self._path_from_track(track)
 
@@ -53,7 +59,6 @@ class DirectoryTracksManager(AbstractTracks):
     def _path_from_track(self, track: TrackDto) -> str:
         path = os.path.join(
             self._path,
-
             track.artist_name,
             track.album_name,
             track.name + EXTENSION_OF_TRACK_FILE

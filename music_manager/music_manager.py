@@ -1,6 +1,5 @@
-from typing import List
+from typing import Iterable
 from typing import Optional
-from typing import Type
 
 from ..dto import AlbumDto
 from ..dto import ArtistDto
@@ -18,19 +17,19 @@ class AbstractArtists:
         except StopIteration:
             raise NotFoundArtistException
 
-    def search(self, artist_name: str) -> List[ArtistDto]:
+    def search(self, artist_name: str) -> Iterable[ArtistDto]:
         pass
 
-    def get_top(self, artist_name: str) -> List[TrackDto]:
+    def get_top(self, artist_name: str) -> Iterable[TrackDto]:
         pass
 
-    def get_albums(self, artist_name: str) -> List[AlbumDto]:
+    def get_albums(self, artist_name: str) -> Iterable[AlbumDto]:
         pass
 
     def get_link(self, artist_name: str) -> Optional[str]:
         pass
 
-    def get_link_on_img(self, artist_name: str) -> str:
+    def get_link_on_img(self, artist_name: str) -> Optional[str]:
         pass
 
 
@@ -41,10 +40,12 @@ class AbstractAlbums:
         except StopIteration:
             raise NotFoundAlbumException
 
-    def search(self, artist_name: str, album_name: str) -> List[AlbumDto]:
+    def search(self, artist_name: str, album_name: str) -> Iterable[AlbumDto]:
         pass
 
-    def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
+    def get_tracks(self,
+                   artist_name: str,
+                   album_name: str) -> Iterable[TrackDto]:
         pass
 
     def get_link(self, artist_name, album_name: str) -> Optional[str]:
@@ -57,35 +58,31 @@ class AbstractAlbums:
 
 
 class AbstractTracks:
-    def get(
-            self,
+    def get(self,
             artist_name: str,
             album_name: str,
-            track_name: str
-    ) -> TrackDto:
+            track_name: str) -> TrackDto:
         try:
             return next(iter(self.search(artist_name, album_name, track_name)))
         except StopIteration:
             raise NotFoundTrackException
 
-    def search(
-            self,
-            artist_name: str,
-            album_name: str,
-            track_name: str
-    ) -> List[TrackDto]:
+    def search(self,
+               artist_name: str,
+               album_name: str,
+               track_name: str) -> Iterable[TrackDto]:
         pass
 
     def get_link(self,
                  artist_name: str,
                  album_name: str,
-                 track_name: str) -> str:
+                 track_name: str) -> Optional[str]:
         pass
 
     def get_link_on_img(self,
                         artist_name: str,
                         album_name: str,
-                        track_name: str) -> str:
+                        track_name: str) -> Optional[str]:
         pass
 
 
