@@ -5,11 +5,13 @@ from typing import Optional
 
 from ..entities import Artist
 from ..entities import Album
+from ..entities import Track
 
 from .entities_formatter import AbstractParseMode
 from .entities_formatter import format_artist
 from .entities_formatter import format_album
 from .entities_formatter import get_parse_mode_by_name
+from .entities_formatter import format_track
 
 from .handler_collection import HandlersCollection
 
@@ -57,8 +59,8 @@ class AbstractUI:
         for command in _commands:
             if command.is_run(msg):
                 command.execute(msg, self)
-                break
-
+                return
+        raise KeyError("Command not found")
     @property
     def parse_mode(self):
         if not self._parse_mode:
@@ -135,7 +137,6 @@ class _SearchArtistCommand(_Command):
 
 class _SearchAlbumCommand(_Command):
     command_name = "album"
-    _ui: AbstractUI
 
     def execute(self, msg: str, ui: AbstractUI):
         query = msg.removeprefix(self._command_prefix)
@@ -143,4 +144,15 @@ class _SearchAlbumCommand(_Command):
         ui.print_normal_message(format_album(album, ui.parse_mode))
 
 
-_commands: list[_Command] = [_SearchArtistCommand(), _SearchAlbumCommand()]
+class _SearchTrackCommand(_Command):
+    command_name = "track"
+
+    def execute(self, msg: str, ui: AbstractUI):
+        query = msg.removeprefix(self._command_prefix)
+        track = Track.from_query(query)
+        ui.print_normal_message(format_track(track, ui.parse_mode))
+
+
+_commands: list[_Command] = [_SearchArtistCommand(),
+                             _SearchAlbumCommand(),
+                             _SearchTrackCommand()]
