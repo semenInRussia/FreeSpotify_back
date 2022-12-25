@@ -28,7 +28,7 @@ def _create_random_disc_number():
 
 
 class MockArtists(AbstractArtists):
-    def search(self, artist_name: str, limit: int = 3) -> List[ArtistDto]:
+    def query(self, artist_name: str, limit: int = 3) -> List[ArtistDto]:
         random.seed(SEED)
 
         res = [
@@ -75,12 +75,14 @@ class MockArtists(AbstractArtists):
 
 
 class MockAlbums(AbstractAlbums):
-    def search(
-            self,
-            artist_name: str,
-            album_name: str,
-            limit: int = 4
-    ) -> List[AlbumDto]:
+    def query(self, query: str) -> List[AlbumDto]:
+        artist_name, album_name = query.split(" - ")
+        return self.search(artist_name, album_name)
+
+    def search(self,
+               artist_name: str,
+               album_name: str,
+               limit: int = 4) -> List[AlbumDto]:
         random.seed(SEED)
 
         return [
@@ -114,12 +116,16 @@ class MockAlbums(AbstractAlbums):
 
 
 class MockTracks(AbstractTracks):
-    def search(
-            self,
-            artist_name: str,
-            album_name: str,
-            track_name: str
-    ) -> List[TrackDto]:
+    def query(self, query: str) -> List[TrackDto]:
+        artist_name, track_name = query.split(" - ")
+        return self.search(artist_name,
+                           _create_random_name(),
+                           track_name)
+
+    def search(self,
+               artist_name: str,
+               album_name: str,
+               track_name: str) -> List[TrackDto]:
         random.seed(SEED)
 
         return [
