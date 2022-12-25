@@ -1,5 +1,3 @@
-import traceback
-
 from typing import Callable
 from typing import Optional
 
@@ -15,6 +13,8 @@ from .entities_formatter import format_track
 
 from .handler_collection import HandlersCollection
 
+class UnknownCommandException(Exception):
+    """You indicated unknow command or not indicated"""
 
 class AbstractUI:
     handlers: HandlersCollection
@@ -34,7 +34,10 @@ class AbstractUI:
         try:
             while True:
                 user_message = self.get_user_message()
-                self.handle_user_message(user_message)
+                try:
+                    self.handle_user_message(user_message)
+                except Exception as exc:
+                    self.print_error(exc)
 
         except KeyboardInterrupt:
             self._raise_event_or_call_self_method("finish")
@@ -60,7 +63,7 @@ class AbstractUI:
             if command.is_run(msg):
                 command.execute(msg, self)
                 return
-        raise KeyError("Command not found")
+        raise UnknownCommandException
     @property
     def parse_mode(self):
         if not self._parse_mode:
@@ -72,8 +75,6 @@ class AbstractUI:
         self.handlers.raise_event("print normal message", message)
 
     def print_error(self, exception: Exception):
-        traceback.print_exc()
-
         self.handlers.raise_event("print error", exception)
 
     def start(self):

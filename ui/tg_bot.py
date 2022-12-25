@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 from aiogram import Bot
 from aiogram import Dispatcher
@@ -68,10 +69,15 @@ class TelegramUI(AbstractUI):
 
         @dispatcher.message_handler()
         async def handle_user_message(message: types.Message):
-            self.handle_user_message(message.text)
-            await self.handlers.execute_calls_queue(
-                message,
-                self._telegram_settings)
+            try:
+                self.handle_user_message(message.text)
+            except Exception as err:
+                self.print_error(err)
+                print(traceback.format_exc())
+            finally:
+                await self.handlers.execute_calls_queue(
+                    message,
+                    self._telegram_settings)
 
         executor.start_polling(dispatcher, skip_updates=True)
 
