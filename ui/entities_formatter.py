@@ -33,22 +33,23 @@ class TextParseMode(AbstractParseMode):
     """
     artist_header = """
     {artist.name}
-        IMG URL - {artist.link_on_img|Not found picture...}
-        URL - {artist.link|Not found link...}
+        IMG URL - {artist.link_on_img|'Not found picture...'}
+        URL - {artist.link|'Not found link...'}
     """
     album_header = """
     {album.name} [{album.release_date}|3000]
-        IMG URL - {album.link_on_img|Not found picture...}
-        URL - {album.link|Not found link...}
+        IMG URL - {album.link_on_img|'Not found picture...'}
+        URL - {album.link|'Not found link...'}
     """
     album_track = """
-    {track.disc_number| }. {track.name}
-       {track.link}
+    {track.disc_number|''}. {track.name}
+       {track.link|''}
     """
     track = """
     {track.name}
         IMG: {track.link_on_img}
-        ALBUM: {track.album.name}
+        ARTIST: {track.artist.name} {track.artist.link}
+        ALBUM: {track.album.name} {track.album.link}
         DOWNLOAD: {track.link}
     """
 
@@ -73,17 +74,18 @@ class TelegramMarkdownParseMode(AbstractParseMode):
     """
 
     album_header = """
-    {album.name} ({album.release_date}|3000)
-        [[IMG URL]({album.link_on_img|Not found picture...})]
-        [[URL]({album.link|Not found link...})]
+    {album.name} ({album.release_date|3000})
+        [[IMG URL]({album.link_on_img|'Not found picture...'})]
+        [[URL]({album.link|'Not found link...'})]
     """
 
-    album_track = "{track.disc_number| }. [[{track.name}]({track.link})]\n"
+    album_track = "{track.disc_number| }. [{track.name}]({track.link})\n"
     track = """
-    {track.name}
-        [[IMG]({track.link_on_img})]
-        [[ALBUM]({track.album.name})]
-        [[DOWNLOAD]({track.link})]
+    {track.artist.name} - {track.name} ({track.album.release_year|3000})
+      [IMG]({track.link_on_img|''})
+      [{track.artist.name}]({track.artist.link|''})
+      [{track.album.name}]({track.album.link|''})
+      [DOWNLOAD]({track.link|''})
     """
 
 
@@ -157,3 +159,7 @@ def format_album_tracks(tracks: Iterable[Track],
     return "".join(map(
         lambda t: my_format_str(parse_mode.album_track, track=t),
         tracks))
+
+def format_track(track: Track, parse_mode: AbstractParseMode) -> str:
+    return my_format_str(parse_mode.track,
+                         track=track)
