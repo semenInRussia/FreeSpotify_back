@@ -8,7 +8,7 @@ import pytest
 from ..settings.main import main
 from ..settings.server import server
 
-from ..ui.bot_programm import TelegramUI
+from ..ui.tg_bot import TelegramUI
 from ..ui.console_ui import ConsoleUI
 
 from ..commands import CLICommand
