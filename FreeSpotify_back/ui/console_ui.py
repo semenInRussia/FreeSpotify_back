@@ -1,7 +1,7 @@
 from sys import stderr
 
-from ui.abstract_ui import create_ui
-from ui.handler_collection import HandlersCollection
+from .abstract_ui import create_ui
+from .handler_collection import HandlersCollection
 
 handlers_console = HandlersCollection()
 
