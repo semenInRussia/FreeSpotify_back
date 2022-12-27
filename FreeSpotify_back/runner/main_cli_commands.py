@@ -64,8 +64,8 @@ class RunTestsCommand(CLICommand):
 
 class MainCLICommandsCollection(CLICommandsCollection):
     all_commands = [
-        RunServerCommand,
-        RunConsoleUICommand,
-        RunTestsCommand,
-        RunBotCommand,
+        RunServerCommand(),
+        RunConsoleUICommand(),
+        RunTestsCommand(),
+        RunBotCommand(),
     ]

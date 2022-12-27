@@ -2,7 +2,10 @@ from .. import Command
 
 
 class CLICommand(Command):
-    def get_selected_alias(self, args: list) -> str:
+    def run(args: list[str]):
+        pass
+
+    def get_selected_alias(self, args: list[str]) -> str:
         try:
             return args[0]
         except IndexError:

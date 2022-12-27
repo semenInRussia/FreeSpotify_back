@@ -1,7 +1,8 @@
+from .abstract_command import Command
 from ..core import exceptions
 
 class CommandsCollection:
-    all_commands: list = []
+    all_commands: list[Command] = []
 
     def run(self, *args, **kwargs):
         pass
