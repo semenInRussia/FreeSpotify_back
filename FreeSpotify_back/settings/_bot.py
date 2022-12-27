@@ -14,9 +14,22 @@ BOT_BRIEF_DESCRIPTION = (
     f"{BOT_NAME}\n Very cool bot for downloading only ROCK 'n ROLL music"
 )
 
-_BotCommand = _namedtuple("BotCommand", "name command description example")
+_BotCommand = _namedtuple("_BotCommand", "name command description example")
 
-BOT_COMMANDS = []
+BOT_COMMANDS = [
+    _BotCommand("artist",
+                "/artist",
+                "search an artist by query",
+                "/artist metallica"),
+    _BotCommand("album",
+                "/album",
+                "search an album by query",
+                "/album metallica - master of puppets"),
+    _BotCommand("track",
+                "/track",
+                "search an track by query",
+                "/album metallica - master of puppets")
+    ]
 
 _BOT_COMMAND_TEXT_TEMPLATE = """
 {bot_command.name} | {bot_command.command}
