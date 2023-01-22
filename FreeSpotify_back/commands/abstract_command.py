@@ -1,7 +1,7 @@
 class Command:
     aliases: list[str] = []
 
-    def run(self):
+    def run(self, *args, **kwargs):
         pass
 
     def is_selected(self, *args) -> bool:

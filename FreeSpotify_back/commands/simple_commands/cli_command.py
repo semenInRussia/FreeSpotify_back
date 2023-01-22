@@ -2,7 +2,7 @@ from .. import Command
 
 
 class CLICommand(Command):
-    def run(args: list[str]):
+    def run(self, args: list[str]):
         pass
 
     def get_selected_alias(self, args: list[str]) -> str:

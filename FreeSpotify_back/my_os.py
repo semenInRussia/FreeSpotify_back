@@ -75,23 +75,25 @@ def search_dirs_by_pattern(pattern: str) -> List[str]:
 
 class SearchExpression:
     def is_this_expression(self, string: str) -> bool:
-        pass
+        return NotImplemented
 
-    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
-        pass
+    def get_listdir_from_dirs(self,
+                              paths: List[str],
+                              concrete_expression: str) -> List[str]:
+        return NotImplemented
 
 
 class SimilarSearchExpression(SearchExpression):
     token: str = '~'
     token_length: int = 1
 
-    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
+    def get_listdir_from_dirs(self,
+                              paths: List[str],
+                              concrete_expression: str) -> Iterable[str]:
         string_for_compare = self._ignore_token(concrete_expression)
 
-        listdir = chain.from_iterable(map(
-            lambda path: dirs_similar_to(string_for_compare, path),
-            paths
-        ))
+        listdir = chain.from_iterable(
+            map(lambda path: dirs_similar_to(string_for_compare, path), paths))
 
         return listdir
 
@@ -105,7 +107,9 @@ class SimilarSearchExpression(SearchExpression):
 class AllDirsSearchExpression(SearchExpression):
     token = '*'
 
-    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
+    def get_listdir_from_dirs(self,
+                              paths: List[str],
+                              concrete_expression: str) -> Iterable[str]:
         listdir = chain.from_iterable(map(dirs, paths))
         return listdir
 

@@ -1,9 +1,9 @@
 from typing import Iterable
 
-from FreeSpotify_back._low_level_utils import my_format_str
-from FreeSpotify_back.entities import Album
-from FreeSpotify_back.entities import Artist
-from FreeSpotify_back.entities import Track
+from .._low_level_utils import my_format_str
+from ..entities import Album
+from ..entities import Artist
+from ..entities import Track
 
 
 class AbstractParseMode:

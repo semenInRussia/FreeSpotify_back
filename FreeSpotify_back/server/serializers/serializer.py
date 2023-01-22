@@ -1,7 +1,8 @@
 from typing import Type
 
-from FreeSpotify_back._low_level_utils import get_public_fields_of
+from ..._low_level_utils import get_public_fields_of
 from .fields import FieldSerializer
+from .exceptions import NotFoundSerializerError
 
 
 class Serializer:
@@ -25,7 +26,8 @@ class Serializer:
     @property
     def _all_fields(self):
         if not self.all_fields:
-            self.all_fields = get_public_fields_of(self, ignore=self.public_fields)
+            self.all_fields = get_public_fields_of(self,
+                                                   ignore=self.public_fields)
 
         return self.all_fields
 
@@ -57,9 +59,10 @@ class GeneralSerializer(Serializer):
 
         return serializer(self._obj).get_data(*fields)
 
-    def _get_current_serializer(self):
+    def _get_current_serializer(self) -> Type[Serializer]:
         current_obj_type = type(self._obj)
 
         for serializer in self.all_serializers:
             if serializer.object_type == current_obj_type:
                 return serializer
+        raise NotFoundSerializerError

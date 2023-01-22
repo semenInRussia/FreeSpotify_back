@@ -30,11 +30,6 @@ ROCKNATION_BASE_URL = 'http://rocknation.su'
 ROCKNATION_BASE_UPLOAD_MP3_URL = ROCKNATION_BASE_URL + "/upload/mp3/"
 
 
-def _raise_exception_if_is_false(obj, exception):
-    if not obj:
-        raise exception
-
-
 class RocknationArtists(AbstractArtists):
     @cached_function
     def get_link(self, artist_name: str) -> Optional[str]:
@@ -113,6 +108,9 @@ class RocknationArtists(AbstractArtists):
             'img[src^="/upload/images/bands"]'
         )
 
+        if element is None:
+            raise NotFoundArtistException
+
         return parsing_lib.get_absolute_url_by_element(element,
                                                        ROCKNATION_BASE_URL,
                                                        url_attribute_of_tag="src")
@@ -137,7 +135,8 @@ class RocknationAlbums(AbstractAlbums):
         element = parsing_lib.cached_select_one_element_on_page(album_link,
             "img[src^='/upload/images/albums/']")
 
-        _raise_exception_if_is_false(element, NotFoundAlbumException)
+        if element is None:
+            raise NotFoundAlbumException
 
         link_on_img = parsing_lib.get_absolute_url_by_element(element,
             ROCKNATION_BASE_URL,
@@ -150,6 +149,10 @@ class RocknationAlbums(AbstractAlbums):
         album_name = delete_sound_quality(album_name)
 
         link_on_artist = self._artists.get_link(artist_name)
+
+        if link_on_artist is None:
+            raise NotFoundAlbumException
+
         link_on_album = self._find_album_link_on_artist_page(
             link_on_artist, album_name)
 

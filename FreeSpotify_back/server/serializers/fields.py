@@ -16,6 +16,9 @@ class FieldSerializer:
         self._field_name_for_serialize = value
 
     def serialize_field_of(self, obj):
+        if not self.field_name_for_serialize:
+            raise Exception
+
         not_serialized_value = getattr(obj, self.field_name_for_serialize)
 
         if not_serialized_value is None:
@@ -51,12 +54,10 @@ class BooleanFieldSerializer(FieldSerializer):
 
 
 class ListFieldSerializer(FieldSerializer):
-    serialize_elements_of_list = None
+    serialize_elements_of_list: Callable
 
     def serialize(self, value):
-        return list(map(
-            self.serialize_elements_of_list, value
-        ))
+        return map(self.serialize_elements_of_list, value)
 
 
 class CustomListFieldSerializer(ListFieldSerializer):

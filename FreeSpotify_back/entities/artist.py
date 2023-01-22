@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 from typing import Optional
 from typing import List
 from typing import Iterable
@@ -35,7 +36,7 @@ class Artist(AbstractEntity):
         return self._instance.name
 
     @property
-    def top(self):
+    def top(self) -> Iterable:
         tracks_dto_top = self._music_mgr.artists.get_top(self.name)
 
         tracks_top = self._get_top_from_dto_top(tracks_dto_top)
@@ -57,7 +58,7 @@ class Artist(AbstractEntity):
 
         return albums
 
-    def _get_albums_from_dto_albums(self, dto_albums: List[AlbumDto]):
+    def _get_albums_from_dto_albums(self, dto_albums: Iterable[AlbumDto]):
         from . import Album
 
         return list(map(

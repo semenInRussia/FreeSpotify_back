@@ -44,8 +44,9 @@ class DirectoryArtistsManager(AbstractArtists):
 
     def get_albums(self, artist_name: str) -> Iterable[AlbumDto]:
         path_to_artist = self.get_link(artist_name)
+        if path_to_artist is None:
+            return []
         albums = self._albums_by_path_to_artist(path_to_artist)
-
         return albums
 
     def _albums_by_path_to_artist(self,

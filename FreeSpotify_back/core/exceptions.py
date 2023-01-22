@@ -10,3 +10,7 @@ class NotJsonResponseFromUrl(Exception):
 
 class NotFoundCommandException(Exception):
     """Your Alias Is Not Defined."""
+
+
+class NotFoundFormatExpression(Exception):
+    """By use `_low_level_utils.my_format_str` not found `FormatExpression`."""

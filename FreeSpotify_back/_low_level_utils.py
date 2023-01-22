@@ -1,9 +1,11 @@
 from functools import lru_cache
-from typing import List
+from typing import List, Type
 
 from .brackets_lib import Brackets
 from .brackets_lib import add_brackets_around
 from .brackets_lib import get_values_inside_of_brackets
+
+from .core.exceptions import NotFoundFormatExpression
 
 cached_function = lru_cache()
 
@@ -66,7 +68,7 @@ class FormatExpression:
 
     @staticmethod
     def is_this_expression(str_expression: str) -> bool:
-        pass
+        return NotImplemented
 
     def execute(self):
         pass
@@ -121,10 +123,13 @@ class DefaultFormatExpression(FormatExpression):
         return eval(self._str_expression, self.kwargs)
 
 
-def _get_format_expression(expression: str, args: tuple, kwargs: dict):
+def _get_format_expression(expression: str,
+                           args: tuple,
+                           kwargs: dict) -> FormatExpression:
     for format_expression in all_format_expression:
         if format_expression.is_this_expression(expression):
             return format_expression(expression, args, kwargs)
+    raise NotFoundFormatExpression
 
 
 all_format_expression: List[type[FormatExpression]] = [

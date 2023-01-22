@@ -1,4 +1,5 @@
 from typing import Union
+from typing import Optional
 
 
 class statuses:
@@ -9,7 +10,7 @@ class statuses:
 class Status:
     _value = statuses.OK
 
-    def __init__(self, status_name: str = None):
+    def __init__(self, status_name: Optional[str]=None):
         if status_name is not None:
             self.set(status_name)
 

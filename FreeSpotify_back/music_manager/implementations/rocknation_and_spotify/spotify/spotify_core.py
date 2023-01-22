@@ -1,10 +1,11 @@
 import base64
+from typing import Optional
 
 from loguru import logger
 
-from FreeSpotify_back._low_level_utils import cached_function
-from FreeSpotify_back import my_request
-from FreeSpotify_back.settings.spotify import spotify
+from ....._low_level_utils import cached_function
+from ..... import my_request
+from .....settings.spotify import spotify
 
 from .core.exceptions import AccessTokenExpiredException
 from .core.exceptions import InvalidClientException
@@ -44,12 +45,11 @@ def _is_response_has_error(json_response: dict) -> bool:
     return bool(json_response.get('error'))
 
 
-def _get_spotify_error_message(error_response: dict) -> str:
+def _get_spotify_error_message(error_response: dict) -> Optional[str]:
     error_main_content = error_response.get("error")
 
     if isinstance(error_main_content, dict):
         return error_response["error"]["message"]
-
     elif isinstance(error_main_content, str):
         return error_response["error_description"]
 
@@ -108,7 +108,7 @@ class SpotifyJsonParser:
             self,
             second_part_of_links: str,
             method_name: str = 'get',
-            data: dict = None,
+            data: Optional[dict]=None,
             **params
     ) -> dict:
         url = base_url + second_part_of_links
@@ -143,7 +143,7 @@ class SpotifyCore:
         self._json_parser = SpotifyJsonParser()
 
     @cached_function
-    def parse_search_json(self, q: str, type_: str, market: str = None, limit: int = 1, offset: int = 0) -> dict:
+    def parse_search_json(self, q: str, type_: str, market: Optional[str]=None, limit: int = 1, offset: int = 0) -> dict:
         """
         Search ANYTHING in Spotify.
 

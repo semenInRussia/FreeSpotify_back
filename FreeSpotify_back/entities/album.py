@@ -55,7 +55,7 @@ class Album(AbstractEntity):
             self._instance.name
         )
 
-    def _get_tracks_from_dto_tracks(self, tracks: List[TrackDto]) -> list:
+    def _get_tracks_from_dto_tracks(self, tracks: Iterable[TrackDto]) -> list:
         return list(map(self._create_track_from_dto, tracks))
 
     def _create_track_from_dto(self, dto_track: TrackDto):
