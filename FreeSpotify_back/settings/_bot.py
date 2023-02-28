@@ -8,10 +8,12 @@ _load_dotenv()
 
 BOT_TOKEN = _os.getenv('BOT_TOKEN')
 
-BOT_NAME = "cool ROCK 'n ROLL music"
+BOT_NAME = "tg bot to download a music"
 
 BOT_BRIEF_DESCRIPTION = (
-    f"{BOT_NAME}\n Very cool bot for downloading only ROCK 'n ROLL music"
+    f"{BOT_NAME}\n Very cool bot for downloading music, note that mp3 files "
+    "I fetch from the https://rocknation.su , so most of the modern music "
+    "isn't provided"
 )
 
 _BotCommand = _namedtuple("_BotCommand", "name command description example")
@@ -19,22 +21,21 @@ _BotCommand = _namedtuple("_BotCommand", "name command description example")
 BOT_COMMANDS = [
     _BotCommand("artist",
                 "/artist",
-                "search an artist by query",
+                "artist search by name",
                 "/artist metallica"),
     _BotCommand("album",
                 "/album",
-                "search an album by query",
+                "album search by name",
                 "/album metallica - master of puppets"),
     _BotCommand("track",
                 "/track",
-                "search an track by query",
+                "track search by name",
                 "/album metallica - master of puppets")
     ]
 
 _BOT_COMMAND_TEXT_TEMPLATE = """
 {bot_command.name} | {bot_command.command}
 {bot_command.description}. For example: {bot_command.example}
-\n\n
 """
 
 BOT_COMMANDS_TEXT = "\n".join(
