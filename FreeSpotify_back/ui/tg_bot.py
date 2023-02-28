@@ -61,7 +61,7 @@ class TelegramUI(AbstractUI):
 
         dispatcher = Dispatcher(bot_)
 
-        @dispatcher.message_handler(commands=["help"])
+        @dispatcher.message_handler(commands=["help", "start"])
         async def get_bot_help_information(message: types.Message):
             await message.answer(self._telegram_settings.BOT_DESCRIPTION)
             await message.answer_sticker(
