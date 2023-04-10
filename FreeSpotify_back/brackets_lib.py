@@ -1,22 +1,22 @@
 from collections import namedtuple
+from collections.abc import Iterable
 from functools import reduce
-
-from typing import List
-from typing import Iterable
 
 Brackets = namedtuple("Brackets", ["open_char", "closed_char"])
 
 ALL_BRACKETS_TYPES = [
     Brackets("(", ")"),
-    Brackets("[", "]")
+    Brackets("[", "]"),
 ]
 
 
-def delete_all_values_with_all_brackets_types(string: str):
+def delete_all_values_with_all_brackets_types(string: str) -> str:
     return delete_all_values_with_given_brackets(string, ALL_BRACKETS_TYPES)
 
 
-def delete_all_values_with_given_brackets(string: str, brackets_types: List[Brackets]) -> str:
+def delete_all_values_with_given_brackets(string: str,
+                                          brackets_types: list[Brackets],
+                                          ) -> str:
     for brackets in brackets_types:
         string = delete_value_with_brackets_pair(string, brackets)
     return string
@@ -27,13 +27,13 @@ def delete_value_with_brackets_pair(string: str, brackets: Brackets) -> str:
     return reduce(
         lambda old, inside_brackets: old.replace(inside_brackets, ""),
         inside_brackets,
-        string
+        string,
     )
 
 
 def ignore_brackets_around(string: str) -> str:
-    """
-    Return the modified string without brackets around.
+    """Return the modified string without brackets around.
+
     String should has 2 brackets: first at the string start, second at the
     string end
     """
@@ -46,19 +46,17 @@ def get_values_with_brackets(string: str, brackets: Brackets) -> Iterable[str]:
         yield inside_brackets
         string = string.replace(inside_brackets, "")
 
-def get_values_inside_of_brackets(string: str, brackets: Brackets) -> List[str]:
+def get_values_inside_of_brackets(string: str, brackets: Brackets) -> list[str]:
     return list(map(
         ignore_brackets_around,
-        get_values_with_brackets(string, brackets)
+        get_values_with_brackets(string, brackets),
     ))
 
 
 def _find_one_value_inside_brackets(string: str, brackets: Brackets) -> str:
     open_branch_index = string.find(brackets.open_char)
     closed_branch_index = string.find(brackets.closed_char) + 1
-    inside_brackets = string[open_branch_index: closed_branch_index]
-
-    return inside_brackets
+    return string[open_branch_index: closed_branch_index]
 
 
 def _is_string_has_brackets(string: str, brackets: Brackets) -> bool:

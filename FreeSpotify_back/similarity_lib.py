@@ -1,13 +1,9 @@
 import difflib
-
-from typing import Callable
-from typing import Iterable
-from typing import Optional
-from typing import TypeVar
+from typing import Callable, Iterable, Optional, TypeVar
 
 DEFAULT_MIN_RATIO_OF_SIMILARITY = 0.6
-O = TypeVar("O")
-_Key = Optional[Callable[[O], str]]
+Obj = TypeVar("Obj")
+_Key = Optional[Callable[[Obj], str]]
 
 def search_string_similar_to(string: str,
                              strings: Iterable[O],

@@ -1,30 +1,34 @@
 from typing import NamedTuple
-from typing import Optional
 
 
-class TrackDto(NamedTuple):
-    artist_name: str
-    album_name: str
+class ArtistDto(NamedTuple):
+    """Object that represent a music artist in the most simple form."""
+
     name: str
-    disc_number: Optional[int] = None
+    spotify_id: str | None = None
 
     def __repr__(self):
-        return f"{self.artist_name} - {self.disc_number}.{self.name}"
-
+        return self.name
 
 class AlbumDto(NamedTuple):
+    """Object that represent a music album in the most simple form."""
+
     artist_name: str
     name: str
-    release_date: Optional[str] = None
-    spotify_id: Optional[str] = None
+    release_date: str | None = None
+    spotify_id: str | None = None
 
     def __repr__(self):
         return f"{self.artist_name} - {self.name}"
 
 
-class ArtistDto(NamedTuple):
+class TrackDto(NamedTuple):
+    """Object that represent a music track in the most simple form."""
+
+    artist_name: str
+    album_name: str
     name: str
-    spotify_id: Optional[str] = None
+    disc_number: int | None = None
 
     def __repr__(self):
-        return self.name
+        return f"{self.artist_name} - {self.disc_number}.{self.name}"

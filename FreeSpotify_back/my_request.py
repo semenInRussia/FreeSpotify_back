@@ -1,32 +1,27 @@
 import json
+from collections.abc import Callable
 from json import JSONDecodeError
-from typing import Callable
-from typing import Dict
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 from ._low_level_utils import cached_function
 from .core.exceptions import NotJsonResponseFromUrl
 
-dependencies_of_methods_on_name: Dict[str, Callable] = {
+dependencies_of_methods_on_name: dict[str, Callable] = {
     "get": requests.get,
     "post": requests.post,
     "put": requests.put,
-    "delete": requests.delete
+    "delete": requests.delete,
 }
 
 
 def humanized_link(link: str) -> str:
-    link = link.replace("%20", " ")
-
-    return link
+    return link.replace("%20", " ")
 
 
 def normalize_link(link: str) -> str:
-    link = link.replace(" ", "%20")
-
-    return link
+    return link.replace(" ", "%20")
 
 
 def get_absolute_url(relative_url: str, base_url: str) -> str:
@@ -42,21 +37,19 @@ def get_bs(url: str, method_name: str = 'get', **kwargs) -> BeautifulSoup:
 cached_get_bs = cached_function(get_bs)
 
 
-def get_json(url: str, method_name: str = 'get', **kwargs):
+def get_json(url: str, method_name: str = 'get', **kwargs) -> dict:
     content = get_content(url, method_name, **kwargs)
-    json_data = _try_load_content_to_json(content, url)
-
-    return json_data
+    return _try_load_content_to_json(content, url)
 
 
-def _try_load_content_to_json(content_of_page: str, url: str):
+def _try_load_content_to_json(content_of_page: str, url: str) -> dict:
     try:
         return json.loads(content_of_page)
     except JSONDecodeError as exc:
         raise NotJsonResponseFromUrl(url) from exc
 
 
-def get_content(url: str, method_name: str = 'get', **kwargs):
+def get_content(url: str, method_name: str = 'get', **kwargs) -> str:
     return create_request(url, method_name, **kwargs).text
 
 

@@ -1,10 +1,9 @@
-from functools import reduce
-from itertools import chain
 import os
 import pathlib
-
+from collections.abc import Iterable
+from itertools import chain
+from pathlib import Path
 from typing import List
-from typing import Iterable
 
 from .similarity_lib import filter_and_sort_strings_by_min_similarity_to
 
@@ -14,11 +13,9 @@ SIMILARITY_TARGET_LENGTH = 1
 DEFAULT_MIN_RATIO_OF_SIMILARITY_FILENAMES = 0.5
 
 
-def dirs_similar_to(string_for_compare: str, path: str) -> List[str]:
-    return list(map(
-        lambda dir_name: os.path.join(path, dir_name),
-        dirs_names_similar_to(string_for_compare, path)
-    ))
+def dirs_similar_to(string_for_compare: str, path: str) -> Iterable[str]:
+    for dir_name in dirs_names_similar_to(string_for_compare, path):
+        yield Path(path) / dir_name
 
 
 def dirs_names_similar_to(string_for_compare: str, path: str) -> Iterable[str]:
@@ -28,31 +25,29 @@ def dirs_names_similar_to(string_for_compare: str, path: str) -> Iterable[str]:
         DEFAULT_MIN_RATIO_OF_SIMILARITY_FILENAMES)
 
 
-def dirs_names(path: str) -> List[str]:
+def dirs_names(path: str) -> Iterable[str]:
     try:
         return os.listdir(parse_path(path))
     except NotADirectoryError:
         return []
 
 
-def dirs(path: str) -> List[str]:
-    return list(map(
-        lambda dir_name: os.path.join(path, dir_name),
-        dirs_names(path)
-    ))
+def dirs(path: str) -> Iterable[str]:
+    for dir_name in dirs_names(path):
+        yield Path(path) / dir_name
 
 
 def parse_path(path: str) -> str:
-    if path == '':
+    if not path:
         return '.'
     return os.path.join(*path.split('/'))
 
 
-def get_parts_of_path(path: str):
+def get_parts_of_path(path: str) -> Iterable[str]:
     return pathlib.Path(path).parts
 
 
-def search_dirs_by_pattern(pattern: str) -> List[str]:
+def search_dirs_by_pattern(pattern: str) -> Iterable[str]:
     found_dirs = [""]
 
     pattern = parse_path(pattern)
@@ -61,25 +56,27 @@ def search_dirs_by_pattern(pattern: str) -> List[str]:
     possible_search_expressions = [
         SimilarSearchExpression(),
         AllDirsSearchExpression(),
-        DefaultSearchExpression()
+        DefaultSearchExpression(),
     ]
 
     for expression in parts_of_patterns:
         for search_expression in possible_search_expressions:
             if search_expression.is_this_expression(expression):
-                found_dirs = search_expression.get_listdir_from_dirs(found_dirs, expression)
+                found_dirs = search_expression.get_listdir_from_dirs(
+                    found_dirs,
+                    expression)
                 break
 
     return found_dirs
 
 
 class SearchExpression:
-    def is_this_expression(self, string: str) -> bool:
+    def is_this_expression(self, _string: str) -> bool:
         return NotImplemented
 
     def get_listdir_from_dirs(self,
-                              paths: List[str],
-                              concrete_expression: str) -> List[str]:
+                              _paths: Iterable[str],
+                              _concrete_expression: str) -> Iterable[str]:
         return NotImplemented
 
 
@@ -88,14 +85,13 @@ class SimilarSearchExpression(SearchExpression):
     token_length: int = 1
 
     def get_listdir_from_dirs(self,
-                              paths: List[str],
+                              paths: Iterable[str],
                               concrete_expression: str) -> Iterable[str]:
         string_for_compare = self._ignore_token(concrete_expression)
 
-        listdir = chain.from_iterable(
-            map(lambda path: dirs_similar_to(string_for_compare, path), paths))
+        return chain.from_iterable(
+            [dirs_similar_to(string_for_compare, path) for path in paths])
 
-        return listdir
 
     def _ignore_token(self, string: str) -> str:
         return string[self.token_length:]
@@ -105,31 +101,31 @@ class SimilarSearchExpression(SearchExpression):
 
 
 class AllDirsSearchExpression(SearchExpression):
-    token = '*'
+    token = "*"
 
     def get_listdir_from_dirs(self,
-                              paths: List[str],
-                              concrete_expression: str) -> Iterable[str]:
-        listdir = chain.from_iterable(map(dirs, paths))
-        return listdir
+                              paths: Iterable[str],
+                              _concrete_expression: str) -> Iterable[str]:
+        return chain.from_iterable(map(dirs, paths))
 
     def is_this_expression(self, string: str) -> bool:
         return string.startswith(self.token)
 
 
 class DefaultSearchExpression(SearchExpression):
-    def get_listdir_from_dirs(self, paths: List[str], concrete_expression: str) -> List[str]:
+    def get_listdir_from_dirs(self,
+                              paths: Iterable[str],
+                              concrete_expression: str) -> Iterable[str]:
         return join_all_paths_with(concrete_expression, paths)
 
-    def is_this_expression(self, string: str) -> bool:
+    def is_this_expression(self, _string: str) -> bool:
         return True
 
 
-def join_all_paths_with(path_for_joining: str, paths: List[str]):
-    return list(map(
-        lambda path: os.path.join(path, path_for_joining),
-        paths
-    ))
+    def join_all_paths_with(path_for_joining: str,
+                            paths: Iterable[str]) -> Iterable[str]:
+        for path in paths:
+            yield Path(path) / path_for_joining
 
 
 def file_without_file_extension(path: str) -> str:

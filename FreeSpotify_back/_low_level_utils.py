@@ -1,10 +1,7 @@
 from functools import lru_cache
-from typing import List, Type
 
-from .brackets_lib import Brackets
-from .brackets_lib import add_brackets_around
-from .brackets_lib import get_values_inside_of_brackets
-
+from .brackets_lib import (Brackets, add_brackets_around,
+                           get_values_inside_of_brackets)
 from .core.exceptions import NotFoundFormatExpression
 
 cached_function = lru_cache()
@@ -18,7 +15,7 @@ def format_exception(error: Exception) -> str:
     error_description = error.__doc__
 
     if error_description:
-        error_description = f"Description - \"{error_description}\""
+        error_description = f'Description - "{error_description}"'
     else:
         error_description = "Description not found..."
 
@@ -30,15 +27,19 @@ def format_exception(error: Exception) -> str:
     )
 
 
-def get_public_fields_of(obj, ignore=None):
-    if ignore is None:
-        ignore = []
-
+def get_public_fields_of(obj,
+                         ignore_list: list[str] | None = None) -> list[str]:
+    if ignore_list is None:
+        ignore_list = []
     all_fields = dir(obj)
-    is_public_field_name = lambda field_name: not (field_name.startswith("_") or field_name in ignore)
 
-    return list(filter(is_public_field_name, all_fields))
+    return list(filter(lambda f: _is_public_field_name(f, ignore_list),
+                       all_fields))
 
+def _is_public_field_name(field_name: str, ignore_list: list[str]=None) -> bool:
+    if ignore_list is None:
+        ignore_list = []
+    return not (field_name.startswith("_") or field_name in ignore_list)
 
 def my_format_str(string: str, *args, **kwargs) -> str:
     insides_of_brackets = get_values_inside_of_brackets(string, format_brackets)
@@ -49,10 +50,7 @@ def my_format_str(string: str, *args, **kwargs) -> str:
         old_string = add_brackets_around(inside_of_brackets, format_brackets)
         new_string = str(current_expression.execute())
 
-        string = string.replace(
-            old_string,
-            new_string
-        )
+        string = string.replace(old_string, new_string)
 
         args = current_expression.args
         kwargs = current_expression.kwargs
@@ -67,10 +65,10 @@ class FormatExpression:
         self._kwargs = kwargs
 
     @staticmethod
-    def is_this_expression(str_expression: str) -> bool:
+    def is_this_expression(_str_expression: str) -> bool:
         return NotImplemented
 
-    def execute(self):
+    def execute(self) -> str:
         pass
 
     @property
@@ -85,9 +83,9 @@ class FormatExpression:
 class EmptyFormatExpression(FormatExpression):
     @staticmethod
     def is_this_expression(str_expression: str) -> bool:
-        return str_expression.strip() == ''
+        return not str_expression.strip()
 
-    def execute(self):
+    def execute(self) -> str:
         res = self._args[0]
         self._args = self._args[1:]
         return res
@@ -98,14 +96,13 @@ class OrFormatExpression(FormatExpression):
     def is_this_expression(str_expression: str) -> bool:
         return or_char in str_expression
 
-    def execute(self):
+    def execute(self) -> str:
         parts_of_expression = self._str_expression.split(or_char)
         if self._is_valid_expression(parts_of_expression[0]):
             return eval(parts_of_expression[0], self.kwargs)
-        else:
-            return eval(parts_of_expression[1], self.kwargs)
+        return eval(parts_of_expression[1], self.kwargs)
 
-    def _is_valid_expression(self, expression) -> bool:
+    def _is_valid_expression(self, expression: str) -> bool:
         try:
             result = eval(expression, self.kwargs)
         except:
@@ -116,10 +113,10 @@ class OrFormatExpression(FormatExpression):
 
 class DefaultFormatExpression(FormatExpression):
     @staticmethod
-    def is_this_expression(str_expression: str) -> bool:
+    def is_this_expression(_str_expression: str) -> bool:
         return True
 
-    def execute(self):
+    def execute(self) -> str:
         return eval(self._str_expression, self.kwargs)
 
 
@@ -132,11 +129,10 @@ def _get_format_expression(expression: str,
     raise NotFoundFormatExpression
 
 
-all_format_expression: List[type[FormatExpression]] = [
+all_format_expression: list[type[FormatExpression]] = [
     EmptyFormatExpression,
     OrFormatExpression,
-    DefaultFormatExpression
-]
+    DefaultFormatExpression]
 
 
 # code taked from the itertools recipes
