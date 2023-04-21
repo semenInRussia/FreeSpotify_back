@@ -1,7 +1,6 @@
 import pytest
 
-from FreeSpotify_back.music_manager.core.exceptions import \
-     NotFoundArtistException
+from FreeSpotify_back.music_manager.core.exceptions import NotFoundArtistError
 from FreeSpotify_back.music_manager.implementations import Rocknation
 
 artist_name = "AC DC"
@@ -25,7 +24,7 @@ def test_get_link(rocknation: Rocknation):
 
 
 def test_get_link_should_raise_not_found_exception(rocknation: Rocknation):
-    with pytest.raises(NotFoundArtistException):
+    with pytest.raises(NotFoundArtistError):
         artist = rocknation.artists.get_link(**not_valid_params)
 
 

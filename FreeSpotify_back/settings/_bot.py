@@ -30,7 +30,7 @@ BOT_COMMANDS = [
     _BotCommand("track",
                 "/track",
                 "track search by name",
-                "/album metallica - master of puppets")
+                "/album metallica - master of puppets"),
     ]
 
 _BOT_COMMAND_TEXT_TEMPLATE = """
@@ -42,7 +42,7 @@ BOT_COMMANDS_TEXT = "\n".join(
     [
         _BOT_COMMAND_TEXT_TEMPLATE.format(bot_command=bot_command)
         for bot_command in BOT_COMMANDS
-    ]
+    ],
 )
 
 BOT_DESCRIPTION = f"""

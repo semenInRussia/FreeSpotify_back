@@ -3,16 +3,18 @@ from typing import Optional
 
 from loguru import logger
 
-from ....._low_level_utils import cached_function
-from ..... import my_request
-from .....settings.spotify import spotify
+from FreeSpotify_back import my_request
+from FreeSpotify_back._low_level_utils import cached_function
+from FreeSpotify_back.settings.spotify import spotify
 
-from .core.exceptions import AccessTokenExpiredException
-from .core.exceptions import InvalidClientException
-from .core.exceptions import InvalidObjectIdException
-from .core.exceptions import NoSearchQueryException
-from .core.exceptions import NotValidTokenException
-from .core.exceptions import UndefinedErrorMessageException
+from .core.exceptions import (
+    AccessTokenExpiredException,
+    InvalidClientException,
+    InvalidObjectIdException,
+    NoSearchQueryException,
+    NotValidTokenException,
+    UndefinedErrorMessageException,
+)
 
 version_api = 'v1'
 base_url = f"https://api.spotify.com/{version_api}/"
@@ -29,7 +31,7 @@ def _check_json_spotify_response(json_response: dict):
         AccessTokenExpiredException,
         InvalidObjectIdException,
         InvalidClientException,
-        NoSearchQueryException
+        NoSearchQueryException,
     ]
 
     current_exception_message = _get_spotify_error_message(json_response)
@@ -80,17 +82,17 @@ class SpotifyAuthenticator:
         base64_message = _encode_as_base64(message)
 
         headers = {
-            'Authorization': f"Basic {base64_message}"
+            'Authorization': f"Basic {base64_message}",
         }
         data = {
-            'grant_type': "client_credentials"
+            'grant_type': "client_credentials",
         }
 
         auth_json_data = my_request.get_json(
             url,
             method_name='post',
             headers=headers,
-            data=data
+            data=data,
         )
 
         _check_json_spotify_response(auth_json_data)
@@ -109,12 +111,12 @@ class SpotifyJsonParser:
             second_part_of_links: str,
             method_name: str = 'get',
             data: Optional[dict]=None,
-            **params
+            **params,
     ) -> dict:
         url = base_url + second_part_of_links
 
         headers = {
-            "Authorization": "Bearer " + self._authenticator.token
+            "Authorization": "Bearer " + self._authenticator.token,
         }
 
         response_data = my_request.get_json(
@@ -123,7 +125,7 @@ class SpotifyJsonParser:
 
             params=params,
             headers=headers,
-            data=data
+            data=data,
         )
 
         _check_json_spotify_response(response_data)
@@ -132,8 +134,7 @@ class SpotifyJsonParser:
 
 
 class SpotifyCore:
-    """
-    Object for work with base operations with spotify on level with rest api.
+    """Object for work with base operations with spotify on level with rest api.
     All methods of THIS class, are parsing json from spotify api.
 
     For additional info watch https://developer.spotify.com/documentation/ .
@@ -144,8 +145,7 @@ class SpotifyCore:
 
     @cached_function
     def parse_search_json(self, q: str, type_: str, market: Optional[str]=None, limit: int = 1, offset: int = 0) -> dict:
-        """
-        Search ANYTHING in Spotify.
+        """Search ANYTHING in Spotify.
 
         Info from https://developer.spotify.com/documentation/web-api/reference/#endpoint-search .
 
@@ -170,7 +170,9 @@ class SpotifyCore:
         :param market:
         An ISO 3166-1 alpha-2 country code or the string from_token.
         If a country code is specified, only content that is playable in that market is returned.
+
         Note:
+        ----
         - Playlist results are not affected by the market parameter.
         - If market is set to from_token, and a valid access token is specified in the request header, only content
           playable in the country associated with the user account, is returned.
@@ -190,42 +192,38 @@ class SpotifyCore:
         * Default: 0 (the first result).
         * Maximum offset (including limit): 1,000.
         Use with limit to get the next page of search results.
-       """
-
+        """
         return self._json_parser.parse_json_from_spotify(second_part_of_links='search', q=q, type=type_, limit=limit,
                                                          offset=offset, market=market)
 
     @cached_function
     def parse_tracks_of_top(self, artist_id: str, market: str = 'US') -> dict:
-        """
-        Get Artist's top.
+        """Get Artist's top.
 
         Info from https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-an-artists-top-tracks .
 
         :param artist_id: str
         The Spotify ID for the artist 	String 	Required
         Query Parameter 	Type 	Required
-        :param market: str | None
+        :param market: Optional[str]
         An ISO 3166-1 alpha-2 country code or the string from_token. Synonym for country.
         """
-
         url = f'artists/{artist_id}/top-tracks'
 
         return self._json_parser.parse_json_from_spotify(second_part_of_links=url, country=market)
 
     @cached_function
     def parse_albums(self, album_ids: str, market: str = 'ES'):
-        """
-        Get info about current albums by ids.
-        Info from https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-multiple-albums
+        """Get info about current albums by ids.
+
+        Info from https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-multiple-albums.
 
         :param album_ids: str
         A comma-separated list of the Spotify IDs for the albums. Maximum: 20 IDs.
-        :param market: str | None
+        :param market: Optional[str]
         An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track
         Relinking.
         """
-
         return self._json_parser.parse_json_from_spotify(second_part_of_links='albums', market=market, ids=album_ids)
 
     @cached_function
@@ -236,8 +234,7 @@ class SpotifyCore:
 
     @cached_function
     def parse_albums_of_artist(self, artist_id: str, market: str = 'ES', limit: int = 1, offset: int = 0):
-        """
-        :param artist_id:
+        """:param artist_id:
         The Spotify ID for the artist.
         :param market:
         Synonym for country. An ISO 3166-1 alpha-2 country code or the string from_token.
@@ -256,9 +253,8 @@ class SpotifyCore:
         """
         return self._json_parser.parse_json_from_spotify(
             second_part_of_links=f"artists/{artist_id}/albums",
-
             id=artist_id,
             market=market,
             limit=limit,
-            offset=offset
+            offset=offset,
         )

@@ -1,4 +1,4 @@
-from ..brackets_lib import delete_all_values_with_all_brackets_types
+from FreeSpotify_back.brackets_lib import delete_all_values_with_all_brackets_types
 
 name_and_year_splitter = " - "
 

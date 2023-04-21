@@ -1,11 +1,9 @@
 import pytest
-
-from ..settigs_for_test import settings_with_mock
-
 from FreeSpotify_back.dto import TrackDto
-from FreeSpotify_back.entities import Album
-from FreeSpotify_back.entities import Artist
+from FreeSpotify_back.entities import Album, Artist
 from FreeSpotify_back.entities.track import Track
+
+from tests.settigs_for_test import settings_with_mock
 
 artist_name = "Metallica"
 album_name = "Master of Puppets"
@@ -26,7 +24,7 @@ def track():
         artist_name=artist_name,
         album_name=album_name,
         track_name=approximate_track_name,
-        additional_settings=additional_settings
+        additional_settings=additional_settings,
     )
 
 
@@ -35,7 +33,7 @@ def track_dto():
     track_dto = TrackDto(
         artist_name=artist_name,
         album_name=album_name,
-        name=track_name
+        name=track_name,
     )
     return track_dto
 
@@ -45,7 +43,7 @@ def not_valid_track_dto():
     track_dto = TrackDto(
         artist_name=artist_name,
         album_name=album_name,
-        name="kdkdkdkkdkdkd"
+        name="kdkdkdkkdkdkd",
     )
     return track_dto
 
@@ -63,8 +61,10 @@ def test_work_with_settings(track):
 
 
 def test_equal_tracks():
-    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
-    second_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
+    first_track = Track(artist_name, album_name, track_name,
+        additional_settings=additional_settings)
+    second_track = Track(artist_name, album_name,
+        track_name, additional_settings=additional_settings)
 
     assert first_track.name == second_track.name
     assert first_track.album == second_track.album
@@ -73,15 +73,19 @@ def test_equal_tracks():
 
 
 def test_notequal_by_artists_tracks():
-    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
-    second_track = Track(difference_artist_name, album_name, track_name, additional_settings=additional_settings)
+    first_track = Track(artist_name, album_name, track_name,
+        additional_settings=additional_settings)
+    second_track = Track(difference_artist_name, album_name,
+        track_name, additional_settings=additional_settings)
 
     assert first_track != second_track
 
 
 def test_notequal_by_albums_tracks():
-    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
-    second_track = Track(artist_name, difference_album_name, track_name, additional_settings=additional_settings)
+    first_track = Track(artist_name, album_name, track_name,
+        additional_settings=additional_settings)
+    second_track = Track(artist_name, difference_album_name, track_name,
+        additional_settings=additional_settings)
 
     assert first_track.album != second_track.album
 
@@ -89,15 +93,19 @@ def test_notequal_by_albums_tracks():
 
 
 def test_notequal_by_names_tracks():
-    first_track = Track(artist_name, album_name, track_name, additional_settings=additional_settings)
-    second_track = Track(artist_name, album_name, difference_track_name, additional_settings=additional_settings)
+    first_track = Track(artist_name, album_name, track_name,
+        additional_settings=additional_settings)
+    second_track = Track(artist_name, album_name, difference_track_name,
+        additional_settings=additional_settings)
 
     assert first_track != second_track
 
 
 def test_notequal_with_other_types():
-    assert Track(artist_name, album_name, track_name, additional_settings=additional_settings) != 0
-    assert Track(artist_name, album_name, track_name, additional_settings=additional_settings) != "STRING"
+    assert Track(artist_name, album_name, track_name,
+                 additional_settings=additional_settings) != 0
+    assert Track(artist_name, album_name, track_name,
+                 additional_settings=additional_settings) != "STRING"
 
 
 def test_track_album(track):

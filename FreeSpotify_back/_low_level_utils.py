@@ -1,8 +1,11 @@
+from collections.abc import Iterable
 from functools import lru_cache
+from typing import Callable, Optional
 
-from .brackets_lib import (Brackets, add_brackets_around,
-                           get_values_inside_of_brackets)
-from .core.exceptions import NotFoundFormatExpression
+from typing_extensions import TypeVar
+
+from .brackets_lib import Brackets, add_brackets_around, get_values_inside_of_brackets
+from .core.exceptions import InvalidFormatExpressionError
 
 cached_function = lru_cache()
 
@@ -20,7 +23,7 @@ def format_exception(error: Exception) -> str:
         error_description = "Description not found..."
 
     return (
-        f"Sorry... I'm found error...\n"
+        "Sorry... I'm found error...\n"
         "Detail:\n"
         f"|     Name - {error_name}\n"
         f"|     {error_description}"
@@ -28,7 +31,7 @@ def format_exception(error: Exception) -> str:
 
 
 def get_public_fields_of(obj,
-                         ignore_list: list[str] | None = None) -> list[str]:
+                         ignore_list: Optional[list[str]] = None) -> list[str]:
     if ignore_list is None:
         ignore_list = []
     all_fields = dir(obj)
@@ -36,7 +39,8 @@ def get_public_fields_of(obj,
     return list(filter(lambda f: _is_public_field_name(f, ignore_list),
                        all_fields))
 
-def _is_public_field_name(field_name: str, ignore_list: list[str]=None) -> bool:
+def _is_public_field_name(field_name: str,
+                          ignore_list: Optional[list[str]]=None) -> bool:
     if ignore_list is None:
         ignore_list = []
     return not (field_name.startswith("_") or field_name in ignore_list)
@@ -126,7 +130,7 @@ def _get_format_expression(expression: str,
     for format_expression in all_format_expression:
         if format_expression.is_this_expression(expression):
             return format_expression(expression, args, kwargs)
-    raise NotFoundFormatExpression
+    raise InvalidFormatExpressionError
 
 
 all_format_expression: list[type[FormatExpression]] = [
@@ -135,9 +139,13 @@ all_format_expression: list[type[FormatExpression]] = [
     DefaultFormatExpression]
 
 
+Element = TypeVar("Element")
+
 # code taked from the itertools recipes
-def first_true(iterable, default=False, pred=None):
-    """Returns the first true value in the iterable.
+def first_true(iterable: Iterable[Element],
+               default: Optional[Element] = None,
+               pred: Optional[Callable[[Element], bool]] = None) -> Optional[Element]:
+    """Return the first true value in the iterable.
 
     If no true value is found, returns *default*
 

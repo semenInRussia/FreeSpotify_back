@@ -1,10 +1,8 @@
 import pytest
-
 from FreeSpotify_back.dto import AlbumDto
-from FreeSpotify_back.entities import Album
-from FreeSpotify_back.entities import Artist
-from FreeSpotify_back.entities import Track
-from ..settigs_for_test import settings_with_mock
+from FreeSpotify_back.entities import Album, Artist, Track
+
+from tests.settigs_for_test import settings_with_mock
 
 album_name = "Paranoid"
 artist_name = "Black sabbath"
@@ -19,7 +17,7 @@ num_tracks_in_album = 8
 additional_settings = settings_with_mock
 
 
-@pytest.fixture
+@pytest.fixture()
 def album():
     return Album(artist_name, album_name, additional_settings=additional_settings)
 
@@ -45,7 +43,7 @@ def test_create_from_dto():
 
 
 def test_get_tracks(album):
-    tracks = album.tracks
+    tracks = list(album.tracks)
 
     assert isinstance(tracks[0], Track)
     assert len(tracks)
@@ -68,29 +66,36 @@ def test_work_with_settings_when_create_from_dto():
 
 
 def test_equal_albums():
-    first_album = Album(artist_name, album_name, additional_settings=additional_settings)
-    second_album = Album(artist_name, album_name, additional_settings=additional_settings)
+    first_album = Album(artist_name, album_name,
+        additional_settings=additional_settings)
+    second_album = Album(artist_name, album_name,
+        additional_settings=additional_settings)
 
     assert first_album == second_album
 
 
 def test_notequal_by_artist_albums():
-    first_album = Album(artist_name, album_name, additional_settings=additional_settings)
-    second_album = Album(difference_artist_name, album_name, additional_settings=additional_settings)
+    first_album = Album(artist_name, album_name,
+        additional_settings=additional_settings)
+    second_album = Album(difference_artist_name, album_name,
+        additional_settings=additional_settings)
 
     assert first_album != second_album
 
 
 def test_notequal_by_name_albums():
-    first_album = Album(artist_name, album_name, additional_settings=additional_settings)
-    second_album = Album(artist_name, difference_album_name, additional_settings=additional_settings)
+    first_album = Album(artist_name, album_name,
+        additional_settings=additional_settings)
+    second_album = Album(artist_name, difference_album_name,
+        additional_settings=additional_settings)
 
     assert first_album != second_album
 
 
 def test_notequal_with_other_type():
     assert Album(artist_name, album_name, additional_settings=additional_settings) != 1
-    assert Album(artist_name, album_name, additional_settings=additional_settings) != "STRING"
+    assert Album(artist_name, album_name,
+                 additional_settings=additional_settings) != "STRING"
 
 
 def test_get_artist(album):
@@ -101,8 +106,8 @@ def test_album_query_and_search():
     query_res = Album.query("Kanye West - Mr Fantasy")
     search_res = Album.search("Kanye West", "Mr Fantasy")
 
-    assert all(map(lambda obj: isinstance(obj, Album), query_res))
-    assert all(map(lambda obj: isinstance(obj, Album), search_res))
+    assert all(isinstance(obj, Album) for obj in query_res)
+    assert all(isinstance(obj, Album) for obj in search_res)
 
 
 def test_album_from_query():

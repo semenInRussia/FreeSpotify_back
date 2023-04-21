@@ -1,5 +1,5 @@
-from ..settings.entities import entities
-from ..music_manager import AbstractMusicManager
+from FreeSpotify_back.music_manager import AbstractMusicManager
+from FreeSpotify_back.settings.entities import entities
 
 
 class AbstractEntity:

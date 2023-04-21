@@ -1,10 +1,8 @@
 from typing import List
 
-from FreeSpotify_back.dto import TrackDto
-from FreeSpotify_back.dto import AlbumDto
+from FreeSpotify_back.dto import AlbumDto, TrackDto
+from FreeSpotify_back.music_manager.core.exceptions import NotFoundAlbumError
 
-from FreeSpotify_back.music_manager.core.exceptions import \
-     NotFoundAlbumException
 from .fixtures import *
 
 artist_name = "Queen"
@@ -69,7 +67,7 @@ def test_get(spotify: Spotify):
 
 
 def test_get_raise_not_found_album(spotify: Spotify):
-    with pytest.raises(NotFoundAlbumException):
+    with pytest.raises(NotFoundAlbumError):
         album = spotify.albums.get(**not_valid_params)
 
 

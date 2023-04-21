@@ -1,16 +1,11 @@
 import os
-
+from collections.abc import Iterable
 from typing import Optional
-from typing import List
-from typing import Iterable
 
 from FreeSpotify_back import my_os
 from FreeSpotify_back.dto import TrackDto
-
-from FreeSpotify_back.similarity_lib import \
-     filter_and_sort_strings_by_min_similarity_to
-
-from ... import AbstractTracks
+from FreeSpotify_back.music_manager import AbstractTracks
+from FreeSpotify_back.similarity_lib import filter_and_sort_strings_by_min_similarity_to
 
 EXTENSION_OF_TRACK_FILE = '.mp3'
 
@@ -20,9 +15,7 @@ class DirectoryTracksManager(AbstractTracks):
         self._path = path
 
     def query(self, query: str) -> Iterable[TrackDto]:
-        all_tracks_paths = map(
-            lambda p: p.removeprefix(self._path),
-            my_os.search_dirs_by_pattern(f"{self._path}/*/*/*"))
+        all_tracks_paths = (p.removeprefix(self._path) for p in my_os.search_dirs_by_pattern(f"{self._path}/*/*/*"))
         sute_tracks_paths = filter_and_sort_strings_by_min_similarity_to(query,
             all_tracks_paths)
         tracks = self._tracks_from_paths(sute_tracks_paths)
@@ -39,7 +32,7 @@ class DirectoryTracksManager(AbstractTracks):
         return tracks
 
     def _tracks_from_paths(self,
-                           paths_to_tracks: Iterable[str]
+                           paths_to_tracks: Iterable[str],
                            ) -> Iterable[TrackDto]:
         return map(self._track_from_path, paths_to_tracks)
 
@@ -56,7 +49,7 @@ class DirectoryTracksManager(AbstractTracks):
         return TrackDto(
             artist_name=artist_name,
             album_name=album_name,
-            name=track_name
+            name=track_name,
         )
 
     def get_link(self,
@@ -73,7 +66,7 @@ class DirectoryTracksManager(AbstractTracks):
             self._path,
             track.artist_name,
             track.album_name,
-            track.name + EXTENSION_OF_TRACK_FILE
+            track.name + EXTENSION_OF_TRACK_FILE,
         )
 
         return path

@@ -1,12 +1,7 @@
-from .rocknation import RocknationAlbums
-from .rocknation import RocknationArtists
-from .rocknation import RocknationTracks
+from FreeSpotify_back.music_manager import AbstractMusicManager
 
-from .spotify.spotify import SpotifyAlbums
-from .spotify.spotify import SpotifyArtists
-from .spotify.spotify import SpotifyTracks
-
-from ... import AbstractMusicManager
+from .rocknation import RocknationAlbums, RocknationArtists, RocknationTracks
+from .spotify.spotify import SpotifyAlbums, SpotifyArtists, SpotifyTracks
 
 
 class RocknationAndSpotifyArtists(RocknationArtists, SpotifyArtists):

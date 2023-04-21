@@ -1,13 +1,12 @@
 import random
-from typing import List
 
-from FreeSpotify_back.dto import AlbumDto
-from FreeSpotify_back.dto import ArtistDto
-from FreeSpotify_back.dto import TrackDto
-from .. import AbstractAlbums
-from .. import AbstractArtists
-from .. import AbstractMusicManager
-from .. import AbstractTracks
+from FreeSpotify_back.dto import AlbumDto, ArtistDto, TrackDto
+from FreeSpotify_back.music_manager import (
+    AbstractAlbums,
+    AbstractArtists,
+    AbstractMusicManager,
+    AbstractTracks,
+)
 
 SEED = 1000
 
@@ -17,7 +16,7 @@ def _create_random_name():
         "I AM DIED?", "Me and dog: forever", "Gob vs Devil", "!!!SUpEr CoOl!!!",
         "My crazy cats!", "I am eat my T_SHORT", "Please, kill me!?",
         "I am your FATHER \\0_0/", "Basic", "IV White Album", "III White Album",
-        "We are the gobs: I", "We are the gobs: II"
+        "We are the gobs: I", "We are the gobs: II",
     ]
 
     return random.choice(names)
@@ -28,26 +27,26 @@ def _create_random_disc_number():
 
 
 class MockArtists(AbstractArtists):
-    def query(self, artist_name: str, limit: int = 3) -> List[ArtistDto]:
+    def query(self, artist_name: str, limit: int = 3) -> list[ArtistDto]:
         random.seed(SEED)
 
         res = [
             ArtistDto(
-                name=_create_random_name()
+                name=_create_random_name(),
             ) for _ in range(limit)
         ]
         res[0] = ArtistDto(artist_name)
 
         return res
 
-    def get_top(self, artist_name: str) -> List[TrackDto]:
+    def get_top(self, artist_name: str) -> list[TrackDto]:
         random.seed(SEED)
 
         return [
             TrackDto(
                 name=_create_random_name() + str(i),
                 artist_name=artist_name,
-                album_name=_create_random_name()
+                album_name=_create_random_name(),
             ) for i in range(10)
         ]
 
@@ -56,7 +55,7 @@ class MockArtists(AbstractArtists):
 
         return f"https://rocknation.su/mp3/band-{random.randint(1, 266)}"
 
-    def get_albums(self, artist_name: str) -> List[AlbumDto]:
+    def get_albums(self, artist_name: str) -> list[AlbumDto]:
         random.seed(SEED)
 
         return [
@@ -64,8 +63,8 @@ class MockArtists(AbstractArtists):
                 artist_name=artist_name,
                 name=_create_random_name(),
 
-                release_date="25-4-2021"
-            )
+                release_date="25-4-2021",
+            ),
         ]
 
     def get_link_on_img(self, artist_name: str) -> str:
@@ -75,14 +74,14 @@ class MockArtists(AbstractArtists):
 
 
 class MockAlbums(AbstractAlbums):
-    def query(self, query: str) -> List[AlbumDto]:
+    def query(self, query: str) -> list[AlbumDto]:
         artist_name, album_name = query.split(" - ")
         return self.search(artist_name, album_name)
 
     def search(self,
                artist_name: str,
                album_name: str,
-               limit: int = 4) -> List[AlbumDto]:
+               limit: int = 4) -> list[AlbumDto]:
         random.seed(SEED)
 
         return [
@@ -93,14 +92,14 @@ class MockAlbums(AbstractAlbums):
             ) for _ in range(limit)
         ]
 
-    def get_tracks(self, artist_name: str, album_name: str) -> List[TrackDto]:
+    def get_tracks(self, artist_name: str, album_name: str) -> list[TrackDto]:
         random.seed(SEED)
 
         return [
             TrackDto(
                 name=_create_random_name(),
                 artist_name=artist_name,
-                album_name=album_name
+                album_name=album_name,
             ) for _ in range(random.randint(6, 21))
         ]
 
@@ -116,7 +115,7 @@ class MockAlbums(AbstractAlbums):
 
 
 class MockTracks(AbstractTracks):
-    def query(self, query: str) -> List[TrackDto]:
+    def query(self, query: str) -> list[TrackDto]:
         artist_name, track_name = query.split(" - ")
         return self.search(artist_name,
                            _create_random_name(),
@@ -125,7 +124,7 @@ class MockTracks(AbstractTracks):
     def search(self,
                artist_name: str,
                album_name: str,
-               track_name: str) -> List[TrackDto]:
+               track_name: str) -> list[TrackDto]:
         random.seed(SEED)
 
         return [
@@ -133,7 +132,7 @@ class MockTracks(AbstractTracks):
                 artist_name=artist_name,
                 album_name=album_name,
                 name=track_name,
-                disc_number=_create_random_disc_number()
+                disc_number=_create_random_disc_number(),
             ) for _ in range(3)
         ]
 
@@ -141,7 +140,7 @@ class MockTracks(AbstractTracks):
             self,
             artist_name: str,
             album_name: str,
-            track_name: str
+            track_name: str,
     ) -> str:
         return ""
 
@@ -149,7 +148,7 @@ class MockTracks(AbstractTracks):
             self,
             artist_name: str,
             album_name: str,
-            track_name: str
+            track_name: str,
     ) -> str:
         random.seed(SEED)
 

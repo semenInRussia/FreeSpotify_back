@@ -1,12 +1,12 @@
-from unittest.mock import MagicMock
-from unittest.mock import create_autospec
+from unittest.mock import MagicMock, create_autospec
 
 import pytest
-
-from .._low_level_utils import cached_function
-from .._low_level_utils import first_true
-from .._low_level_utils import get_public_fields_of
-from .._low_level_utils import my_format_str
+from FreeSpotify_back._low_level_utils import (
+    cached_function,
+    first_true,
+    get_public_fields_of,
+    my_format_str,
+)
 
 
 class TestClass:
@@ -36,7 +36,8 @@ def function2():
 
 
 def test_get_public_fields_of():
-    assert get_public_fields_of(TestClass, ignore=["protected_field"]) == ["public_field"]
+    assert get_public_fields_of(TestClass,
+                                ignore_list=["protected_field"]) == ["public_field"]
 
 
 def test_cached_function(function: MagicMock):

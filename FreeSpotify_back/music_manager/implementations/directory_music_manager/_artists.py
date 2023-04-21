@@ -1,14 +1,10 @@
 import os
-
+from collections.abc import Iterable
 from typing import Optional
-from typing import Iterable
-
-from FreeSpotify_back.dto import AlbumDto
-from FreeSpotify_back.dto import ArtistDto
 
 from FreeSpotify_back import my_os
-
-from ... import AbstractArtists
+from FreeSpotify_back.dto import AlbumDto, ArtistDto
+from FreeSpotify_back.music_manager import AbstractArtists
 
 
 class DirectoryArtistsManager(AbstractArtists):
@@ -54,5 +50,4 @@ class DirectoryArtistsManager(AbstractArtists):
         album_names = my_os.dirs_names(path_to_artist)
         artist_name = self._artist_from_path(path_to_artist).name
 
-        return map(lambda album_name: AlbumDto(artist_name, album_name),
-                   album_names)
+        return (AlbumDto(artist_name, album_name) for album_name in album_names)

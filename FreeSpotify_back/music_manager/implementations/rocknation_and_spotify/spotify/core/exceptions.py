@@ -1,5 +1,6 @@
 class NotValidTokenException(Exception):
     """No Spotify token provided."""
+
     message = 'No token provided'
 
 

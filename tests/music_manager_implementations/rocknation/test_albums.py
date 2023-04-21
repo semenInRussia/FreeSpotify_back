@@ -1,7 +1,7 @@
 import pytest
 
 from FreeSpotify_back.music_manager.core.exceptions import \
-     NotFoundAlbumException
+     NotFoundAlbumError
 from FreeSpotify_back.music_manager.implementations import Rocknation
 
 artist_name = "queen"
@@ -28,9 +28,8 @@ def test_get_link(rocknation: Rocknation):
 
 
 def test_get_link_should_raise_not_found_album(rocknation: Rocknation):
-    with pytest.raises(NotFoundAlbumException):
-        album = rocknation.albums.get_link(artist_name, "adhhrfeushfuehreururhgurheguirhegueg")
-        assert album is None
+    with pytest.raises(NotFoundAlbumError):
+        rocknation.albums.get_link(artist_name, "adhhrfeushfuehreururhgurheguirhegueg")
 
 def test_get_link_on_album_on_page_with_nest(rocknation: Rocknation):
     actual = rocknation.albums.get_link("AC/DC", "Power UP")

@@ -1,6 +1,5 @@
 import pytest
-
-from FreeSpotify_back.music_manager.core.exceptions import NotFoundTrackException
+from FreeSpotify_back.music_manager.core.exceptions import NotFoundTrackError
 from FreeSpotify_back.music_manager.implementations import Rocknation
 
 artist_name = "nirvana"
@@ -23,7 +22,7 @@ def test_get_link_on_single(rocknation):
     actual = rocknation.tracks.get_link(
         "Kiss",
         "Hotter than hell",
-        "Hotter than hell"
+        "Hotter than hell",
     )
 
     excepted = "http://rocknation.su/upload/mp3/Kiss/1974%20-%20Hotter%20Than%20Hell/04.%20Hotter%20Than%20Hell.mp3"
@@ -32,11 +31,11 @@ def test_get_link_on_single(rocknation):
 
 
 def test_get_link_should_raise_exception(rocknation):
-    with pytest.raises(NotFoundTrackException):
+    with pytest.raises(NotFoundTrackError):
         rocknation.tracks.get_link(
             artist_name,
             album_name,
-            "jiferihguthughtughtughtughtughtugkdfrkrjfirmc,nvtjugtugn"
+            "jiferihguthughtughtughtughtughtugkdfrkrjfirmc,nvtjugtugn",
         )
 
 

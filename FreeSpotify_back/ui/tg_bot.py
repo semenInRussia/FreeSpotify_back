@@ -1,15 +1,12 @@
 import logging
 import traceback
 
-from aiogram import Bot
-from aiogram import Dispatcher
-from aiogram import types
+from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
-
 from loguru import logger
 
-from .._low_level_utils import format_exception
-from ..settings.bot import bot
+from FreeSpotify_back._low_level_utils import format_exception
+from FreeSpotify_back.settings.bot import bot
 
 from .abstract_ui import AbstractUI
 from .handler_collection import AsyncHandlersCollection
@@ -22,56 +19,61 @@ handlers_telegram = AsyncHandlersCollection()
 
 
 @handlers_telegram.new_handler("print normal message")
-async def print_normal_message(message: str,
+async def print_normal_message(message: str,  # noqa: D103
                                aiogram_message: types.Message,
-                               _settings):
+                               _settings) -> None:  # noqa: ANN001
     logger.info("Print normal message")
     await aiogram_message.answer(message, parse_mode="markdown")
 
 
 @handlers_telegram.new_handler("print error")
-async def print_error(error: Exception,
+async def print_error(error: Exception,  # noqa: D103
                       aiogram_message: types.Message,
-                      settings):
+                      settings) -> None:  # noqa: ANN001
     logger.warning(f"Error: {error.__class__.__name__}")
 
     await aiogram_message.answer_sticker(settings.stickers.FAIL)
     await aiogram_message.answer(format_exception(error))
 
 
-def _create_telegram_settings(additional_settings=None):
+def _create_telegram_settings(additional_settings=None):  # noqa: ANN202, ANN001
     return _default_settings + additional_settings
 
 
 class TelegramUI(AbstractUI):
+    """The class runner for `FreeSpotify_back` telegram bot."""
+
     handlers: AsyncHandlersCollection
     _parse_mode_name = "markdown"
 
     def __init__(self,
-                 additional_telegram_settings=None,
-                 additional_entities_settings=None):
+                 additional_telegram_settings=None,  # noqa: ANN001
+                 additional_entities_settings=None):  # noqa: ANN001
+        """Build a new `FreeSpotify_back` telegram bot runner with given settings."""
         self._telegram_settings = _create_telegram_settings(
             additional_telegram_settings)
         self.handlers = handlers_telegram
 
         super().__init__(additional_entities_settings)
 
-    def run(self):
+    def run(self) -> None:
+        """Rune telegram bot."""
         bot_ = Bot(token=self._telegram_settings.BOT_TOKEN)
 
         dispatcher = Dispatcher(bot_)
 
         @dispatcher.message_handler(commands=["help", "start"])
-        async def get_bot_help_information(message: types.Message):
+        async def get_bot_help_information(message: types.Message) -> None:
+            """Send to the user helpful message."""
             await message.answer(self._telegram_settings.BOT_DESCRIPTION)
             await message.answer_sticker(
                 self._telegram_settings.stickers.WELCOME)
 
         @dispatcher.message_handler()
-        async def handle_user_message(message: types.Message):
+        async def handle_user_message(message: types.Message):  # noqa: ANN202
             try:
                 self.handle_user_message(message.text)
-            except Exception as err:
+            except Exception as err:  # noqa: BLE001
                 self.print_error(err)
                 print(traceback.format_exc())
             finally:
@@ -83,6 +85,5 @@ class TelegramUI(AbstractUI):
 
 
 if __name__ == "__main__":
-    telegram_ui = TelegramUI()
-
-    telegram_ui.run()
+    ui = TelegramUI()
+    ui.run()

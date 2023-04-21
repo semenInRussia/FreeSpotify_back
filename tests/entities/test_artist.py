@@ -1,10 +1,9 @@
 import pytest
-
 from FreeSpotify_back.dto import ArtistDto
-from FreeSpotify_back.entities import Album
-from FreeSpotify_back.entities import Artist
+from FreeSpotify_back.entities import Album, Artist
 from FreeSpotify_back.entities.track import Track
-from ..settigs_for_test import settings_with_mock
+
+from tests.settigs_for_test import settings_with_mock
 
 artist_name = "Metallica"
 approximate_artist_name = "metallica"
@@ -13,10 +12,11 @@ difference_name = "Megadeth"
 additional_settings = settings_with_mock
 
 
-@pytest.fixture
+@pytest.fixture()
 def artist():
-    return Artist(artist_name=approximate_artist_name,
-                  additional_settings=settings_with_mock)
+    return Artist(
+        artist_name=approximate_artist_name, additional_settings=settings_with_mock
+    )
 
 
 @pytest.fixture()
@@ -41,16 +41,14 @@ def test_equal_artists():
 
 def test_notequal_artists():
     first_artist = Artist(artist_name, additional_settings=additional_settings)
-    second_artist = Artist(difference_name,
-        additional_settings=additional_settings)
+    second_artist = Artist(difference_name, additional_settings=additional_settings)
 
     assert first_artist != second_artist
 
 
 def test_notequal_artist_with_other_types():
     assert Artist(artist_name, additional_settings=additional_settings) != 0
-    assert Artist(artist_name,
-                  additional_settings=additional_settings) != "STRING"
+    assert Artist(artist_name, additional_settings=additional_settings) != "STRING"
 
 
 def _assert_is_track_top(top):
@@ -65,6 +63,7 @@ def test_get_top(artist):
 
     _assert_is_track_top(top)
 
+
 def test_get_top_by_not_valid_track_names():
     artist = Artist(artist_name)
 
@@ -72,17 +71,16 @@ def test_get_top_by_not_valid_track_names():
 
     # Get all tracks' links
     for track in top:
-        track.link
+        assert isinstance(track.link, str) or not track.link
 
     assert isinstance(top, list)
 
 
 def test_get_albums(artist: Artist):
-    albums = artist.albums
+    albums = list(artist.albums)
 
     assert albums
     assert isinstance(albums, list)
-
     assert isinstance(albums[0], Album)
 
 
@@ -104,6 +102,7 @@ def test_get_link(artist):
 
 def test_get_link_on_img(artist):
     assert isinstance(artist.link_on_img, str)
+
 
 def test_artist_query_and_search():
     query_res = Artist.query("Kanye West")

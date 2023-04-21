@@ -1,7 +1,8 @@
+from FreeSpotify_back.music_manager import AbstractMusicManager
+
 from ._albums import DirectoryAlbumsManager
 from ._artists import DirectoryArtistsManager
 from ._tracks import DirectoryTracksManager
-from ... import AbstractMusicManager
 
 
 class DirectoryMusicManager(AbstractMusicManager):

@@ -3,7 +3,7 @@ from FreeSpotify_back.core import exceptions
 from .abstract_command import Command
 
 
-class CommandsCollection:
+class CommandsCollection(Command):
     """Abstract class that defines methods of objects of Command collection."""
 
     all_commands: list[Command] = []
@@ -16,11 +16,11 @@ class CommandsCollection:
         """Return a command that suite to given arguments.
 
         Choose from `self.all_commands`.  If a command isn't found raise
-        `exceptions.NotFoundCommandException`
+        `exceptions.NotFoundCommandError`
         """
         for command in self.all_commands:
             if command.is_selected(*args, **kwargs):
                 return command
 
-        raise exceptions.NotFoundCommandException
+        raise exceptions.UndefinedCommandError
 

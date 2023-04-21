@@ -1,16 +1,22 @@
 import re
+from typing import Optional
 
 from bs4 import Tag
 
 from ._low_level_utils import cached_function
-from .my_request import (cached_get_bs, cached_get_content, get_absolute_url,
-                         get_bs, get_content)
+from .my_request import (
+    cached_get_bs,
+    cached_get_content,
+    get_absolute_url,
+    get_bs,
+    get_content,
+)
 
 
 def select_one_element_on_page(url: str,
                                css_selector: str,
                                method_name: str='get',
-                               **kwargs) -> Tag | None:
+                               **kwargs) -> Optional[Tag]:
     soup = get_bs(url, method_name, **kwargs)
     return soup.select_one(css_selector)
 
@@ -44,7 +50,7 @@ def cached_select_one_element_on_page(url: str,
 
 
 def get_first_link_by_elements_or_raise_exception(elements: list[Tag],
-                                                  exception: Exception,
+                                                  exception: type[Exception],
                                                   base_url: str,
                                                   url_attribute_of_tag: str = 'href',
                                                   ) -> str:
@@ -72,9 +78,8 @@ def get_absolute_url_by_element(element: Tag,
 def search_on_page(url: str,
                    pattern: str,
                    method: str = 'get',
-                   **kwargs) -> str[str]:
+                   **kwargs) -> list[str]:
     string = get_content(url, method, **kwargs)
-
     return re.findall(pattern, string)
 
 

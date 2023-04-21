@@ -1,11 +1,10 @@
 from typing import List
 
 import pytest
-
-from FreeSpotify_back.dto import AlbumDto
-from FreeSpotify_back.dto import ArtistDto
-from FreeSpotify_back.music_manager.core.exceptions import NotFoundArtistException
+from FreeSpotify_back.dto import AlbumDto, ArtistDto
+from FreeSpotify_back.music_manager.core.exceptions import NotFoundArtistError
 from FreeSpotify_back.music_manager.implementations import Spotify
+
 from .test_tracks import assert_is_valid_track_collection
 
 artist_name = "Queen"
@@ -48,7 +47,7 @@ def test_get(spotify: Spotify):
 
 
 def test_get_raise_not_found_artist(spotify: Spotify):
-    with pytest.raises(NotFoundArtistException):
+    with pytest.raises(NotFoundArtistError):
         artist = spotify.artists.get(**not_valid_params)
 
 

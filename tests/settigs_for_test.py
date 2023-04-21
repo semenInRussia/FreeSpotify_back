@@ -1,4 +1,4 @@
-from ..music_manager.implementations import MockMusicManager
+from FreeSpotify_back.music_manager.implementations import MockMusicManager
 
 
 class settings_with_mock:

@@ -1,12 +1,12 @@
-from typing import Iterable
+from collections.abc import Iterable
 
-from .._low_level_utils import my_format_str
-from ..entities import Album
-from ..entities import Artist
-from ..entities import Track
+from FreeSpotify_back._low_level_utils import first_true, my_format_str
+from FreeSpotify_back.entities import Album, Artist, Track
 
 
 class AbstractParseMode:
+    """Class that defines format to print entities."""
+
     name: str
     artist: str
     top_item: str
@@ -17,6 +17,8 @@ class AbstractParseMode:
 
 
 class TextParseMode(AbstractParseMode):
+    """A common format to print entities."""
+
     name = "text"
     artist = """
     {artist_header}
@@ -55,6 +57,8 @@ class TextParseMode(AbstractParseMode):
 
 
 class TelegramMarkdownParseMode(AbstractParseMode):
+    """A telegram markdown format to print entities."""
+
     name = "markdown"
 
     artist = """
@@ -90,32 +94,37 @@ class TelegramMarkdownParseMode(AbstractParseMode):
 
 
 def get_parse_mode_by_name(parse_mode_name: str) -> AbstractParseMode:
-    for actual_parse_mode in all_parse_modes:
-        if actual_parse_mode.name == parse_mode_name:
-            return actual_parse_mode
-    raise KeyError(f"Not found parse mode with name: {parse_mode_name}")
+    """Return the format to print entities with a given name."""
+    parse_mode = first_true(all_parse_modes,
+        pred=lambda pm: pm.name == parse_mode_name)
+
+    if not parse_mode:
+       raise KeyError(f"Not found parse mode with name: {parse_mode_name}")
+
+    return parse_mode
 
 
 all_parse_modes: Iterable[AbstractParseMode] = [
     TextParseMode(),
-    TelegramMarkdownParseMode()
+    TelegramMarkdownParseMode(),
 ]
 
 
 def format_artist(artist: Artist, parse_mode: AbstractParseMode) -> str:
-    artist_header = format_artist_to_header(artist, parse_mode)
+    """Return an artist in a given string format."""
+    artist_header = _format_artist_to_header(artist, parse_mode)
     top_items = format_top_items(artist.top, parse_mode)
 
     return my_format_str(
         parse_mode.artist,
-
         top_items=top_items,
-        artist_header=artist_header
+        artist_header=artist_header,
     )
 
 
 def format_top_items(top: Iterable[Track],
                      parse_mode: AbstractParseMode) -> str:
+    """Return a artist top in a given string format."""
     res = ""
 
     for n, track in enumerate(top):
@@ -127,39 +136,39 @@ def format_top_items(top: Iterable[Track],
 def format_top_item(track: Track,
                     num_in_top: int,
                     parse_mode: AbstractParseMode) -> str:
+    """Return an artist top item in a given string format."""
     return my_format_str(
         parse_mode.top_item,
-
         num_in_top=num_in_top,
-        track=track
+        track=track,
     )
 
 
-def format_artist_to_header(artist: Artist,
-                            parse_mode: AbstractParseMode) -> str:
+def _format_artist_to_header(artist: Artist,
+                             parse_mode: AbstractParseMode) -> str:
     return my_format_str(
         parse_mode.artist_header,
-        artist=artist
+        artist=artist,
     )
 
 
 def format_album(album: Album, parse_mode: AbstractParseMode) -> str:
-    header = format_album_to_header(album, parse_mode)
-    tracks = format_album_tracks(album.tracks, parse_mode)
+    """Return an album in a given string format."""
+    header = _format_album_to_header(album, parse_mode)
+    tracks = _format_album_tracks(album.tracks, parse_mode)
     return header + "\n" + tracks
 
 
-def format_album_to_header(album: Album,
-                           parse_mode: AbstractParseMode) -> str:
+def _format_album_to_header(album: Album,
+                            parse_mode: AbstractParseMode) -> str:
     return my_format_str(parse_mode.album_header, album=album)
 
 
-def format_album_tracks(tracks: Iterable[Track],
-                        parse_mode: AbstractParseMode) -> str:
-    return "".join(map(
-        lambda t: my_format_str(parse_mode.album_track, track=t),
-        tracks))
+def _format_album_tracks(tracks: Iterable[Track],
+                         parse_mode: AbstractParseMode) -> str:
+    return "".join(my_format_str(parse_mode.album_track, track=t) for t in tracks)
 
 def format_track(track: Track, parse_mode: AbstractParseMode) -> str:
+    """Return a track in a given string format."""
     return my_format_str(parse_mode.track,
                          track=track)

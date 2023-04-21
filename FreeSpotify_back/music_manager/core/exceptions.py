@@ -1,10 +1,10 @@
-class NotFoundAlbumException(Exception):
+class NotFoundAlbumError(Exception):
     """Album don't found."""
 
 
-class NotFoundArtistException(Exception):
+class NotFoundArtistError(Exception):
     """Artist don't found."""
 
 
-class NotFoundTrackException(Exception):
+class NotFoundTrackError(Exception):
     """Track don't found."""

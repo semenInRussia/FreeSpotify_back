@@ -1,6 +1,8 @@
-from ..brackets_lib import Brackets
-from ..brackets_lib import add_brackets_around
-from ..brackets_lib import delete_all_values_with_all_brackets_types
+from FreeSpotify_back.brackets_lib import (
+    Brackets,
+    add_brackets_around,
+    delete_all_values_with_all_brackets_types,
+)
 
 
 def test_delete_all_values_with_all_brackets_types():

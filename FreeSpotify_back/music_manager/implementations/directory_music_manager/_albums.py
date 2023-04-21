@@ -1,17 +1,11 @@
 import os
+from collections.abc import Iterable
 from typing import Optional
-from typing import List
-from typing import Iterable
 
 from FreeSpotify_back import my_os
-
-from FreeSpotify_back.dto import AlbumDto
-from FreeSpotify_back.dto import TrackDto
-
-from FreeSpotify_back.similarity_lib import \
-     filter_and_sort_strings_by_min_similarity_to
-
-from ... import AbstractAlbums
+from FreeSpotify_back.dto import AlbumDto, TrackDto
+from FreeSpotify_back.music_manager import AbstractAlbums
+from FreeSpotify_back.similarity_lib import filter_and_sort_strings_by_min_similarity_to
 
 RATIO_OF_SIMILARITY_OF_ALBUMS = 0.5
 
@@ -24,7 +18,7 @@ class DirectoryAlbumsManager(AbstractAlbums):
         all_path_names = my_os.search_dirs_by_pattern(f"{self._path}/*/*")
         suite_path_names = filter_and_sort_strings_by_min_similarity_to(
             query,
-            map(lambda p: p.removeprefix(self._path), all_path_names))
+            (p.removeprefix(self._path) for p in all_path_names))
         return self._get_albums_by_paths(suite_path_names)
 
     def search(self, artist_name: str, album_name: str) -> Iterable[AlbumDto]:
@@ -34,7 +28,7 @@ class DirectoryAlbumsManager(AbstractAlbums):
 
     def _search_paths_to_albums(self,
                                 artist_name: str,
-                                album_name: str) -> List[str]:
+                                album_name: str) -> list[str]:
         return my_os.search_dirs_by_pattern(
             f"{self._path}/~{artist_name}/~{album_name}")
 
@@ -64,13 +58,10 @@ class DirectoryAlbumsManager(AbstractAlbums):
         album = self.get(artist_name, album_name)
         path_to_album = self._path_from_album(album)
 
-        return map(
-            lambda track_filename: self._track_from_filename(
+        return (self._track_from_filename(
                 artist_name,
                 album_name,
-                track_filename),
-            my_os.dirs_names(path_to_album)
-        )
+                track_filename) for track_filename in my_os.dirs_names(path_to_album))
 
     @staticmethod
     def _track_from_filename(artist_name: str,

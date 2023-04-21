@@ -1,13 +1,13 @@
-from typing import Iterable
+from collections.abc import Iterable
 from typing import Optional
 
-from ..dto import AlbumDto
-from ..dto import ArtistDto
-from ..dto import TrackDto
+from FreeSpotify_back.dto import AlbumDto, ArtistDto, TrackDto
 
-from .core.exceptions import NotFoundAlbumException
-from .core.exceptions import NotFoundArtistException
-from .core.exceptions import NotFoundTrackException
+from .core.exceptions import (
+    NotFoundAlbumError,
+    NotFoundArtistError,
+    NotFoundTrackError,
+)
 
 
 class AbstractArtists:
@@ -15,7 +15,7 @@ class AbstractArtists:
         try:
             return next(iter(self.search(artist_name)))
         except StopIteration:
-            raise NotFoundArtistException
+            raise NotFoundArtistError from StopIteration
 
     def query(self, query: str) -> Iterable[ArtistDto]:
         # you should implemet method `query` or `search` or both
@@ -25,16 +25,16 @@ class AbstractArtists:
         # you should implemet method `query` or `search` or both
         return self.query(artist_name)
 
-    def get_top(self, artist_name: str) -> Iterable[TrackDto]:
+    def get_top(self, _artist_name: str) -> Iterable[TrackDto]:
         return NotImplemented
 
-    def get_albums(self, artist_name: str) -> Iterable[AlbumDto]:
+    def get_albums(self, _artist_name: str) -> Iterable[AlbumDto]:
         return NotImplemented
 
-    def get_link(self, artist_name: str) -> Optional[str]:
+    def get_link(self, _artist_name: str) -> Optional[str]:
         return NotImplemented
 
-    def get_link_on_img(self, artist_name: str) -> Optional[str]:
+    def get_link_on_img(self, _artist_name: str) -> Optional[str]:
         return NotImplemented
 
 
@@ -43,7 +43,7 @@ class AbstractAlbums:
         try:
             return next(iter(self.search(artist_name, album_name)))
         except StopIteration:
-            raise NotFoundAlbumException
+            raise NotFoundAlbumError
 
     def query(self, query: str) -> Iterable[AlbumDto]:
         # you should implemet method `query` or `search` or both
@@ -77,7 +77,7 @@ class AbstractTracks:
         try:
             return next(iter(self.search(artist_name, album_name, track_name)))
         except StopIteration:
-            raise NotFoundTrackException
+            raise NotFoundTrackError
 
     def query(self, query: str) -> Iterable[TrackDto]:
         # you should implemet method `query` or `search` or both
