@@ -1,36 +1,47 @@
 # FreeSpotify_back
-You are can download top rock tracks from db rocknations.su with info of Spotify with FreeSpotify!!!!!!!!!!!!!!  
 
-**(This is backend)**
+You can download top rock tracks from db rocknations.su with info of Spotify!!!!!!!!!!!!!! 
 
-## USE
-### AS SERVER:
+**(This is the backend)**
+
+## Usage
+
+### AS SERVER (rest API)
 
 Linux / Mac OS
 ```
-python . runserver
+python3 run.py runserver
 ```
 
-WINDOWS
+Windows
 ```
-python3 . runserver
-```
-
-## AS TELEGRAM BOT
-```
-python3 . bot
+python run.py runserver
 ```
 
-### RUN SHELL
+### as Telegram bot
+
 Linux / Mac OS
 ```
-python3 . shell
+python3 run.py bot
 ```
 
-WINDOWS
+Windows
 ```
-python . shell
+python run.py bot
 ```
+
+### as Shell
+
+Linux / Mac OS
+```
+python3 run.py shell
+```
+
+Windows
+```
+python run.py shell
+```
+
 ## INSTALL
 Linux / Mac OS
 ```
@@ -44,17 +55,24 @@ git clone https://github.com/semenInRussia/FreeSpotify_back.git
 pip install -r requirements.txt
 ```
 
-## DEPENDECIES
-We are use:
-* Flask
-* bs4 & requests
-* aiogram
-* settings-master
+## Dependencies
 
-## DEV
+* `bs4` 
+* `requests`
+* `settings-master`
+* for Server
+  * `Flask`
+* for Telegram Bot
+  * `aiogram`
+* for Tests
+  * `pytest`
 
-### EXAMPLE OF USE ENTITIES
-## Album
+## as Library
+
+### USE ENTITIES
+
+#### Album
+
 ```python
 >>> from entities import Album
 >>> album = Album("AC DC", "Back in black")
@@ -90,7 +108,7 @@ AC/DC - Back In Black
 AC/DC
 ```
 
-## Artist
+#### Artist
 ```python
 >>> from entities import Artist
 artist = Artist("queen")
@@ -117,7 +135,8 @@ Queen
  Queen - 2.We Are The Champions,
  Queen - 6.Somebody To Love]
  ```
- ## Track
+
+#### Track
  ```python
 >>> from entities import Track
 >>> track = Track("Deep Purple", "Burn", "Burn")
@@ -137,18 +156,7 @@ Deep Purple
 1
  ```
 
-### TESTS
+### Run TESTS
 ```
 pytest
-```
-
-or
-
-WINDOWS
-```
-python . tests
-```
-Linux / Mac OS
-```
-python3 . tests
 ```
