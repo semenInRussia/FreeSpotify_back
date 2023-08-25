@@ -55,25 +55,18 @@ class AbstractAlbums:
         query = artist_name + " - " + album_name
         return self.query(query)
 
-    def get_tracks(self,
-                   artist_name: str,
-                   album_name: str) -> Iterable[TrackDto]:
+    def get_tracks(self, artist_name: str, album_name: str) -> Iterable[TrackDto]:
         return NotImplemented
 
     def get_link(self, artist_name, album_name: str) -> Optional[str]:
         return NotImplemented
 
-    def get_link_on_img(self,
-                        artist_name: str,
-                        album_name: str) -> Optional[str]:
+    def get_link_on_img(self, artist_name: str, album_name: str) -> Optional[str]:
         return NotImplemented
 
 
 class AbstractTracks:
-    def get(self,
-            artist_name: str,
-            album_name: str,
-            track_name: str) -> TrackDto:
+    def get(self, artist_name: str, album_name: str, track_name: str) -> TrackDto:
         try:
             return next(iter(self.search(artist_name, album_name, track_name)))
         except StopIteration:
@@ -84,24 +77,21 @@ class AbstractTracks:
         artist_name, track_name = query.split(" - ")
         return self.search(artist_name, "", track_name)
 
-    def search(self,
-               artist_name: str,
-               _album_name: str,
-               track_name: str) -> Iterable[TrackDto]:
+    def search(
+        self, artist_name: str, _album_name: str, track_name: str
+    ) -> Iterable[TrackDto]:
         # you should implemet method `query` or `search` or both
         query = artist_name + " - " + track_name
         return self.query(query)
 
-    def get_link(self,
-                 artist_name: str,
-                 album_name: str,
-                 track_name: str) -> Optional[str]:
+    def get_link(
+        self, artist_name: str, album_name: str, track_name: str
+    ) -> Optional[str]:
         return NotImplemented
 
-    def get_link_on_img(self,
-                        artist_name: str,
-                        album_name: str,
-                        track_name: str) -> Optional[str]:
+    def get_link_on_img(
+        self, artist_name: str, album_name: str, track_name: str
+    ) -> Optional[str]:
         return NotImplemented
 
 

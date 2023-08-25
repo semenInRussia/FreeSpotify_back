@@ -8,8 +8,10 @@ from .serializer import GeneralSerializer, Serializer
 T = TypeVar("T")
 SerializeFunction = Callable[[T], dict]
 
-def get_serialize_artist_function(*fields_to_serialize: str,
-                                  ) -> SerializeFunction[Artist]:
+
+def get_serialize_artist_function(
+    *fields_to_serialize: str,
+) -> SerializeFunction[Artist]:
     """Return a function that accepts an Artist and returns a dict with given fields.
 
     The Resulting dict is a representation of an artist
@@ -17,8 +19,9 @@ def get_serialize_artist_function(*fields_to_serialize: str,
     return lambda artist: ArtistSerializer(artist).get_data(*fields_to_serialize)
 
 
-def get_serialize_album_function(*fields_for_serialize: str,
-                                 ) -> SerializeFunction[Album]:
+def get_serialize_album_function(
+    *fields_for_serialize: str,
+) -> SerializeFunction[Album]:
     """Return a function that accepts an Album and returns a dict with given fields.
 
     The Resulting dict is a representation of an album
@@ -26,8 +29,9 @@ def get_serialize_album_function(*fields_for_serialize: str,
     return lambda album: AlbumSerializer(album).get_data(*fields_for_serialize)
 
 
-def get_serialize_track_function(*fields_for_serialize: str,
-                                 ) -> SerializeFunction[Track]:
+def get_serialize_track_function(
+    *fields_for_serialize: str,
+) -> SerializeFunction[Track]:
     """Return a function that accepts a Track and returns a dict with given fields.
 
     The Resulting dict is a representation of a track
@@ -48,10 +52,12 @@ class ArtistSerializer(Serializer):
     link = fields.StringFieldSerializer()
     link_on_img = fields.StringFieldSerializer()
 
-    top = fields.CustomListFieldSerializer(get_serialize_track_function("name",
-        "disc_number", "album", "link"))
-    albums = fields.CustomListFieldSerializer(get_serialize_album_function("name",
-        "link_on_img", "release_date"))
+    top = fields.CustomListFieldSerializer(
+        get_serialize_track_function("name", "disc_number", "album", "link")
+    )
+    albums = fields.CustomListFieldSerializer(
+        get_serialize_album_function("name", "link_on_img", "release_date")
+    )
 
 
 class AlbumSerializer(Serializer):
@@ -69,9 +75,11 @@ class AlbumSerializer(Serializer):
     link_on_img = fields.StringFieldSerializer()
 
     artist = fields.CustomFieldSerializer(
-        get_serialize_artist_function("name", "link_on_img"))
+        get_serialize_artist_function("name", "link_on_img")
+    )
     tracks = fields.CustomListFieldSerializer(
-        get_serialize_track_function("name", "disc_number", "link"))
+        get_serialize_track_function("name", "disc_number", "link")
+    )
 
 
 class TrackSerializer(Serializer):
@@ -87,9 +95,11 @@ class TrackSerializer(Serializer):
     disc_number = fields.IntegerFieldSerializer()
 
     artist = fields.CustomFieldSerializer(
-        get_serialize_artist_function("name", "link_on_img"))
+        get_serialize_artist_function("name", "link_on_img")
+    )
     album = fields.CustomFieldSerializer(
-        get_serialize_album_function("name", "link_on_img", "release_date"))
+        get_serialize_album_function("name", "link_on_img", "release_date")
+    )
 
     link = fields.StringFieldSerializer()
 

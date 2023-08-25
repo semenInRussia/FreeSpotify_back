@@ -19,17 +19,17 @@ handlers_telegram = AsyncHandlersCollection()
 
 
 @handlers_telegram.new_handler("print normal message")
-async def print_normal_message(message: str,  # noqa: D103
-                               aiogram_message: types.Message,
-                               _settings) -> None:  # noqa: ANN001
+async def print_normal_message(
+    message: str, aiogram_message: types.Message, _settings  # noqa: D103
+) -> None:  # noqa: ANN001
     logger.info("Print normal message")
     await aiogram_message.answer(message, parse_mode="markdown")
 
 
 @handlers_telegram.new_handler("print error")
-async def print_error(error: Exception,  # noqa: D103
-                      aiogram_message: types.Message,
-                      settings) -> None:  # noqa: ANN001
+async def print_error(
+    error: Exception, aiogram_message: types.Message, settings  # noqa: D103
+) -> None:  # noqa: ANN001
     logger.warning(f"Error: {error.__class__.__name__}")
 
     await aiogram_message.answer_sticker(settings.stickers.FAIL)
@@ -46,12 +46,15 @@ class TelegramUI(AbstractUI):
     handlers: AsyncHandlersCollection
     _parse_mode_name = "markdown"
 
-    def __init__(self,
-                 additional_telegram_settings=None,  # noqa: ANN001
-                 additional_entities_settings=None):  # noqa: ANN001
+    def __init__(
+        self,
+        additional_telegram_settings=None,  # noqa: ANN001
+        additional_entities_settings=None,
+    ):  # noqa: ANN001
         """Build a new `FreeSpotify_back` telegram bot runner with given settings."""
         self._telegram_settings = _create_telegram_settings(
-            additional_telegram_settings)
+            additional_telegram_settings
+        )
         self.handlers = handlers_telegram
 
         super().__init__(additional_entities_settings)
@@ -66,8 +69,7 @@ class TelegramUI(AbstractUI):
         async def get_bot_help_information(message: types.Message) -> None:
             """Send to the user helpful message."""
             await message.answer(self._telegram_settings.BOT_DESCRIPTION)
-            await message.answer_sticker(
-                self._telegram_settings.stickers.WELCOME)
+            await message.answer_sticker(self._telegram_settings.stickers.WELCOME)
 
         @dispatcher.message_handler()
         async def handle_user_message(message: types.Message):  # noqa: ANN202
@@ -78,8 +80,8 @@ class TelegramUI(AbstractUI):
                 print(traceback.format_exc())
             finally:
                 await self.handlers.execute_calls_queue(
-                    message,
-                    self._telegram_settings)
+                    message, self._telegram_settings
+                )
 
         executor.start_polling(dispatcher, skip_updates=True)
 

@@ -11,16 +11,15 @@ class Call(NamedTuple):
     args: tuple = ()
     kwargs: dict = {}
 
-    def execute(self,
-                *additional_args,  # noqa: ANN002
-                **additional_kwargs) -> None:  # noqa: ANN003
+    def execute(
+        self, *additional_args, **additional_kwargs  # noqa: ANN002
+    ) -> None:  # noqa: ANN003
         """Execute the call.
 
         Notice that the call can't return a value (it's a dirty function)
         """
         args = self.args + additional_args
-        kwargs = dict(**additional_kwargs,
-                      **self.kwargs)
+        kwargs = dict(**additional_kwargs, **self.kwargs)
         self.callback(*args, **kwargs)
 
 
@@ -31,16 +30,15 @@ class AsyncCall(NamedTuple):
     args: tuple = ()
     kwargs: dict = {}
 
-    async def execute(self,
-                      *additional_args,  # noqa: ANN002
-                      **additional_kwargs) -> None:  # noqa: ANN003
+    async def execute(
+        self, *additional_args, **additional_kwargs  # noqa: ANN002
+    ) -> None:  # noqa: ANN003
         """Execute the call.
 
         Notice that the call can't return a value (it's a dirty function)
         """
         args = self.args + additional_args
-        kwargs = dict(**additional_kwargs,
-                      **self.kwargs)
+        kwargs = dict(**additional_kwargs, **self.kwargs)
         await self.callback(*args, **kwargs)
 
 
@@ -66,9 +64,11 @@ class HandlersCollection:
 
     def new_handler(self, event_name: str):  # noqa: ANN201
         """A decorator to bind a function with event."""  # noqa: D401
+
         def wrapper(func):  # noqa: ANN202, ANN001
             self.bind_one_handler_to_event(func, event_name)
             return func
+
         return wrapper
 
     def bind_handlers_to_event(self, handlers: list[Handler], event_name: str) -> None:
@@ -87,31 +87,34 @@ class HandlersCollection:
         """Return True, when an event has handlers."""
         return bool(self._handlers_on_events.get(event_name))
 
-    def raise_event(self,  # noqa: D102, ANN201
-                    event_name: str,
-                    *handlers_args,  # noqa: ANN002
-                    **handlers_kwargs):  # noqa: ANN003
+    def raise_event(
+        self,  # noqa: D102, ANN201
+        event_name: str,
+        *handlers_args,  # noqa: ANN002
+        **handlers_kwargs
+    ):  # noqa: ANN003
         handlers_of_current_event = self._handlers_on_events[event_name]
 
-        new_calls = [self.CurrentCallType(callback, args=handlers_args,
-            kwargs=handlers_kwargs) for callback in handlers_of_current_event]
+        new_calls = [
+            self.CurrentCallType(callback, args=handlers_args, kwargs=handlers_kwargs)
+            for callback in handlers_of_current_event
+        ]
 
         self._extend_calls_queue(new_calls)
 
     def _extend_calls_queue(self, calls: list) -> None:
         self._calls_queue.extend(calls)
 
-    def execute_calls_queue(self,
-                            *additional_args,  # noqa: ANN002
-                            **additional_kwargs) -> None:  # noqa: ANN003
+    def execute_calls_queue(
+        self, *additional_args, **additional_kwargs  # noqa: ANN002
+    ) -> None:  # noqa: ANN003
         """Execute each call from the queue."""
         for _ in range(len(self._calls_queue)):
-            self.execute_last_call_from_queue(*additional_args,
-                                              **additional_kwargs)
+            self.execute_last_call_from_queue(*additional_args, **additional_kwargs)
 
-    def execute_last_call_from_queue(self,
-                                     *additional_args,  # noqa: ANN002
-                                     **additional_kwargs) -> None:  # noqa: ANN003
+    def execute_last_call_from_queue(
+        self, *additional_args, **additional_kwargs  # noqa: ANN002
+    ) -> None:  # noqa: ANN003
         """Execute the last call from the queue."""
         last_call = self._calls_queue.pop()
         last_call.execute(*additional_args, **additional_kwargs)
@@ -127,16 +130,13 @@ class AsyncHandlersCollection(HandlersCollection):
         super().__init__()
         self._calls_queue: list[AsyncCall] = []
 
-    async def execute_calls_queue(self,
-                                  *additional_args,
-                                  **additional_kwargs) -> None:
+    async def execute_calls_queue(self, *additional_args, **additional_kwargs) -> None:
         """Execute each call from the queue."""
-        await self.execute_last_call_from_queue(*additional_args,
-                                                **additional_kwargs)
+        await self.execute_last_call_from_queue(*additional_args, **additional_kwargs)
 
-    async def execute_last_call_from_queue(self,
-                                           *additional_args,
-                                           **additional_kwargs) -> None:
+    async def execute_last_call_from_queue(
+        self, *additional_args, **additional_kwargs
+    ) -> None:
         """Execute the last call from the queue."""
         last_call = self._calls_queue.pop()
         await last_call.execute(*additional_args, **additional_kwargs)

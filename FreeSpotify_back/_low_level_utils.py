@@ -30,20 +30,21 @@ def format_exception(error: Exception) -> str:
     )
 
 
-def get_public_fields_of(obj,
-                         ignore_list: Optional[list[str]] = None) -> list[str]:
+def get_public_fields_of(obj, ignore_list: Optional[list[str]] = None) -> list[str]:
     if ignore_list is None:
         ignore_list = []
     all_fields = dir(obj)
 
-    return list(filter(lambda f: _is_public_field_name(f, ignore_list),
-                       all_fields))
+    return list(filter(lambda f: _is_public_field_name(f, ignore_list), all_fields))
 
-def _is_public_field_name(field_name: str,
-                          ignore_list: Optional[list[str]]=None) -> bool:
+
+def _is_public_field_name(
+    field_name: str, ignore_list: Optional[list[str]] = None
+) -> bool:
     if ignore_list is None:
         ignore_list = []
     return not (field_name.startswith("_") or field_name in ignore_list)
+
 
 def my_format_str(string: str, *args, **kwargs) -> str:
     insides_of_brackets = get_values_inside_of_brackets(string, format_brackets)
@@ -124,9 +125,9 @@ class DefaultFormatExpression(FormatExpression):
         return eval(self._str_expression, self.kwargs)
 
 
-def _get_format_expression(expression: str,
-                           args: tuple,
-                           kwargs: dict) -> FormatExpression:
+def _get_format_expression(
+    expression: str, args: tuple, kwargs: dict
+) -> FormatExpression:
     for format_expression in all_format_expression:
         if format_expression.is_this_expression(expression):
             return format_expression(expression, args, kwargs)
@@ -136,15 +137,19 @@ def _get_format_expression(expression: str,
 all_format_expression: list[type[FormatExpression]] = [
     EmptyFormatExpression,
     OrFormatExpression,
-    DefaultFormatExpression]
+    DefaultFormatExpression,
+]
 
 
 Element = TypeVar("Element")
 
+
 # code taked from the itertools recipes
-def first_true(iterable: Iterable[Element],
-               default: Optional[Element] = None,
-               pred: Optional[Callable[[Element], bool]] = None) -> Optional[Element]:
+def first_true(
+    iterable: Iterable[Element],
+    default: Optional[Element] = None,
+    pred: Optional[Callable[[Element], bool]] = None,
+) -> Optional[Element]:
     """Return the first true value in the iterable.
 
     If no true value is found, returns *default*

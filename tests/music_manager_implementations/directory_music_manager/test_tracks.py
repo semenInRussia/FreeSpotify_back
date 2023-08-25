@@ -14,16 +14,14 @@ def tracks_manager():
 
 @pytest.fixture()
 def track():
-    return TrackDto(
-        artist_name="artist1",
-        album_name="album1",
-        name="track1")
+    return TrackDto(artist_name="artist1", album_name="album1", name="track1")
 
 
 def test_query(tracks_manager, track: TrackDto):
     query = "artist1 - track1"
     actual = list(tracks_manager.query(query))
     assert actual[0] == track
+
 
 def test_search(tracks_manager, track: TrackDto):
     actual = list(tracks_manager.search("artist1", "album1", "track1"))

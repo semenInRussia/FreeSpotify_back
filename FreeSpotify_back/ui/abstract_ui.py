@@ -16,6 +16,7 @@ from .handler_collection import HandlersCollection
 class UnknownCommandError(Exception):
     """You indicated unknow command or not indicated."""
 
+
 class AbstractUI:
     r"""Abstract class to define UI for multi-platform chat bot to search tracks.
 
@@ -128,10 +129,13 @@ class AbstractUI:
         self.print_normal_message("I am leave this, GOOD BY!")
 
 
-def create_ui(handlers: HandlersCollection,
-              get_user_message_func: Callable[[], str],
-              parse_mode_name: str = 'text'):
+def create_ui(
+    handlers: HandlersCollection,
+    get_user_message_func: Callable[[], str],
+    parse_mode_name: str = "text",
+):
     """Build an abstract UI with given parameters."""
+
     class UI(AbstractUI):
         def __init__(self, *args, **kwargs):
             self.handlers = handlers
@@ -203,6 +207,8 @@ class _SearchTrackCommand(_Command):
         ui.print_normal_message(format_track(track, ui.parse_mode))
 
 
-_commands: list[_Command] = [_SearchArtistCommand(),
-                             _SearchAlbumCommand(),
-                             _SearchTrackCommand()]
+_commands: list[_Command] = [
+    _SearchArtistCommand(),
+    _SearchAlbumCommand(),
+    _SearchTrackCommand(),
+]

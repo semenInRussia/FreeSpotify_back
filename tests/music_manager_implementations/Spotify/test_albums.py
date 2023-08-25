@@ -8,15 +8,9 @@ from .fixtures import *
 artist_name = "Queen"
 album_name = "Jazz"
 
-albums_params = {
-    "artist_name": artist_name,
-    "album_name": album_name
-}
+albums_params = {"artist_name": artist_name, "album_name": album_name}
 
-not_valid_params = {
-    "artist_name": "*!@",
-    "album_name": "#"
-}
+not_valid_params = {"artist_name": "*!@", "album_name": "#"}
 
 
 def assert_is_valid_album_collection(albums: List[AlbumDto]):
@@ -25,12 +19,7 @@ def assert_is_valid_album_collection(albums: List[AlbumDto]):
 
 
 def assert_is_valid_album(album: AlbumDto):
-    fields = {
-        "name": str,
-        "artist_name": str,
-        "spotify_id": str,
-        "release_date": str
-    }
+    fields = {"name": str, "artist_name": str, "spotify_id": str, "release_date": str}
 
     for field_name, field_type in fields.items():
         field = getattr(album, field_name)
@@ -39,13 +28,7 @@ def assert_is_valid_album(album: AlbumDto):
 
 
 def assert_is_valid_track(track: TrackDto):
-    fields = {
-        "name": str,
-        "artist_name": str,
-        "album_name": str,
-
-        "disc_number": int
-    }
+    fields = {"name": str, "artist_name": str, "album_name": str, "disc_number": int}
 
     for field_name, field_type in fields.items():
         field = getattr(track, field_name)
@@ -76,6 +59,7 @@ def test_search(spotify: Spotify):
 
     assert_is_valid_album_collection(albums)
 
+
 def test_query(spotify: Spotify):
     albums = spotify.albums.query("Queen - Jazz")
 
@@ -96,4 +80,3 @@ def test_get_tracks(spotify: Spotify):
     assert len(tracks) == 18
 
     assert_is_valid_track_collection(tracks)
-

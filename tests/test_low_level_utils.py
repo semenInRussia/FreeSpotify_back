@@ -36,8 +36,9 @@ def function2():
 
 
 def test_get_public_fields_of():
-    assert get_public_fields_of(TestClass,
-                                ignore_list=["protected_field"]) == ["public_field"]
+    assert get_public_fields_of(TestClass, ignore_list=["protected_field"]) == [
+        "public_field"
+    ]
 
 
 def test_cached_function(function: MagicMock):
@@ -70,14 +71,31 @@ def test_my_format_with_expression_with_funcs_from_kwargs():
 
 
 def test_my_format_with_or():
-    assert my_format_str("my {last_name|first_name}", last_name="Bond", first_name="James") == "my Bond"
-    assert my_format_str("my {last_name|first_name}", last_name=None, first_name="James") == "my James"
+    assert (
+        my_format_str("my {last_name|first_name}", last_name="Bond", first_name="James")
+        == "my Bond"
+    )
+    assert (
+        my_format_str("my {last_name|first_name}", last_name=None, first_name="James")
+        == "my James"
+    )
+
 
 def test_first_true():
     assert first_true(["", False, "Value", "Anotther Value"]) == "Value"
-    assert first_true(["Moscow", "St. Petersburg", "Ekaterinburg"],
-                      pred=lambda c: len(c.split()) > 1,
-                      default="Veliky Luki") == "St. Petersburg"
-    assert first_true(["Moscow", "Volgograd", "Ekaterinburg"],
-                      pred=lambda c: len(c.split()) > 1,
-                      default="Veliky Luki") == "Veliky Luki"
+    assert (
+        first_true(
+            ["Moscow", "St. Petersburg", "Ekaterinburg"],
+            pred=lambda c: len(c.split()) > 1,
+            default="Veliky Luki",
+        )
+        == "St. Petersburg"
+    )
+    assert (
+        first_true(
+            ["Moscow", "Volgograd", "Ekaterinburg"],
+            pred=lambda c: len(c.split()) > 1,
+            default="Veliky Luki",
+        )
+        == "Veliky Luki"
+    )

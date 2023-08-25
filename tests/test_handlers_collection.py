@@ -6,7 +6,6 @@ from FreeSpotify_back.ui.handler_collection import Call
 from FreeSpotify_back.ui.handler_collection import HandlersCollection
 
 
-
 @pytest.fixture()
 def handler():
     def _handler(*args, **kwargs):
@@ -39,10 +38,7 @@ def test_bind_one_handler(handlers_collection: HandlersCollection, handler):
 
 
 def test_bind_handlers(handlers_collection: HandlersCollection, handler, handler2):
-    handlers_collection.bind_handlers_to_event(
-        [handler, handler2],
-        "test event"
-    )
+    handlers_collection.bind_handlers_to_event([handler, handler2], "test event")
 
     assert handler in handlers_collection.handlers_on_events["test event"]
     assert handler2 in handlers_collection.handlers_on_events["test event"]
@@ -64,7 +60,9 @@ def test_raise_event_with_args(handlers_collection: HandlersCollection, handler)
     assert Call(handler, (1, 2)) in handlers_collection.calls_queue
 
 
-def test_execute_calls_queue(handlers_collection: HandlersCollection, handler, handler2):
+def test_execute_calls_queue(
+    handlers_collection: HandlersCollection, handler, handler2
+):
     handlers_collection.bind_handlers_to_event([handler, handler2], "test event")
     handlers_collection.raise_event("test event")
 
@@ -75,14 +73,9 @@ def test_execute_calls_queue(handlers_collection: HandlersCollection, handler, h
 
 
 def test_execute_calls_queue_with_additional_args(
-        handlers_collection: HandlersCollection,
-        handler,
-        handler2
+    handlers_collection: HandlersCollection, handler, handler2
 ):
-    handlers_collection.bind_handlers_to_event(
-        [handler, handler2],
-        "test event"
-    )
+    handlers_collection.bind_handlers_to_event([handler, handler2], "test event")
 
     handlers_collection.raise_event("test event")
     handlers_collection.execute_calls_queue(1)
@@ -100,7 +93,9 @@ def test_execute_calls_queue_and_raise_event_with_args(handlers_collection, hand
     handler.assert_called_with("STRING...", 1)
 
 
-def test_execute_calls_queue_and_raise_event_with_some_args(handlers_collection, handler):
+def test_execute_calls_queue_and_raise_event_with_some_args(
+    handlers_collection, handler
+):
     handlers_collection.bind_one_handler_to_event(handler, "test event")
 
     handlers_collection.raise_event("test event", 1, 2, 3)

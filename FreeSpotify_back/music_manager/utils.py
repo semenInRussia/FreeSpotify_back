@@ -16,5 +16,6 @@ def delete_sound_quality(string: str) -> str:
 
     return string
 
+
 def delete_year_in_album_name(album_name: str) -> str:
     return album_name[7:]

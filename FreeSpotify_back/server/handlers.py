@@ -17,7 +17,7 @@ from .urls import (
 app = Flask(__name__)
 
 cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+app.config["CORS_HEADERS"] = "Content-Type"
 
 
 @app.route(MAIN_PAGE_URL)
@@ -25,10 +25,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def main_handle() -> dict:
     """Handle function of the main server endpoint."""
     return {
-        'Main page': MAIN_PAGE_URL,
-        'Artists': ARTISTS_WELCOME_PAGE_URL,
-        'Albums': ALBUMS_WELCOME_PAGE_URL,
-        'Tracks': TRACKS_WELCOME_PAGE_URL,
+        "Main page": MAIN_PAGE_URL,
+        "Artists": ARTISTS_WELCOME_PAGE_URL,
+        "Albums": ALBUMS_WELCOME_PAGE_URL,
+        "Tracks": TRACKS_WELCOME_PAGE_URL,
     }
 
 
@@ -37,7 +37,7 @@ def main_handle() -> dict:
 def artists_handle() -> dict:
     """Handle function to the root URL of artists endpoints."""
     return {
-        'Watch detail info': ARTIST_DETAIL_PAGE_URL,
+        "Watch detail info": ARTIST_DETAIL_PAGE_URL,
     }
 
 
@@ -56,7 +56,7 @@ def artist_detail_handle(artist_name: str) -> dict:
 def albums_handle() -> dict:
     """Handle function to view information about albums endpoints."""
     return {
-        'Detail': ALBUM_DETAIL_PAGE_URL,
+        "Detail": ALBUM_DETAIL_PAGE_URL,
     }
 
 
@@ -75,7 +75,7 @@ def album_detail_handle(artist_name: str, name: str) -> dict:
 def tracks_handle() -> dict:
     """Handle function to view information about tracks endpoints."""
     return {
-        'Watch All Info': TRACK_DETAIL_PAGE_URL,
+        "Watch All Info": TRACK_DETAIL_PAGE_URL,
     }
 
 

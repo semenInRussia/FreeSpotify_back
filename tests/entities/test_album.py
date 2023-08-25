@@ -66,36 +66,44 @@ def test_work_with_settings_when_create_from_dto():
 
 
 def test_equal_albums():
-    first_album = Album(artist_name, album_name,
-        additional_settings=additional_settings)
-    second_album = Album(artist_name, album_name,
-        additional_settings=additional_settings)
+    first_album = Album(
+        artist_name, album_name, additional_settings=additional_settings
+    )
+    second_album = Album(
+        artist_name, album_name, additional_settings=additional_settings
+    )
 
     assert first_album == second_album
 
 
 def test_notequal_by_artist_albums():
-    first_album = Album(artist_name, album_name,
-        additional_settings=additional_settings)
-    second_album = Album(difference_artist_name, album_name,
-        additional_settings=additional_settings)
+    first_album = Album(
+        artist_name, album_name, additional_settings=additional_settings
+    )
+    second_album = Album(
+        difference_artist_name, album_name, additional_settings=additional_settings
+    )
 
     assert first_album != second_album
 
 
 def test_notequal_by_name_albums():
-    first_album = Album(artist_name, album_name,
-        additional_settings=additional_settings)
-    second_album = Album(artist_name, difference_album_name,
-        additional_settings=additional_settings)
+    first_album = Album(
+        artist_name, album_name, additional_settings=additional_settings
+    )
+    second_album = Album(
+        artist_name, difference_album_name, additional_settings=additional_settings
+    )
 
     assert first_album != second_album
 
 
 def test_notequal_with_other_type():
     assert Album(artist_name, album_name, additional_settings=additional_settings) != 1
-    assert Album(artist_name, album_name,
-                 additional_settings=additional_settings) != "STRING"
+    assert (
+        Album(artist_name, album_name, additional_settings=additional_settings)
+        != "STRING"
+    )
 
 
 def test_get_artist(album):

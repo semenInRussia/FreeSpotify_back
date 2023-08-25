@@ -10,12 +10,8 @@ from .test_tracks import assert_is_valid_track_collection
 artist_name = "Queen"
 not_valid_name = "$#@!-"
 
-artist_params = {
-    "artist_name": artist_name
-}
-not_valid_params = {
-    "artist_name": not_valid_name
-}
+artist_params = {"artist_name": artist_name}
+not_valid_params = {"artist_name": not_valid_name}
 
 
 @pytest.fixture()
@@ -29,10 +25,7 @@ def assert_is_valid_artist_collection(artists: List[ArtistDto]):
 
 
 def assert_is_valid_artist(artist: ArtistDto):
-    fields = {
-        "name": str,
-        "spotify_id": str
-    }
+    fields = {"name": str, "spotify_id": str}
 
     for field_name, field_type in fields.items():
         field = getattr(artist, field_name)
@@ -69,6 +62,7 @@ def test_get_top(spotify: Spotify):
 
     assert len(top) == 10
     assert_is_valid_track_collection(top)
+
 
 def test_get_albums(spotify: Spotify):
     actual = spotify.artists.get_albums(**artist_params)

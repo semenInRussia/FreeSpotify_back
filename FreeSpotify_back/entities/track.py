@@ -22,11 +22,13 @@ class Track(AbstractEntity):
 
     _instance: TrackDto
 
-    def __init__(self,
-                 artist_name: str,
-                 album_name: str,
-                 track_name: str,
-                 additional_settings=None):
+    def __init__(
+        self,
+        artist_name: str,
+        album_name: str,
+        track_name: str,
+        additional_settings=None,
+    ):
         """Build a Track with given parameters.
 
         If additional_setting provided, then use it.
@@ -35,10 +37,9 @@ class Track(AbstractEntity):
         self._init_instance(artist_name, album_name, track_name)
         super().__init__(additional_settings=additional_settings)
 
-    def _init_instance(self,
-                       artist_name: str,
-                       album_name: str,
-                       track_name: str) -> None:
+    def _init_instance(
+        self, artist_name: str, album_name: str, track_name: str
+    ) -> None:
         self._instance = self._music_mgr.tracks.get(
             artist_name=artist_name,
             album_name=album_name,
@@ -50,13 +51,13 @@ class Track(AbstractEntity):
 
     def __eq__(self, other):
         return (
-            isinstance(other, self.__class__) and
-            self.album == other.album and self.name == other.name)
+            isinstance(other, self.__class__)
+            and self.album == other.album
+            and self.name == other.name
+        )
 
     @classmethod
-    def create_from_dto(cls,
-                        track_dto: TrackDto,
-                        additional_settings=None) -> "Track":
+    def create_from_dto(cls, track_dto: TrackDto, additional_settings=None) -> "Track":
         """Construct a new Track object from a given `TrackDto`."""
         return cls(
             track_dto.artist_name,
@@ -66,16 +67,15 @@ class Track(AbstractEntity):
         )
 
     @classmethod
-    def create_from_dto_or_none(cls,
-                                track_dto: TrackDto,
-                                additional_settings=None) -> Optional["Track"]:
+    def create_from_dto_or_none(
+        cls, track_dto: TrackDto, additional_settings=None
+    ) -> Optional["Track"]:
         """Like ok `create_from_dto`, but if it raise an error, return None."""
         try:
-            actual_track = cls.create_from_dto(track_dto,
-                additional_settings=additional_settings)
-        except (NotFoundTrackError,
-                NotFoundAlbumError,
-                NotFoundArtistError):
+            actual_track = cls.create_from_dto(
+                track_dto, additional_settings=additional_settings
+            )
+        except (NotFoundTrackError, NotFoundAlbumError, NotFoundArtistError):
             return None
         else:
             return actual_track
@@ -95,18 +95,18 @@ class Track(AbstractEntity):
         """Return the artist of the track (use Artist object)."""
         from .artist import Artist
 
-        return Artist(
-            self._instance.artist_name,
-            additional_settings=self.settings)
+        return Artist(self._instance.artist_name, additional_settings=self.settings)
 
     @property
     def album(self):
         """Return the album of the track."""
         from .album import Album
 
-        return Album(self._instance.artist_name,
-                     self._instance.album_name,
-                     additional_settings=self.settings)
+        return Album(
+            self._instance.artist_name,
+            self._instance.album_name,
+            additional_settings=self.settings,
+        )
 
     @property
     def link(self) -> Optional[str]:
@@ -115,7 +115,8 @@ class Track(AbstractEntity):
             link = self._music_mgr.tracks.get_link(
                 self._instance.artist_name,
                 self._instance.album_name,
-                self._instance.name)
+                self._instance.name,
+            )
         except (NotFoundTrackError, NotFoundAlbumError):
             return None
         else:
@@ -127,10 +128,9 @@ class Track(AbstractEntity):
         return self.album.link_on_img
 
     @staticmethod
-    def search(artist_name: str,
-               album_name: str,
-               track_name: str,
-               additional_settings=None) -> Iterable["Track"]:
+    def search(
+        artist_name: str, album_name: str, track_name: str, additional_settings=None
+    ) -> Iterable["Track"]:
         """Return a list of the tracks that matched with given parameters."""
         settings = entities + additional_settings
         music_mgr: AbstractMusicManager = settings.music_manager_impl()
@@ -149,7 +149,6 @@ class Track(AbstractEntity):
     def from_query(cls, query: str, additional_settings=None) -> "Track":
         """Fetch an album from the query."""
         try:
-            return next(iter(
-                cls.query(query, additional_settings=additional_settings)))
+            return next(iter(cls.query(query, additional_settings=additional_settings)))
         except StopIteration:
             raise NotFoundTrackError from StopIteration

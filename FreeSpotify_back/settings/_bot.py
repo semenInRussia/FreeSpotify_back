@@ -6,7 +6,7 @@ from dotenv import load_dotenv as _load_dotenv
 _load_dotenv()
 
 
-BOT_TOKEN = _os.getenv('BOT_TOKEN')
+BOT_TOKEN = _os.getenv("BOT_TOKEN")
 
 BOT_NAME = "tg bot to download a music"
 
@@ -19,19 +19,20 @@ BOT_BRIEF_DESCRIPTION = (
 _BotCommand = _namedtuple("_BotCommand", "name command description example")
 
 BOT_COMMANDS = [
-    _BotCommand("artist",
-                "/artist",
-                "artist search by name",
-                "/artist metallica"),
-    _BotCommand("album",
-                "/album",
-                "album search by name",
-                "/album metallica - master of puppets"),
-    _BotCommand("track",
-                "/track",
-                "track search by name",
-                "/album metallica - master of puppets"),
-    ]
+    _BotCommand("artist", "/artist", "artist search by name", "/artist metallica"),
+    _BotCommand(
+        "album",
+        "/album",
+        "album search by name",
+        "/album metallica - master of puppets",
+    ),
+    _BotCommand(
+        "track",
+        "/track",
+        "track search by name",
+        "/album metallica - master of puppets",
+    ),
+]
 
 _BOT_COMMAND_TEXT_TEMPLATE = """
 {bot_command.name} | {bot_command.command}
@@ -55,9 +56,5 @@ COMMANDS
 
 
 class stickers:
-    FAIL = (
-        "CAACAgIAAxkBAAEBuVlf6MEBtd8e94ObW5LSmP1_FrWZHAACgQMAAs-71A6WvjEQeKbJyh4E"
-    )
-    WELCOME = (
-        "CAACAgIAAxkBAAEBuVtf6MZ8_6rAiFA6uBh9uxtluKhr7wACSgEAApafjA6Mfk73uDljvh4E"
-    )
+    FAIL = "CAACAgIAAxkBAAEBuVlf6MEBtd8e94ObW5LSmP1_FrWZHAACgQMAAs-71A6WvjEQeKbJyh4E"
+    WELCOME = "CAACAgIAAxkBAAEBuVtf6MZ8_6rAiFA6uBh9uxtluKhr7wACSgEAApafjA6Mfk73uDljvh4E"

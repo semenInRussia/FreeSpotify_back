@@ -15,16 +15,21 @@ class RunServerCommand(CLICommand):
     these arguments can be provided into this class via `run` method
     """
 
-    aliases = ['server', 'run-server', 'runserver', 'rest-api']
+    aliases = ["server", "run-server", "runserver", "rest-api"]
 
     @property
     def parser(self) -> ArgumentParser:
         """Parser of command-line arguments."""
         server_parser = ArgumentParser()
 
-        server_parser.add_argument('-p', '--port', '-P', type=int,
-                                   help=main.help_text_for_port,
-                                   default=server.PORT)
+        server_parser.add_argument(
+            "-p",
+            "--port",
+            "-P",
+            type=int,
+            help=main.help_text_for_port,
+            default=server.PORT,
+        )
 
         return server_parser
 
@@ -33,8 +38,7 @@ class RunServerCommand(CLICommand):
         namespace = self.parser.parse_args(args)
         port = namespace.port
 
-        app.run(host=server.HOST,
-                port=port)
+        app.run(host=server.HOST, port=port)
 
 
 class RunConsoleUICommand(CLICommand):
@@ -44,7 +48,7 @@ class RunConsoleUICommand(CLICommand):
     these arguments can be provided into this class via `run` method
     """
 
-    aliases = ['console', 'cli-api', 'shell']
+    aliases = ["console", "cli-api", "shell"]
 
     def run(self, _args: list[str]) -> None:
         """Run the command with given command-line arguments."""
@@ -59,7 +63,7 @@ class RunBotCommand(CLICommand):
     these arguments can be provided into this class via `run` method
     """
 
-    aliases = ['bot', 'run-bot']
+    aliases = ["bot", "run-bot"]
 
     def run(self, _args: list[str], additional_settings=None, **kwargs) -> None:
         """Run the command with given command line arguments and settings of the bot."""

@@ -36,7 +36,9 @@ def test_search(directory_music_manager: AbstractMusicManager):
 
 
 def test_get_link(directory_music_manager: DirectoryMusicManager):
-    assert directory_music_manager.artists.get_link("artist 1") == os.path.join(path_to_music, "artist1")
+    assert directory_music_manager.artists.get_link("artist 1") == os.path.join(
+        path_to_music, "artist1"
+    )
 
 
 def test_get_albums(directory_music_manager: DirectoryMusicManager):

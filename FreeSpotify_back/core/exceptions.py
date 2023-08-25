@@ -6,6 +6,7 @@ class InvalidJsonResponseError(Exception):
 
         super().__init__(url)
 
+
 class UndefinedCommandError(Exception):
     """A given command isn't defined."""
 

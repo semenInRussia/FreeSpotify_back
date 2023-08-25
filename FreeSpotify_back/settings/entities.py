@@ -4,4 +4,3 @@ from typing_extensions import Any
 from . import _entities
 
 entities: Any = Settings(_entities)
-

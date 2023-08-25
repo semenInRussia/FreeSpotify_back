@@ -9,9 +9,10 @@ _Key = Optional[Callable[[Element], str]]
 
 T = TypeVar("T")
 
-def search_string_similar_to(string: str,
-                             strings: Iterable[T],
-                             key: _Key[T]=None) -> T:
+
+def search_string_similar_to(
+    string: str, strings: Iterable[T], key: _Key[T] = None
+) -> T:
     """Return the most similar to the given string.
 
     You can pass a list of objects (not strings) and function that return string,
@@ -19,13 +20,15 @@ def search_string_similar_to(string: str,
     """
     return next(iter(sort_objects_by_similarity_to(string, strings, key=key)))
 
+
 T = TypeVar("T")
+
 
 def filter_and_sort_strings_by_min_similarity_to(
     string: str,
     strings: Iterable[T],
-    min_ratio_of_similarity: float=DEFAULT_MIN_RATIO_OF_SIMILARITY,
-    key: _Key[T]=None,
+    min_ratio_of_similarity: float = DEFAULT_MIN_RATIO_OF_SIMILARITY,
+    key: _Key[T] = None,
 ) -> Iterable[T]:
     """Return the most similar to the given strings.
 
@@ -35,19 +38,21 @@ def filter_and_sort_strings_by_min_similarity_to(
     Similarity measured as number from 0 to 1, you can provide the number what
     you need to remove
     """
-    filtered_strings = filter_objects_by_min_similarity_to(string,
-        strings, min_ratio_of_similarity, key=key)
-    return sort_objects_by_similarity_to(string,
-        filtered_strings,
-        key=key)
+    filtered_strings = filter_objects_by_min_similarity_to(
+        string, strings, min_ratio_of_similarity, key=key
+    )
+    return sort_objects_by_similarity_to(string, filtered_strings, key=key)
+
 
 T = TypeVar("T")
 
+
 def filter_objects_by_min_similarity_to(
-        string: str,
-        objects: Iterable[T],
-        min_ratio_of_similarity: Optional[float]=None,
-        key: _Key[T]=None) -> Iterable[T]:
+    string: str,
+    objects: Iterable[T],
+    min_ratio_of_similarity: Optional[float] = None,
+    key: _Key[T] = None,
+) -> Iterable[T]:
     """Remove from the given strings strings that aren't similar to the given.
 
     You can pass a list of objects (not strings) and function that return string,
@@ -58,13 +63,13 @@ def filter_objects_by_min_similarity_to(
     """
     _key = key or str
     return filter(
-        lambda o: is_similar_strings(_key(o), string, min_ratio_of_similarity),
-        objects)
+        lambda o: is_similar_strings(_key(o), string, min_ratio_of_similarity), objects
+    )
 
 
-def is_similar_strings(actual: str,
-                       expected: str,
-                       min_ratio: Optional[float]=None) -> bool:
+def is_similar_strings(
+    actual: str, expected: str, min_ratio: Optional[float] = None
+) -> bool:
     """Return True, if given strings are similar.
 
     Similarity measured as number from 0 to 1, you can provide that indicates that
@@ -82,12 +87,10 @@ def get_ratio_of_similarity(actual: str, expected: str) -> float:
     """Return number from 0 to 1 that tell about similarity between given strings."""
     normalized_actual, normalized_excepted = (
         _normalize_string(actual),
-        _normalize_string(expected))
+        _normalize_string(expected),
+    )
 
-    matcher = difflib.SequenceMatcher(
-        None,
-        normalized_actual,
-        normalized_excepted)
+    matcher = difflib.SequenceMatcher(None, normalized_actual, normalized_excepted)
 
     return matcher.ratio()
 
@@ -95,11 +98,13 @@ def get_ratio_of_similarity(actual: str, expected: str) -> float:
 def _normalize_string(string: str) -> str:
     return string.lower()
 
+
 T = TypeVar("T")
 
-def sort_objects_by_similarity_to(string: str,
-                                  objects: Iterable[T],
-                                  key: _Key[T]=None) -> Iterable[T]:
+
+def sort_objects_by_similarity_to(
+    string: str, objects: Iterable[T], key: _Key[T] = None
+) -> Iterable[T]:
     """Sort given strings with the similarity to the given.
 
     You can pass a list of objects (not strings) and function that return string,
@@ -107,5 +112,4 @@ def sort_objects_by_similarity_to(string: str,
     """
     if key is None:
         key = str
-    return iter(sorted(objects,
-                       key=lambda o: -get_ratio_of_similarity(key(o), string)))
+    return iter(sorted(objects, key=lambda o: -get_ratio_of_similarity(key(o), string)))

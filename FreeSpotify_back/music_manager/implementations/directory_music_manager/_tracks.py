@@ -7,33 +7,38 @@ from FreeSpotify_back.dto import TrackDto
 from FreeSpotify_back.music_manager import AbstractTracks
 from FreeSpotify_back.similarity_lib import filter_and_sort_strings_by_min_similarity_to
 
-EXTENSION_OF_TRACK_FILE = '.mp3'
+EXTENSION_OF_TRACK_FILE = ".mp3"
 
 
 class DirectoryTracksManager(AbstractTracks):
-    def __init__(self, path: str = ''):
+    def __init__(self, path: str = ""):
         self._path = path
 
     def query(self, query: str) -> Iterable[TrackDto]:
-        all_tracks_paths = (p.removeprefix(self._path) for p in my_os.search_dirs_by_pattern(f"{self._path}/*/*/*"))
-        sute_tracks_paths = filter_and_sort_strings_by_min_similarity_to(query,
-            all_tracks_paths)
+        all_tracks_paths = (
+            p.removeprefix(self._path)
+            for p in my_os.search_dirs_by_pattern(f"{self._path}/*/*/*")
+        )
+        sute_tracks_paths = filter_and_sort_strings_by_min_similarity_to(
+            query, all_tracks_paths
+        )
         tracks = self._tracks_from_paths(sute_tracks_paths)
         return tracks
 
-    def search(self,
-               artist_name: str,
-               album_name: str,
-               track_name: str) -> Iterable[TrackDto]:
+    def search(
+        self, artist_name: str, album_name: str, track_name: str
+    ) -> Iterable[TrackDto]:
         paths_to_tracks = my_os.search_dirs_by_pattern(
-            f"{self._path}/~{artist_name}/~{album_name}/~{track_name}")
+            f"{self._path}/~{artist_name}/~{album_name}/~{track_name}"
+        )
         tracks = self._tracks_from_paths(paths_to_tracks)
 
         return tracks
 
-    def _tracks_from_paths(self,
-                           paths_to_tracks: Iterable[str],
-                           ) -> Iterable[TrackDto]:
+    def _tracks_from_paths(
+        self,
+        paths_to_tracks: Iterable[str],
+    ) -> Iterable[TrackDto]:
         return map(self._track_from_path, paths_to_tracks)
 
     @staticmethod
@@ -52,10 +57,9 @@ class DirectoryTracksManager(AbstractTracks):
             name=track_name,
         )
 
-    def get_link(self,
-                 artist_name: str,
-                 album_name: str,
-                 track_name: str) -> Optional[str]:
+    def get_link(
+        self, artist_name: str, album_name: str, track_name: str
+    ) -> Optional[str]:
         track = self.get(artist_name, album_name, track_name)
         path = self._path_from_track(track)
 

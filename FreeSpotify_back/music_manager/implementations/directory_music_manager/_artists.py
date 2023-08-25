@@ -17,9 +17,7 @@ class DirectoryArtistsManager(AbstractArtists):
         return self.path
 
     def search(self, artist_name: str) -> Iterable[ArtistDto]:
-        artists_paths = my_os.dirs_similar_to(
-            artist_name,
-            self._path_to_all_artists)
+        artists_paths = my_os.dirs_similar_to(artist_name, self._path_to_all_artists)
         artists = self._get_artists_from_paths(artists_paths)
 
         return artists
@@ -45,8 +43,7 @@ class DirectoryArtistsManager(AbstractArtists):
         albums = self._albums_by_path_to_artist(path_to_artist)
         return albums
 
-    def _albums_by_path_to_artist(self,
-                                  path_to_artist: str) -> Iterable[AlbumDto]:
+    def _albums_by_path_to_artist(self, path_to_artist: str) -> Iterable[AlbumDto]:
         album_names = my_os.dirs_names(path_to_artist)
         artist_name = self._artist_from_path(path_to_artist).name
 

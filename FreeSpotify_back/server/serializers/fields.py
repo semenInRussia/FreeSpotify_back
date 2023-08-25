@@ -3,8 +3,9 @@ from typing import Generic, Optional, TypeVar
 
 from .exceptions import SerializerFieldNameNotProvidedError
 
-I = TypeVar("I")                          # input field type
-O = TypeVar("O")                          # output type
+I = TypeVar("I")  # input field type
+O = TypeVar("O")  # output type
+
 
 class FieldSerializer(Generic[I, O]):
     """A class to serialize a field of an object using certain function.
@@ -15,7 +16,7 @@ class FieldSerializer(Generic[I, O]):
 
     serialize: Callable[[I], O]
 
-    def __init__(self, field_name_to_serialize: Optional[str]=None):
+    def __init__(self, field_name_to_serialize: Optional[str] = None):
         """Construct a serializer of a given field for any object.
 
         The serialization should be done with the `self.serialize` function.  Here's the
@@ -43,8 +44,11 @@ class FieldSerializer(Generic[I, O]):
 class CustomFieldSerializer(FieldSerializer):
     """Serializer of a field with a custom serialize function."""
 
-    def __init__(self, serialize_function: Callable,
-                 field_name_to_serialize: Optional[str] = None):
+    def __init__(
+        self,
+        serialize_function: Callable,
+        field_name_to_serialize: Optional[str] = None,
+    ):
         """Create a field with a given name serializer with given serialzize func."""
         super().__init__(field_name_to_serialize)
         self.serialize = serialize_function
@@ -74,8 +78,9 @@ class BooleanFieldSerializer(FieldSerializer):
     serialize = bool
 
 
-I = TypeVar("I")                          # type of input list element
-O = TypeVar("O")                          # type of output list element
+I = TypeVar("I")  # type of input list element
+O = TypeVar("O")  # type of output list element
+
 
 class ListFieldSerializer(FieldSerializer, Generic[I, O]):
     """Serializer of a field with a composite list type."""
@@ -90,9 +95,9 @@ class ListFieldSerializer(FieldSerializer, Generic[I, O]):
 class CustomListFieldSerializer(ListFieldSerializer):
     """Field serializer for list with custom serialize element function."""
 
-    def __init__(self,
-                 serialize_element: Callable,
-                 field_name_to_serialize: Optional[str]=None):
+    def __init__(
+        self, serialize_element: Callable, field_name_to_serialize: Optional[str] = None
+    ):
         """Create a new field serializer with given function and name of the field."""
         self.serialize_element = serialize_element
 

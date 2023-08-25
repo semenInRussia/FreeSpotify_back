@@ -49,10 +49,11 @@ class Artist(AbstractEntity):
 
     def _get_top_from_dto_top(self, track_dto_top: Iterable[TrackDto]):
         from . import Track
+
         for dto_track in track_dto_top:
             yield Track.create_from_dto_or_none(
-                dto_track,
-                additional_settings=self.settings)
+                dto_track, additional_settings=self.settings
+            )
 
     @property
     def albums(self):
@@ -62,9 +63,9 @@ class Artist(AbstractEntity):
 
     def _get_albums_from_dto_albums(self, dto_albums: Iterable[AlbumDto]):
         from . import Album
+
         for dto_album in dto_albums:
-            yield Album.create_from_dto(dto_album,
-                                        additional_settings=self.settings)
+            yield Album.create_from_dto(dto_album, additional_settings=self.settings)
 
     @property
     def link(self) -> Optional[str]:
@@ -83,19 +84,14 @@ class Artist(AbstractEntity):
             return None
 
     @classmethod
-    def create_from_dto(cls,
-                        dto: ArtistDto,
-                        additional_settings=None) -> "Artist":
+    def create_from_dto(cls, dto: ArtistDto, additional_settings=None) -> "Artist":
         """Create an `Artist` from a given `ArtistDto`."""
-        return cls(dto.name,
-                   additional_settings=additional_settings)
+        return cls(dto.name, additional_settings=additional_settings)
 
     @staticmethod
-    def search(artist_name: str,
-               additional_settings=None) -> Iterable["Artist"]:
+    def search(artist_name: str, additional_settings=None) -> Iterable["Artist"]:
         """Return a list which suits with artst_name."""
-        return Artist.query(artist_name,
-                            additional_settings=additional_settings)
+        return Artist.query(artist_name, additional_settings=additional_settings)
 
     @staticmethod
     def query(query: str, additional_settings=None) -> Iterable["Artist"]:
@@ -109,7 +105,6 @@ class Artist(AbstractEntity):
     def from_query(cls, query: str, additional_settings=None) -> "Artist":
         """Return an `Artist` object that matches with query."""
         try:
-            return next(iter(
-                cls.query(query, additional_settings=additional_settings)))
+            return next(iter(cls.query(query, additional_settings=additional_settings)))
         except StopIteration:
             raise NotFoundArtistError from StopIteration

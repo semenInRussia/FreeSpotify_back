@@ -7,7 +7,7 @@ handlers_console = HandlersCollection()
 
 
 def _get_user_message() -> str:
-    return input("Enter:")
+    return input("Enter: ")
 
 
 @handlers_console.new_handler("print normal message")
@@ -27,5 +27,5 @@ def print_error(error_name: str, error_description: str, *args) -> None:
 
 ConsoleUI = create_ui(handlers_console, _get_user_message)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ConsoleUI().run()

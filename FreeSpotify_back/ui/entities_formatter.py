@@ -95,11 +95,10 @@ class TelegramMarkdownParseMode(AbstractParseMode):
 
 def get_parse_mode_by_name(parse_mode_name: str) -> AbstractParseMode:
     """Return the format to print entities with a given name."""
-    parse_mode = first_true(all_parse_modes,
-        pred=lambda pm: pm.name == parse_mode_name)
+    parse_mode = first_true(all_parse_modes, pred=lambda pm: pm.name == parse_mode_name)
 
     if not parse_mode:
-       raise KeyError(f"Not found parse mode with name: {parse_mode_name}")
+        raise KeyError(f"Not found parse mode with name: {parse_mode_name}")
 
     return parse_mode
 
@@ -122,8 +121,7 @@ def format_artist(artist: Artist, parse_mode: AbstractParseMode) -> str:
     )
 
 
-def format_top_items(top: Iterable[Track],
-                     parse_mode: AbstractParseMode) -> str:
+def format_top_items(top: Iterable[Track], parse_mode: AbstractParseMode) -> str:
     """Return a artist top in a given string format."""
     res = ""
 
@@ -133,9 +131,9 @@ def format_top_items(top: Iterable[Track],
     return res
 
 
-def format_top_item(track: Track,
-                    num_in_top: int,
-                    parse_mode: AbstractParseMode) -> str:
+def format_top_item(
+    track: Track, num_in_top: int, parse_mode: AbstractParseMode
+) -> str:
     """Return an artist top item in a given string format."""
     return my_format_str(
         parse_mode.top_item,
@@ -144,8 +142,7 @@ def format_top_item(track: Track,
     )
 
 
-def _format_artist_to_header(artist: Artist,
-                             parse_mode: AbstractParseMode) -> str:
+def _format_artist_to_header(artist: Artist, parse_mode: AbstractParseMode) -> str:
     return my_format_str(
         parse_mode.artist_header,
         artist=artist,
@@ -159,16 +156,14 @@ def format_album(album: Album, parse_mode: AbstractParseMode) -> str:
     return header + "\n" + tracks
 
 
-def _format_album_to_header(album: Album,
-                            parse_mode: AbstractParseMode) -> str:
+def _format_album_to_header(album: Album, parse_mode: AbstractParseMode) -> str:
     return my_format_str(parse_mode.album_header, album=album)
 
 
-def _format_album_tracks(tracks: Iterable[Track],
-                         parse_mode: AbstractParseMode) -> str:
+def _format_album_tracks(tracks: Iterable[Track], parse_mode: AbstractParseMode) -> str:
     return "".join(my_format_str(parse_mode.album_track, track=t) for t in tracks)
+
 
 def format_track(track: Track, parse_mode: AbstractParseMode) -> str:
     """Return a track in a given string format."""
-    return my_format_str(parse_mode.track,
-                         track=track)
+    return my_format_str(parse_mode.track, track=track)

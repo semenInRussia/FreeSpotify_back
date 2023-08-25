@@ -13,4 +13,4 @@ class CLICommand(Command):
         try:
             return args[0]
         except IndexError:
-            raise AttributeError('Not inputted command name.') from IndexError
+            raise AttributeError("Not inputted command name.") from IndexError

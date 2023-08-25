@@ -40,5 +40,5 @@ def test_tracks_of_album(directory_music_manager: AbstractMusicManager):
 
     assert set(tracks) == {
         TrackDto(artist_name="artist1", album_name="album1", name="track1"),
-        TrackDto(artist_name="artist1", album_name="album1", name="track2")
+        TrackDto(artist_name="artist1", album_name="album1", name="track2"),
     }

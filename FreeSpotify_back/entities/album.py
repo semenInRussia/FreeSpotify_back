@@ -2,7 +2,7 @@ from collections.abc import Iterable
 from typing import Optional
 
 from FreeSpotify_back.dto import AlbumDto, TrackDto
-from FreeSpotify_back.music_manager import AbstractMusicManager
+from FreeSpotify_back.music_manager import AbstractMusicManager  # noqa: TCH001
 from FreeSpotify_back.music_manager.core.exceptions import NotFoundAlbumError
 from FreeSpotify_back.settings.entities import entities
 
@@ -13,15 +13,16 @@ class Album(AbstractEntity):
     """Representation of a music album.
 
     It uses a back-end to fetch the information about the album, so there is
-    not fetching, here just a useful API.
     """
 
     _instance: AlbumDto
 
-    def __init__(self,
-                 artist_name: str,
-                 album_name: str,
-                 additional_settings=None):
+    def __init__(
+        self,
+        artist_name: str,
+        album_name: str,
+        additional_settings=None,  # noqa: ANN001
+    ):
         """Build an Album with given parameters.
 
         If additional_setting provided, then use it.
@@ -31,23 +32,27 @@ class Album(AbstractEntity):
         super().__init__(additional_settings=additional_settings)
 
     def _init_instance(self, artist_name: str, album_name: str) -> None:
-        self._instance = self._music_mgr.albums.get(artist_name,
-                                                    album_name)
+        self._instance = self._music_mgr.albums.get(artist_name, album_name)
 
     def __repr__(self) -> str:
         return repr(self._instance)
 
-    def __eq__(self, other) -> bool:
-        return isinstance(other, self.__class__) \
-             and self.artist == other.artist and self.name == other.name
+    def __eq__(self, other) -> bool:  # noqa: ANN001
+        return (
+            isinstance(
+                other,
+                self.__class__,
+            )
+            and self.artist == other.artist
+            and self.name == other.name
+        )
 
     @property
-    def artist(self):
+    def artist(self):  # noqa: ANN201
         """Return the artist of the album (use Artist object)."""
         from . import Artist
 
-        return Artist(self._instance.artist_name,
-                      additional_settings=self.settings)
+        return Artist(self._instance.artist_name, additional_settings=self.settings)
 
     @property
     def tracks(self) -> Iterable:
@@ -61,11 +66,10 @@ class Album(AbstractEntity):
             self._instance.name,
         )
 
-    def _get_tracks_from_dto_tracks(self,
-                                    tracks: Iterable[TrackDto]) -> Iterable:
+    def _get_tracks_from_dto_tracks(self, tracks: Iterable[TrackDto]) -> Iterable:
         return map(self._create_track_from_dto, tracks)
 
-    def _create_track_from_dto(self, dto_track: TrackDto):
+    def _create_track_from_dto(self, dto_track: TrackDto):  # noqa: ANN202
         from . import Track
 
         return Track.create_from_dto(
@@ -106,20 +110,20 @@ class Album(AbstractEntity):
             return None
 
     @classmethod
-    def create_from_dto(cls,
-                        dto: AlbumDto,
-                        additional_settings=None) -> "Album":
+    def create_from_dto(
+        cls,  # noqa: ANN102
+        dto: AlbumDto,
+        additional_settings=None,  # noqa: ANN001
+    ) -> "Album":
         """Construct a new Album object from a given `AlbumDto`."""
-        return cls(
-            dto.artist_name,
-            dto.name,
-            additional_settings=additional_settings,
-        )
+        return cls(dto.artist_name, dto.name, additional_settings=additional_settings)
 
     @staticmethod
-    def search(artist_name: str,
-               album_name: str,
-               additional_settings=None) -> Iterable["Album"]:
+    def search(
+        artist_name: str,
+        album_name: str,
+        additional_settings=None,  # noqa: ANN001
+    ) -> Iterable["Album"]:
         """Return a list of the albums that matched with given parameters."""
         settings = entities + additional_settings
         music_mgr: AbstractMusicManager = settings.music_manager_impl()
@@ -127,7 +131,10 @@ class Album(AbstractEntity):
         return map(Album.create_from_dto, dtos)
 
     @staticmethod
-    def query(query: str, additional_settings=None) -> Iterable["Album"]:
+    def query(
+        query: str,
+        additional_settings=None,  # noqa: ANN001
+    ) -> Iterable["Album"]:
         """Return a list of the albums that matched with a given queries."""
         settings = entities + additional_settings
         music_mgr: AbstractMusicManager = settings.music_manager_impl()
@@ -135,11 +142,13 @@ class Album(AbstractEntity):
         return map(Album.create_from_dto, dtos)
 
     @classmethod
-    def from_query(cls, query: str, additional_settings=None) -> "Album":
+    def from_query(
+        cls,  # noqa: ANN102
+        query: str,
+        additional_settings=None,  # noqa: ANN001
+    ) -> "Album":
         """Fetch an album from the query."""
         try:
-            return next(iter(
-                cls.query(query, additional_settings=additional_settings)))
+            return next(iter(cls.query(query, additional_settings=additional_settings)))
         except StopIteration:
             raise NotFoundAlbumError from StopIteration
-

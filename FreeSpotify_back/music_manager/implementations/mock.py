@@ -13,10 +13,19 @@ SEED = 1000
 
 def _create_random_name():
     names = [
-        "I AM DIED?", "Me and dog: forever", "Gob vs Devil", "!!!SUpEr CoOl!!!",
-        "My crazy cats!", "I am eat my T_SHORT", "Please, kill me!?",
-        "I am your FATHER \\0_0/", "Basic", "IV White Album", "III White Album",
-        "We are the gobs: I", "We are the gobs: II",
+        "I AM DIED?",
+        "Me and dog: forever",
+        "Gob vs Devil",
+        "!!!SUpEr CoOl!!!",
+        "My crazy cats!",
+        "I am eat my T_SHORT",
+        "Please, kill me!?",
+        "I am your FATHER \\0_0/",
+        "Basic",
+        "IV White Album",
+        "III White Album",
+        "We are the gobs: I",
+        "We are the gobs: II",
     ]
 
     return random.choice(names)
@@ -33,7 +42,8 @@ class MockArtists(AbstractArtists):
         res = [
             ArtistDto(
                 name=_create_random_name(),
-            ) for _ in range(limit)
+            )
+            for _ in range(limit)
         ]
         res[0] = ArtistDto(artist_name)
 
@@ -47,7 +57,8 @@ class MockArtists(AbstractArtists):
                 name=_create_random_name() + str(i),
                 artist_name=artist_name,
                 album_name=_create_random_name(),
-            ) for i in range(10)
+            )
+            for i in range(10)
         ]
 
     def get_link(self, artist_name: str) -> str:
@@ -62,7 +73,6 @@ class MockArtists(AbstractArtists):
             AlbumDto(
                 artist_name=artist_name,
                 name=_create_random_name(),
-
                 release_date="25-4-2021",
             ),
         ]
@@ -78,18 +88,18 @@ class MockAlbums(AbstractAlbums):
         artist_name, album_name = query.split(" - ")
         return self.search(artist_name, album_name)
 
-    def search(self,
-               artist_name: str,
-               album_name: str,
-               limit: int = 4) -> list[AlbumDto]:
+    def search(
+        self, artist_name: str, album_name: str, limit: int = 4
+    ) -> list[AlbumDto]:
         random.seed(SEED)
 
         return [
             AlbumDto(
                 artist_name=artist_name,
                 name=album_name,
-                release_date='2020-14-12',
-            ) for _ in range(limit)
+                release_date="2020-14-12",
+            )
+            for _ in range(limit)
         ]
 
     def get_tracks(self, artist_name: str, album_name: str) -> list[TrackDto]:
@@ -100,7 +110,8 @@ class MockAlbums(AbstractAlbums):
                 name=_create_random_name(),
                 artist_name=artist_name,
                 album_name=album_name,
-            ) for _ in range(random.randint(6, 21))
+            )
+            for _ in range(random.randint(6, 21))
         ]
 
     def get_link(self, artist_name, album_name: str) -> str:
@@ -111,20 +122,19 @@ class MockAlbums(AbstractAlbums):
     def get_link_on_img(self, artist_name: str, album_name: str) -> str:
         random.seed(SEED)
 
-        return f"https://rocknation.su/upload/images/albums/{random.randint(1, 2500)}.jpg"
+        return (
+            f"https://rocknation.su/upload/images/albums/{random.randint(1, 2500)}.jpg"
+        )
 
 
 class MockTracks(AbstractTracks):
     def query(self, query: str) -> list[TrackDto]:
         artist_name, track_name = query.split(" - ")
-        return self.search(artist_name,
-                           _create_random_name(),
-                           track_name)
+        return self.search(artist_name, _create_random_name(), track_name)
 
-    def search(self,
-               artist_name: str,
-               album_name: str,
-               track_name: str) -> list[TrackDto]:
+    def search(
+        self, artist_name: str, album_name: str, track_name: str
+    ) -> list[TrackDto]:
         random.seed(SEED)
 
         return [
@@ -133,26 +143,29 @@ class MockTracks(AbstractTracks):
                 album_name=album_name,
                 name=track_name,
                 disc_number=_create_random_disc_number(),
-            ) for _ in range(3)
+            )
+            for _ in range(3)
         ]
 
     def get_link(
-            self,
-            artist_name: str,
-            album_name: str,
-            track_name: str,
+        self,
+        artist_name: str,
+        album_name: str,
+        track_name: str,
     ) -> str:
         return ""
 
     def get_link_on_img(
-            self,
-            artist_name: str,
-            album_name: str,
-            track_name: str,
+        self,
+        artist_name: str,
+        album_name: str,
+        track_name: str,
     ) -> str:
         random.seed(SEED)
 
-        return f"https://rocknation.su/upload/images/albums/{random.randint(1, 1500)}.jpg"
+        return (
+            f"https://rocknation.su/upload/images/albums/{random.randint(1, 1500)}.jpg"
+        )
 
 
 class MockMusicManager(AbstractMusicManager):

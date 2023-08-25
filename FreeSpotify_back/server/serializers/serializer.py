@@ -1,4 +1,3 @@
-
 from typing import Optional
 
 from FreeSpotify_back._low_level_utils import first_true, get_public_fields_of
@@ -32,8 +31,7 @@ class Serializer:
     @property
     def _all_fields(self) -> list[str]:
         if not self.all_fields:
-            self.all_fields = get_public_fields_of(self,
-                                                   ignore_list=self.public_fields)
+            self.all_fields = get_public_fields_of(self, ignore_list=self.public_fields)
         return self.all_fields
 
     def _serialize_object(self, fields: list[str]) -> dict:
@@ -46,8 +44,9 @@ class Serializer:
         field_serializer = self._get_field_serializer_for(field_to_serialize)
         return field_serializer.serialize_field_of(self._obj)
 
-    def _get_field_serializer_for(self,
-                                  field_name_to_serialize: str) -> FieldSerializer:
+    def _get_field_serializer_for(
+        self, field_name_to_serialize: str
+    ) -> FieldSerializer:
         field_serializer: FieldSerializer = getattr(self, field_name_to_serialize)
 
         if field_serializer.has_not_field_name_to_serialize():
@@ -70,8 +69,8 @@ class GeneralSerializer(Serializer):
         current_obj_type = type(self._obj)
 
         current_serializer = first_true(
-            self.all_serializers,
-            pred=lambda ser: ser.object_type == current_obj_type)
+            self.all_serializers, pred=lambda ser: ser.object_type == current_obj_type
+        )
 
         if not current_serializer:
             raise NotFoundSerializerError

@@ -17,8 +17,8 @@ class DirectoryAlbumsManager(AbstractAlbums):
     def query(self, query: str) -> Iterable[AlbumDto]:
         all_path_names = my_os.search_dirs_by_pattern(f"{self._path}/*/*")
         suite_path_names = filter_and_sort_strings_by_min_similarity_to(
-            query,
-            (p.removeprefix(self._path) for p in all_path_names))
+            query, (p.removeprefix(self._path) for p in all_path_names)
+        )
         return self._get_albums_by_paths(suite_path_names)
 
     def search(self, artist_name: str, album_name: str) -> Iterable[AlbumDto]:
@@ -26,14 +26,14 @@ class DirectoryAlbumsManager(AbstractAlbums):
         albums = self._get_albums_by_paths(paths_to_albums)
         return albums
 
-    def _search_paths_to_albums(self,
-                                artist_name: str,
-                                album_name: str) -> list[str]:
+    def _search_paths_to_albums(self, artist_name: str, album_name: str) -> list[str]:
         return my_os.search_dirs_by_pattern(
-            f"{self._path}/~{artist_name}/~{album_name}")
+            f"{self._path}/~{artist_name}/~{album_name}"
+        )
 
     def _get_albums_by_paths(
-            self, paths_to_albums: Iterable[str]) -> Iterable[AlbumDto]:
+        self, paths_to_albums: Iterable[str]
+    ) -> Iterable[AlbumDto]:
         return map(self._get_album_by_path, paths_to_albums)
 
     @staticmethod
@@ -52,20 +52,18 @@ class DirectoryAlbumsManager(AbstractAlbums):
     def _path_from_album(self, album: AlbumDto):
         return os.path.join(self._path, album.artist_name, album.name)
 
-    def get_tracks(self,
-                   artist_name: str,
-                   album_name: str) -> Iterable[TrackDto]:
+    def get_tracks(self, artist_name: str, album_name: str) -> Iterable[TrackDto]:
         album = self.get(artist_name, album_name)
         path_to_album = self._path_from_album(album)
 
-        return (self._track_from_filename(
-                artist_name,
-                album_name,
-                track_filename) for track_filename in my_os.dirs_names(path_to_album))
+        return (
+            self._track_from_filename(artist_name, album_name, track_filename)
+            for track_filename in my_os.dirs_names(path_to_album)
+        )
 
     @staticmethod
-    def _track_from_filename(artist_name: str,
-                             album_name: str,
-                             track_filename: str) -> TrackDto:
+    def _track_from_filename(
+        artist_name: str, album_name: str, track_filename: str
+    ) -> TrackDto:
         track_name = my_os.file_without_file_extension(track_filename)
         return TrackDto(artist_name, album_name, track_name)

@@ -11,18 +11,30 @@ ALL_BRACKETS_TYPES = [
 
 
 def delete_all_values_with_all_brackets_types(string: str) -> str:
+    """Remove values within brackets from string.
+
+    Using square and round parenthesises.
+    """
+
     return delete_all_values_with_given_brackets(string, ALL_BRACKETS_TYPES)
 
 
-def delete_all_values_with_given_brackets(string: str,
-                                          brackets_types: Iterable[Brackets],
-                                          ) -> str:
+def delete_all_values_with_given_brackets(
+    string: str,
+    brackets_types: Iterable[Brackets],
+) -> str:
+    """Remove values within brackets from string.
+
+    Using given parenthesises.
+    """
+
     for brackets in brackets_types:
         string = delete_value_with_brackets_pair(string, brackets)
     return string
 
 
 def delete_value_with_brackets_pair(string: str, brackets: Brackets) -> str:
+    """Remove values inside a given paranthesises struct."""
     inside_brackets = get_values_with_brackets(string, brackets)
     return reduce(
         lambda old, inside_brackets: old.replace(inside_brackets, ""),
@@ -46,6 +58,7 @@ def get_values_with_brackets(string: str, brackets: Brackets) -> Iterable[str]:
         yield inside_brackets
         string = string.replace(inside_brackets, "")
 
+
 def get_values_inside_of_brackets(string: str, brackets: Brackets) -> Iterable[str]:
     return map(ignore_brackets_around, get_values_with_brackets(string, brackets))
 
@@ -53,7 +66,7 @@ def get_values_inside_of_brackets(string: str, brackets: Brackets) -> Iterable[s
 def _find_one_value_inside_brackets(string: str, brackets: Brackets) -> str:
     open_branch_index = string.find(brackets.open_char)
     closed_branch_index = string.find(brackets.closed_char) + 1
-    return string[open_branch_index: closed_branch_index]
+    return string[open_branch_index:closed_branch_index]
 
 
 def _is_string_has_brackets(string: str, brackets: Brackets) -> bool:

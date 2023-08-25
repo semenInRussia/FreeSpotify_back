@@ -23,4 +23,3 @@ class CommandsCollection(Command):
                 return command
 
         raise exceptions.UndefinedCommandError
-

@@ -19,7 +19,8 @@ def _is_equal_paths(path1: str, path2: str) -> bool:
 
 
 def _is_equal_paths_collection(
-    path_collection1: Iterable[str], path_collection2: Iterable[str],
+    path_collection1: Iterable[str],
+    path_collection2: Iterable[str],
 ) -> bool:
     parsed_path_collection1 = list(map(parse_path, path_collection1))
     parsed_path_collection2 = list(map(parse_path, path_collection2))
@@ -59,7 +60,8 @@ def test_dirs_similar_to():
 def test_search_dirs():
     actual = search_dirs_by_pattern(f"{PATH_TO_DIR}/~subdir")
     assert _is_equal_paths_collection(
-        actual, [f"{PATH_TO_DIR}/subdir1", f"{PATH_TO_DIR}/subdir2"],
+        actual,
+        [f"{PATH_TO_DIR}/subdir1", f"{PATH_TO_DIR}/subdir2"],
     )
 
 

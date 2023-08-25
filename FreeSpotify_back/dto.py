@@ -10,6 +10,7 @@ class ArtistDto(NamedTuple):
     def __repr__(self):
         return self.name
 
+
 class AlbumDto(NamedTuple):
     """Object that represent a music album in the most simple form."""
 

@@ -15,7 +15,10 @@ def rocknation():
 def test_get_link(rocknation):
     actual = rocknation.tracks.get_link(artist_name, album_name, track_name)
 
-    assert actual == "http://rocknation.su/upload/mp3/Nirvana/1993%20-%20In%20Utero/11.%20Tourette%27s.mp3"
+    assert (
+        actual
+        == "http://rocknation.su/upload/mp3/Nirvana/1993%20-%20In%20Utero/11.%20Tourette%27s.mp3"
+    )
 
 
 def test_get_link_on_single(rocknation):
@@ -42,4 +45,7 @@ def test_get_link_should_raise_exception(rocknation):
 def test_get_link_on_image(rocknation):
     excepted = "http://rocknation.su/upload/images/albums/781.jpg"
 
-    assert rocknation.tracks.get_link_on_img(artist_name, album_name, track_name) == excepted
+    assert (
+        rocknation.tracks.get_link_on_img(artist_name, album_name, track_name)
+        == excepted
+    )
