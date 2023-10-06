@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import asyncio
 
 from FreeSpotify_back.commands import CLICommand, CLICommandsCollection
 from FreeSpotify_back.server.handlers import app
@@ -68,7 +69,7 @@ class RunBotCommand(CLICommand):
     def run(self, _args: list[str], additional_settings=None, **kwargs) -> None:
         """Run the command with given command line arguments and settings of the bot."""
         telegram_ui = TelegramUI(additional_settings)
-        telegram_ui.run()
+        asyncio.run(telegram_ui.run())
 
 
 class MainCLICommandsCollection(CLICommandsCollection):
