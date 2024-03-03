@@ -318,3 +318,4 @@ fabric.properties
 /Scripts/
 /pyvenv.cfg
 .ruff_cache
+/.vscode/
