@@ -72,8 +72,8 @@ def test_search_dirs_with_double_nesting():
         [
             f"{PATH_TO_DIR}/subdir1/dir1",
             f"{PATH_TO_DIR}/subdir1/dir2",
-            f"{PATH_TO_DIR}/subdir2/dir3",
             f"{PATH_TO_DIR}/subdir2/dir4",
+            f"{PATH_TO_DIR}/subdir2/dir3",
         ],
     )
 

@@ -1,6 +1,8 @@
-from FreeSpotify_back.my_request import humanized_link
-from FreeSpotify_back.my_request import is_not_valid_page
-from FreeSpotify_back.my_request import normalize_link
+from FreeSpotify_back.my_request import (
+    humanized_link,
+    is_not_valid_page,
+    normalize_link,
+)
 
 
 def test_humanized_link():
